@@ -4,7 +4,13 @@ import NotFound from '../views/NotFound.vue'
 
 Vue.use(VueRouter)
 
-const routes = [  
+const routes = [
+  {
+    path: '/regist',
+    name: 'regist',
+    component: () => import('../views/Regist.vue')
+  },
+
   {
     path: '*',
     name: 'not-found',
