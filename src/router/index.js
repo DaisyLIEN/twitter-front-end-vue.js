@@ -4,7 +4,17 @@ import NotFound from '../views/NotFound.vue'
 
 Vue.use(VueRouter)
 
-const routes = [  
+const routes = [
+  // {
+  //   path: '/',
+  //   name: 'root',
+  //   redirect: '/users/:id'
+  // },
+  {
+    path: '/users/:id',
+    name: 'user',
+    component: () => import('../views/UserSelf.vue')
+  },
   {
     path: '*',
     name: 'not-found',
