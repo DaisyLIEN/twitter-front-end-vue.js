@@ -5,11 +5,11 @@ import NotFound from '../views/NotFound.vue'
 Vue.use(VueRouter)
 
 const routes = [
-  // {
-  //   path: '/',
-  //   name: 'root',
-  //   redirect: '/users/:id'
-  // },
+  {
+    path: '/regist',
+    name: 'regist',
+    component: () => import('../views/Regist.vue')
+  },
   {
     path: '/users/:id',
     name: 'user',
