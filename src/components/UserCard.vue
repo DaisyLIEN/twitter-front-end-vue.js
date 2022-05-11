@@ -24,7 +24,9 @@
           <h5 class="user-name">John Doe</h5>
           <p class="user-account">@John Doe</p>
         </div>
-        <p class="description">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+        <p class="description">
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+        </p>
         <div class="follow-ship">
           <a class="following" href="#">34個<span>追隨中</span></a>
           <a class="follower" href="#">59位<span>追隨者</span></a>
@@ -142,16 +144,16 @@ button.edit {
   line-height: 22px;
 }
 .info .user-account,
-.follow-ship > a > span {    
+.follow-ship > a > span {
   color: #6c757d;
 }
 .description,
-.follow-ship a {  
+.follow-ship a {
   color: #171725;
 }
 .description {
   margin-top: 6px;
-  margin-bottom: 8px;  
+  margin-bottom: 8px;
 }
 .following {
   margin-right: 20px;
