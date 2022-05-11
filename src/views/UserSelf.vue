@@ -3,9 +3,9 @@
 
   <div class="container">
     
-    <UserSelfDetail />   
+    <UserCard />   
     
-      <PostNavPills />    
+      <TweetNavPills />    
 
     <!-- UserSelfPostList -->
     <!-- UserSelfReplyList -->
@@ -17,13 +17,13 @@
 </template>
 
 <script>
-import UserSelfDetail from "./../components/UserSelfDetail.vue";
-import PostNavPills from "./../components/PostNavPills.vue";
+import UserCard from "../components/UserCard.vue";
+import TweetNavPills from "../components/TweetNavPills.vue";
 
 export default {
   components: {
-    UserSelfDetail,
-    PostNavPills,
+    UserCard,
+    TweetNavPills,
   },
   data() {
     return {};
@@ -34,6 +34,7 @@ export default {
 <style scoped>
 .container {
   outline: 1px solid blue;
-  width: 640px;
+  width: 639px;
+  padding: 0;  
 }
 </style>
