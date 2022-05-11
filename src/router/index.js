@@ -5,7 +5,13 @@ import Main from '../views/Main.vue'
 
 Vue.use(VueRouter)
 
-const routes = [  
+const routes = [
+  {
+    path: '/regist',
+    name: 'regist',
+    component: () => import('../views/Regist.vue')
+  },
+
   {
     path: '/regist',
     name: 'regist',
