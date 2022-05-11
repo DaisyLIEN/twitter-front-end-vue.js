@@ -8,13 +8,13 @@
         alt="AC-logo"
       />
     </div>
-    <h1>登入 Alphitter</h1>
+    <h1>後台登入</h1>
     <form class="w-100" @submit.prevent.stop="handleSubmit">
       <div :class="['form-label-group', { 'wrong-form': isWronging }]">
         <label for="name">帳號</label>
         <input
           id="account"
-          v-model="account"
+          v-model="adminAccount"
           name="account"
           type="text"
           class="form-control"
@@ -28,7 +28,7 @@
         <label for="password">密碼</label>
         <input
           id="password"
-          v-model="password"
+          v-model="adminPassword"
           name="password"
           type="password"
           class="form-control"
@@ -43,13 +43,7 @@
 
       <div class="text-link text-center">
         <p>
-          <router-link class="regist" to="/regist">
-            註冊 Alphitter
-          </router-link>
-        </p>
-        <p>‧</p>
-        <p>
-          <router-link class="admin-login" to="/admin/signin"> 後台登入 </router-link>
+          <router-link class="admin-login" to="/signin"> 前台登入 </router-link>
         </p>
       </div>
     </form>
@@ -60,8 +54,8 @@
 export default {
   data() {
     return {
-      account: "",
-      password: "",
+      adminAccount: "",
+      adminPassword: "",
       isProcessing: false,
       isWronging: false,
     };
@@ -69,14 +63,14 @@ export default {
   methods: {
     handleSubmit() {
       const data = JSON.stringify({
-        account: this.account,
-        password: this.password,
+        adminAccount: this.adminAccount,
+        adminPassword: this.adminPassword,
       });
 
       // TODO: 向後端驗證使用者登入資訊是否合法
       console.log("data", data);
       // 成功登入後轉址到餐聽首頁
-      this.$router.push("/main");
+      this.$router.push("/admin/main");
     },
   },
 };
