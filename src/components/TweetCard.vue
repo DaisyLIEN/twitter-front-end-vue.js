@@ -7,7 +7,7 @@
       <div class="user">
         <span class="user-name">{{ user.name }}</span>
         <span class="user-account"
-          >@{{ user.account }} ‧ {{ user.createdAt }}小時</span
+          >@{{ user.account }} ‧ {{ user.createdAt | fromNow }}小時</span
         >
       </div>
       <div class="tweet-content">
@@ -29,7 +29,17 @@
 </template>
 
 <script>
+import moment from 'moment'
+
 export default {
+  filters: {
+    fromNow(datetime) {
+      if (!datetime) {
+        return '-'
+      }
+      return moment(datetime).fromNow()
+    }
+  },
   props: {
     initialUser: {
       type: Object,
@@ -40,7 +50,7 @@ export default {
     return {
       user: this.initialUser,
     };
-  },
+  }
 };
 </script>
 
@@ -50,21 +60,39 @@ export default {
   flex-wrap: wrap;
 }
 
-.tweet-img {
-  margin-right: 8px;
-}
-
 img {
   width: 50px;
   height: 50px;
+  margin: 0 8px 0 24px;
 }
 
 .tweet-right {
-  width: calc(100% - 60px);
+  width: calc(100% - 106px);
+}
+
+.user-name {
+  margin-right: 8px;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 26px;
+  color: #171725;
+}
+
+.user-account {
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 26px;
+  text-align: left;
+  color: #171725;
 }
 
 .tweet-content {
   margin: 8px 0;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 26px;
+  text-align: left;
+  color: #171725;
 }
 
 .tweet-actions {
@@ -80,6 +108,9 @@ img {
 .reply-number,
 .like-number {
   margin-left: 8px;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 14px;
 }
 
 .hr1 {
