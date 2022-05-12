@@ -8,9 +8,9 @@
         alt="AC-logo"
       />
     </div>
-    <h1>建立你的帳號</h1>
+    <h1>登入 Alphitter</h1>
     <form class="w-100" @submit.prevent.stop="handleSubmit">
-      <div class="form-label-group">
+      <div :class="['form-label-group', { 'wrong-form': isWronging }]">
         <label for="name">帳號</label>
         <input
           id="account"
@@ -21,35 +21,10 @@
           required
           autofocus
         />
-      </div>
-      <div class="form-label-group">
-        <label for="name">名稱</label>
-        <input
-          id="name"
-          v-model="name"
-          name="name"
-          type="text"
-          class="form-control"
-          autocomplete="username"
-          required
-          autofocus
-        />
+        <p v-show="isWronging" class="wrong-message">帳號不存在</p>
       </div>
 
-      <div class="form-label-group">
-        <label for="email">Email</label>
-        <input
-          id="email"
-          v-model="email"
-          name="email"
-          type="email"
-          class="form-control"
-          autocomplete="email"
-          required
-        />
-      </div>
-
-      <div class="form-label-group">
+      <div :class="['form-label-group', { 'wrong-form': isWronging }]">
         <label for="password">密碼</label>
         <input
           id="password"
@@ -62,26 +37,19 @@
         />
       </div>
 
-      <div class="form-label-group">
-        <label for="password-check">密碼確認</label>
-        <input
-          id="password-check"
-          v-model="passwordCheck"
-          name="passwordCheck"
-          type="password"
-          class="form-control"
-          autocomplete="new-password"
-          required
-        />
-      </div>
-
       <button class="btn btn-lg btn-primary btn-block mb-3" type="submit">
-        註冊
+        登入
       </button>
 
-      <div class="text-center">
-        <p class="cancel">
-          <router-link class="cancel-text" to="/signin"> 取消 </router-link>
+      <div class="text-link text-center">
+        <p>
+          <router-link class="regist" to="/regist">
+            註冊 Alphitter
+          </router-link>
+        </p>
+        <p>‧</p>
+        <p>
+          <router-link class="admin-login" to="/admin"> 後台登入 </router-link>
         </p>
       </div>
     </form>
@@ -93,24 +61,22 @@ export default {
   data() {
     return {
       account: "",
-      name: "",
-      email: "",
       password: "",
-      passwordCheck: "",
+      isProcessing: false,
+      isWronging: false,
     };
   },
   methods: {
     handleSubmit() {
       const data = JSON.stringify({
         account: this.account,
-        name: this.name,
-        email: this.email,
         password: this.password,
-        passwordCheck: this.passwordCheck,
       });
 
       // TODO: 向後端驗證使用者登入資訊是否合法
       console.log("data", data);
+      // 成功登入後轉址到餐聽首頁
+      this.$router.push("/main");
     },
   },
 };
@@ -156,6 +122,17 @@ h1 {
   border-color: #50b5ff;
 }
 
+/* 錯誤訊息提示 */
+.wrong-form:focus-within {
+  border-color: #fc5a5a;
+}
+
+.wrong-message {
+  margin-top: 12px;
+  color: #fc5a5a;
+  font-size: 12px;
+}
+
 .form-control {
   height: 26px;
   margin-top: 5px;
@@ -184,15 +161,20 @@ label {
   font-weight: 700;
 }
 
-.cancel {
-  color: #0099ff;
+.text-link {
+  margin-top: 20px;
+  display: flex;
+  justify-content: flex-end;
+  color: #50b5ff;
   font-size: 18px;
   font-weight: 700;
 }
-.cancel-text {
+.regist,
+.admin-login {
   border-bottom: 1px solid;
 }
-.cancel-text:hover {
+.regist:hover,
+.admin-login:hover {
   text-decoration: none;
 }
 </style>
