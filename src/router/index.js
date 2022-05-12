@@ -5,11 +5,20 @@ import Main from '../views/Main.vue'
 
 Vue.use(VueRouter)
 
-const routes = [  
+const routes = [
   {
     path: '/regist',
     name: 'regist',
     component: () => import('../views/Regist.vue')
+  },
+  {
+    path: '/users/:id',
+    name: 'user',
+    component: () => import('../views/UserSelf.vue')
+  },
+    path: '/signin',
+    name: 'signin',
+    component: () => import('../views/Signin.vue')
   },
   {
     path: '/main',
