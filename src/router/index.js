@@ -12,14 +12,14 @@ const routes = [
     component: () => import('../views/Regist.vue')
   },
   {
-    path: '/users/:id',
-    name: 'user',
-    component: () => import('../views/UserSelf.vue')
-  },
-  {
     path: '/signin',
     name: 'signin',
     component: () => import('../views/Signin.vue')
+  },
+  {
+    path: '/setting',
+    name: 'setting',
+    component: () => import('../views/Setting.vue')
   },
   {
     path: '/admin/signin',
@@ -29,7 +29,12 @@ const routes = [
   {
     path: '/main',
     name: 'main',
-    component: Main
+    component: Main,
+  },
+  {
+    path: '/users/:id',
+    name: 'user',
+    component: () => import('../views/UserSelf.vue')
   },
   {
     path: '/replylist',
