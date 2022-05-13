@@ -1,5 +1,6 @@
 <template>
   <div class="tweet">
+    <h1>123</h1>
     <div class="tweet-img">
       <img :src="user.image" alt="" class="user-photo" />
     </div>

@@ -12,15 +12,21 @@ const routes = [
     component: () => import('../views/Regist.vue')
   },
   {
-    path: '/users/:id',
-    name: 'user',
-    component: () => import('../views/UserSelf.vue')
-  },
     path: '/signin',
     name: 'signin',
     component: () => import('../views/Signin.vue')
   },
   {
+    path: '/main',
+    name: 'main',
+    component: Main,
+  },
+  {
+    path: '/users/:id',
+    name: 'user',
+    component: () => import('../views/UserSelf.vue')
+  },
+
     path: '/main',
     name: 'main',
     component: Main
