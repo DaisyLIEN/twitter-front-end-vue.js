@@ -22,9 +22,9 @@ const routes = [
     component: () => import('../views/Setting.vue')
   },
   {
-    path: '/admin/signin',
-    name: 'admin-signin',
-    component: () => import('../views/AdminSignin.vue')
+    path: '/main/:tweet_id',
+    name: 'replylist',
+    component: () => import('../views/ReplyList.vue')
   },
   {
     path: '/main',
@@ -34,17 +34,27 @@ const routes = [
   {
     path: '/users/:id',
     name: 'user',
-    component: () => import('../views/UserSelf.vue')
+    component: () => import('../views/User.vue')
   },
   {
-    path: '/replylist',
-    name: 'replylist',
-    component: () => import('../views/ReplyList.vue')
+    path: '/follow',
+    name: 'follow',
+    component: () => import('../views/Follow.vue')
   },
   {
-    path: '/following',
-    name: 'following',
-    component: () => import('../views/Following.vue')
+    path: '/admin/users',
+    name: 'admin-users',
+    component: () => import('../views/AdminUsers.vue')
+  },
+  {
+    path: '/admin/tweets',
+    name: 'admin-tweets',
+    component: () => import('../views/AdminTweets.vue')
+  },
+  {
+    path: '/admin',
+    name: 'admin',
+    component: () => import('../views/AdminSignin.vue')
   },
   {
     path: '*',

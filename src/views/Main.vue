@@ -1,124 +1,130 @@
 <template>
   <div class="container">
-    <h4 class="title">首頁</h4>
-    <hr class="hr1" />
-    <!-- post -->
-    <div class="post">
-      <div class="posting">
-        <img class="photo" src="https://img.onl/d0RNIH" alt="" />
-        <input
-          type="text"
-          class="new-post"
-          autofocus
-          placeholder="有什麼新鮮事？"
-        />
-      </div>
-      <div class="btn">
-        <button class="btn-submit" type="submit">推文</button>
-      </div>
-      <hr class="hr2" />
-    </div>
+    <Navbar />
 
-    <!-- tweets -->
-    <div class="tweets">
-      <TweetCard v-for="user in users" :key="user.id" :initial-user="user" />
-    </div>
+    <div class="middle-content">
+      <h4 class="title">首頁</h4>
+      <hr class="hr1" />
+      <!-- post -->
+      <div class="post">
+        <div class="posting">
+          <img class="photo" src="https://img.onl/d0RNIH" alt="" />
+          <input
+            type="text"
+            class="new-post"
+            autofocus
+            placeholder="有什麼新鮮事？"
+          />
+        </div>
+        <div class="btn">
+          <button class="btn-submit" type="submit">推文</button>
+        </div>
+        <hr class="hr2" />
+      </div>
 
-    <!-- TweetModal -->
-    <TweetModal />
+      <!-- tweets -->
+      <div class="tweets">
+        <TweetCard v-for="user in users" :key="user.id" :initial-user="user" />
+      </div>
+
+      <!-- TweetModal -->
+      <TweetModal />
+    </div>
   </div>
 </template>
 
 <script>
+import Navbar from "./../components/Navbar";
 import TweetCard from "./../components/TweetCard";
 import TweetModal from "./../components/TweetModal";
 
 const dummyData = {
-  "users": [
+  users: [
     {
-      "id": 1,
-      "name": "Apple",
-      "account": "apple",
-      "image": "https://img.onl/Dwojms",
-      "createdAt": "2022-05-11T02:16:16.000Z",
-      "updatedAt": "2022-05-11T02:16:16.000Z",
-      "content":
+      id: 1,
+      name: "Apple",
+      account: "apple",
+      image: "https://img.onl/Dwojms",
+      createdAt: "2022-05-11T02:16:16.000Z",
+      updatedAt: "2022-05-11T02:16:16.000Z",
+      content:
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec sed lacinia justo. Cras mi ipsum, venenatis vitae pretium quis, interdum non orci. Suspendisse blandit libero sit amet nisl blandit, vitae fermentum leo tincidunt.",
-      "replyNum": 13,
-      "likeNum": 76,
+      replyNum: 13,
+      likeNum: 76,
     },
     {
-      "id": 2,
-      "name": "Jane Cathy",
-      "account": "jamjane1999",
-      "image": "https://img.onl/KW4sJV",
-      "createdAt": "2022-04-25T02:16:16.000Z",
-      "updatedAt": "2022-04-25T02:16:16.000Z",
-      "content":
+      id: 2,
+      name: "Jane Cathy",
+      account: "jamjane1999",
+      image: "https://img.onl/KW4sJV",
+      createdAt: "2022-04-25T02:16:16.000Z",
+      updatedAt: "2022-04-25T02:16:16.000Z",
+      content:
         "Cras blandit libero nibh, nec scelerisque lorem condimentum sit amet. Nam sapien eros, ultricies sit amet arcu non, iaculis venenatis nulla. Integer efficitur varius neque, viverra vestibulum ligula. Duis libero odio, convallis a elit ac, fermentum luctus velit.",
-      "replyNum": 10,
-      "likeNum": 80,
+      replyNum: 10,
+      likeNum: 80,
     },
     {
-      "id": 3,
-      "name": "Cheery",
-      "account": "cheerysweet",
-      "image": "https://img.onl/H5eDF2",
-      "createdAt": "2022-04-19T02:16:16.000Z",
-      "updatedAt": "2022-04-19T02:16:16.000Z",
-      "content":
+      id: 3,
+      name: "Cheery",
+      account: "cheerysweet",
+      image: "https://img.onl/H5eDF2",
+      createdAt: "2022-04-19T02:16:16.000Z",
+      updatedAt: "2022-04-19T02:16:16.000Z",
+      content:
         "Integer odio tellus, viverra eget vestibulum vitae, auctor sed magna. Sed sed gravida diam. Praesent volutpat tincidunt risus a sagittis. Vestibulum quis purus venenatis, sodales justo eu, faucibus tortor.",
-      "replyNum": 17,
-      "likeNum": 55,
+      replyNum: 17,
+      likeNum: 55,
     },
     {
-      "id": 4,
-      "name": "Dana",
-      "account": "danagirl",
-      "image": "https://img.onl/HM4fxm",
-      "createdAt": "2022-04-19T02:16:16.000Z",
-      "updatedAt": "2022-04-19T02:16:16.000Z",
-      "content":
+      id: 4,
+      name: "Dana",
+      account: "danagirl",
+      image: "https://img.onl/HM4fxm",
+      createdAt: "2022-04-19T02:16:16.000Z",
+      updatedAt: "2022-04-19T02:16:16.000Z",
+      content:
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam porttitor, orci imperdiet condimentum sagittis, nisl enim commodo sem, nec ornare augue libero ut purus.",
-      "replyNum": 10,
-      "likeNum": 88,
+      replyNum: 10,
+      likeNum: 88,
     },
     {
-      "id": 5,
-      "name": "Gorden",
-      "account": "gordenball2022",
-      "image": "https://img.onl/25RyTE",
-      "createdAt": "2022-04-19T02:16:16.000Z",
-      "updatedAt": "2022-04-19T02:16:16.000Z",
-      "content":
+      id: 5,
+      name: "Gorden",
+      account: "gordenball2022",
+      image: "https://img.onl/25RyTE",
+      createdAt: "2022-04-19T02:16:16.000Z",
+      updatedAt: "2022-04-19T02:16:16.000Z",
+      content:
         "Nullam eu ante nisi. In convallis non augue ac rutrum. Fusce eu ullamcorper quam. Duis at aliquet tortor.",
-      "replyNum": 13,
-      "likeNum": 76,
+      replyNum: 13,
+      likeNum: 76,
     },
     {
-      "id": 6,
-      "name": "LuLu",
-      "account": "lulupig",
-      "image": "https://img.onl/1XTVZ",
-      "createdAt": "2022-04-19T02:16:16.000Z",
-      "updatedAt": "2022-04-19T02:16:16.000Z",
-      "content":
+      id: 6,
+      name: "LuLu",
+      account: "lulupig",
+      image: "https://img.onl/1XTVZ",
+      createdAt: "2022-04-19T02:16:16.000Z",
+      updatedAt: "2022-04-19T02:16:16.000Z",
+      content:
         "Integer ut pulvinar augue, ac molestie diam. Aliquam sagittis luctus elit, vitae auctor enim euismod nec.",
-      "replyNum": 17,
-      "likeNum": 68,
-    }
-  ]
+      replyNum: 17,
+      likeNum: 68,
+    },
+  ],
 };
 
 export default {
   components: {
+    Navbar,
     TweetCard,
-    TweetModal
+    TweetModal,
   },
   data() {
     return {
       users: [],
-    }
+    };
   },
   created() {
     this.fetchUsers();
@@ -126,23 +132,27 @@ export default {
   methods: {
     fetchUsers() {
       this.users = dummyData.users;
-    }
-  }
+    },
+  },
 };
 </script>
 
 <style scoped>
+.container {
+  display: flex;
+}
+
 h4 {
   margin: 24px 0 24px 24px;
 }
 
-.container {
+.middle-content {
   width: 46%;
   padding: 0px;
-  border: 1px solid #E6ECF0;
-  border-top: 1px solid white; 
+  border: 1px solid #e6ecf0;
+  border-top: 1px solid white;
   border-bottom: 1px solid white;
-  /* border: 1px solid red; */ 
+  /* border: 1px solid red; */
 }
 
 .title {
@@ -176,7 +186,7 @@ h4 {
   font-weight: 700;
   font-size: 18px;
   line-height: 26px;
-  color: #6C757D;
+  color: #6c757d;
 }
 
 .btn {
@@ -196,7 +206,7 @@ h4 {
   font-size: 16px;
   line-height: 24px;
   text-align: center;
-  color: #FFFFFF;
+  color: #ffffff;
   outline: none; /*點擊不會出現黑框*/
 }
 
