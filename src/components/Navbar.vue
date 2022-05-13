@@ -1,10 +1,9 @@
 <template>
   <div class="left-content">
-    <div class="container">
+    <div class="nav-container">
       <div class="logo">
         <img
-          src="https://upload.cc/i1/2022/05/10/LycK2A.png
-"
+          src="https://upload.cc/i1/2022/05/10/LycK2A.png"
           alt="logo-img"
           class="logo-img"
         />
@@ -26,7 +25,7 @@
         </div>
         <div
           @click="settingPage"
-          :class="['nav-item', { 'current-page': currentPage === 'setting' }]"
+          :class="['nav-item', { 'current-page': $route.name === 'setting' }]"
         >
           <span class="nav-item-font icon-setting-img"></span>
           <span class="nav-item-title">設定</span>
@@ -57,6 +56,7 @@ export default {
     };
   },
   methods: {
+    // 測試效果，待main和self頁面完成時刪除
     mainPage() {
       this.currentPage = "main";
     },
@@ -76,7 +76,7 @@ export default {
   height: 100vh;
   border-right: 1px solid #e6ecf0;
 }
-.container {
+.nav-container {
   width: 235px;
   margin-left: 113px;
 }
