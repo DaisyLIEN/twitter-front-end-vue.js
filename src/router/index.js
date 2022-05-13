@@ -16,21 +16,6 @@ const routes = [
     name: 'signin',
     component: () => import('../views/Signin.vue')
   },
-  // {
-  //   path: '/setting',
-  //   name: 'setting',
-  //   component: () => import('../views/Setting.vue')
-  // },
-  // {
-  //   path: '/admin',
-  //   name: 'admin',
-  //   component: () => import('../views/Admin.vue')
-  // },
-  // {
-  //   path: '/adminmain',
-  //   name: 'admin-main',
-  //   component: () => import('../views/AdminMain.vue')    
-  // },  
   {
     path: '/main',
     name: 'main',
@@ -41,26 +26,26 @@ const routes = [
     name: 'user',
     component: () => import('../views/UserSelf.vue')
   },
-  // {
-  //   path: '/userother',
-  //   name: 'user-other',
-  //   component: () => import('../views/UserOther.vue')
-  // },  
-  // {
-  //   path: '/userselffollow',
-  //   name: 'user-self-follow',
-  //   component: () => import('../views/UserSelfFollow.vue')
-  // },
-  // {
-  //   path: '/replylist',
-  //   name: 'replylist',
-  //   component: () => import('../views/ReplyList.vue')
-  // },     
+
+    path: '/main',
+    name: 'main',
+    component: Main
+  },
+  {
+    path: '/replylist',
+    name: 'replylist',
+    component: () => import('../views/ReplyList.vue')
+  },
+  {
+    path: '/following',
+    name: 'following',
+    component: () => import('../views/Following.vue')
+  },
   {
     path: '*',
     name: 'not-found',
     component: NotFound
-  },
+  }
 ]
 
 const router = new VueRouter({

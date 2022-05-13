@@ -23,91 +23,102 @@
     <div class="tweets">
       <TweetCard v-for="user in users" :key="user.id" :initial-user="user" />
     </div>
+
+    <!-- TweetModal -->
+    <TweetModal />
   </div>
 </template>
 
 <script>
 import TweetCard from "./../components/TweetCard";
+import TweetModal from "./../components/TweetModal";
 
 const dummyData = {
-  users: [
+  "users": [
     {
-      id: 1,
-      name: "Apple",
-      account: "apple",
-      createdAt: 3,
-      image: "https://img.onl/Dwojms",
-      content:
+      "id": 1,
+      "name": "Apple",
+      "account": "apple",
+      "image": "https://img.onl/Dwojms",
+      "createdAt": "2022-05-11T02:16:16.000Z",
+      "updatedAt": "2022-05-11T02:16:16.000Z",
+      "content":
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec sed lacinia justo. Cras mi ipsum, venenatis vitae pretium quis, interdum non orci. Suspendisse blandit libero sit amet nisl blandit, vitae fermentum leo tincidunt.",
-      replyNum: 13,
-      likeNum: 76,
+      "replyNum": 13,
+      "likeNum": 76,
     },
     {
-      id: 2,
-      name: "Jane Cathy",
-      account: "jamjane1999",
-      createdAt: 4,
-      image: "https://img.onl/KW4sJV",
-      content:
+      "id": 2,
+      "name": "Jane Cathy",
+      "account": "jamjane1999",
+      "image": "https://img.onl/KW4sJV",
+      "createdAt": "2022-04-25T02:16:16.000Z",
+      "updatedAt": "2022-04-25T02:16:16.000Z",
+      "content":
         "Cras blandit libero nibh, nec scelerisque lorem condimentum sit amet. Nam sapien eros, ultricies sit amet arcu non, iaculis venenatis nulla. Integer efficitur varius neque, viverra vestibulum ligula. Duis libero odio, convallis a elit ac, fermentum luctus velit.",
-      replyNum: 10,
-      likeNum: 80,
+      "replyNum": 10,
+      "likeNum": 80,
     },
     {
-      id: 3,
-      name: "Cheery",
-      account: "cheerysweet",
-      createdAt: 5,
-      image: "https://img.onl/H5eDF2",
-      content:
+      "id": 3,
+      "name": "Cheery",
+      "account": "cheerysweet",
+      "image": "https://img.onl/H5eDF2",
+      "createdAt": "2022-04-19T02:16:16.000Z",
+      "updatedAt": "2022-04-19T02:16:16.000Z",
+      "content":
         "Integer odio tellus, viverra eget vestibulum vitae, auctor sed magna. Sed sed gravida diam. Praesent volutpat tincidunt risus a sagittis. Vestibulum quis purus venenatis, sodales justo eu, faucibus tortor.",
-      replyNum: 17,
-      likeNum: 55,
+      "replyNum": 17,
+      "likeNum": 55,
     },
     {
-      id: 4,
-      name: "Dana",
-      account: "danagirl",
-      createdAt: 6,
-      image: "https://img.onl/HM4fxm",
-      content:
+      "id": 4,
+      "name": "Dana",
+      "account": "danagirl",
+      "image": "https://img.onl/HM4fxm",
+      "createdAt": "2022-04-19T02:16:16.000Z",
+      "updatedAt": "2022-04-19T02:16:16.000Z",
+      "content":
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam porttitor, orci imperdiet condimentum sagittis, nisl enim commodo sem, nec ornare augue libero ut purus.",
-      replyNum: 10,
-      likeNum: 88,
+      "replyNum": 10,
+      "likeNum": 88,
     },
     {
-      id: 5,
-      name: "Gorden",
-      account: "gordenball2022",
-      createdAt: 4,
-      image: "https://img.onl/25RyTE",
-      content:
+      "id": 5,
+      "name": "Gorden",
+      "account": "gordenball2022",
+      "image": "https://img.onl/25RyTE",
+      "createdAt": "2022-04-19T02:16:16.000Z",
+      "updatedAt": "2022-04-19T02:16:16.000Z",
+      "content":
         "Nullam eu ante nisi. In convallis non augue ac rutrum. Fusce eu ullamcorper quam. Duis at aliquet tortor.",
-      replyNum: 13,
-      likeNum: 76,
+      "replyNum": 13,
+      "likeNum": 76,
     },
     {
-      id: 6,
-      name: "LuLu",
-      account: "lulupig",
-      createdAt: 8,
-      image: "https://img.onl/1XTVZ",
-      content:
+      "id": 6,
+      "name": "LuLu",
+      "account": "lulupig",
+      "image": "https://img.onl/1XTVZ",
+      "createdAt": "2022-04-19T02:16:16.000Z",
+      "updatedAt": "2022-04-19T02:16:16.000Z",
+      "content":
         "Integer ut pulvinar augue, ac molestie diam. Aliquam sagittis luctus elit, vitae auctor enim euismod nec.",
-      replyNum: 17,
-      likeNum: 68,
-    },
-  ],
+      "replyNum": 17,
+      "likeNum": 68,
+    }
+  ]
 };
 
 export default {
   components: {
     TweetCard,
+    TweetModal
   },
   data() {
     return {
       users: [],
-    };
+    }
   },
   created() {
     this.fetchUsers();
@@ -115,47 +126,23 @@ export default {
   methods: {
     fetchUsers() {
       this.users = dummyData.users;
-    },
-  },
+    }
+  }
 };
 </script>
 
 <style scoped>
-/* 引入字體 */
-/* @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&display=swap'); */
-
-/* #app {
-  font-family: 'Noto Sans TC', sans-serif;
-} */
-
-/* css reset */
-/* h1 {
-  font-weight: bold;
-  font-size: 68px;
-}
-h2 {
-  font-weight: bold;
-  font-size: 42px;
-}
-h3 {
-  font-weight: medium;
-  font-size: 28px;
-}
 h4 {
-  font-weight: medium;
-  font-size: 24px;
+  margin: 24px 0 24px 24px;
 }
-h5 {
-  font-weight: medium;
-  font-size: 18px;
-}
-p, span {
-  font-weight: 16px;
-} */
 
 .container {
   width: 46%;
-  /* border: 1px solid red; */
+  padding: 0px;
+  border: 1px solid #E6ECF0;
+  border-top: 1px solid white; 
+  border-bottom: 1px solid white;
+  /* border: 1px solid red; */ 
 }
 
 .title {
@@ -172,14 +159,13 @@ p, span {
 } */
 
 .posting {
-  margin-bottom: 14px;
   display: flex;
-  /* flex-wrap: wrap; */
 }
 
 .photo {
   width: 50px;
   height: 50px;
+  margin-left: 25.19px;
 }
 
 .new-post {
@@ -187,11 +173,16 @@ p, span {
   margin-left: 8px;
   border: none;
   outline: medium;
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 26px;
+  color: #6C757D;
 }
 
 .btn {
   display: flex;
   justify-content: flex-end;
+  margin: 14px 25.19px 6px 0;
 }
 
 .btn-submit {
@@ -200,17 +191,23 @@ p, span {
   background-color: #ff6600;
   border: none;
   border-radius: 50px;
-  color: white;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 24px;
+  text-align: center;
+  color: #FFFFFF;
+  outline: none; /*點擊不會出現黑框*/
 }
 
 .hr2 {
   border: 10px solid #e6ecf0;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   margin: 10px 0 16px 0;
+  background-color: #e6ecf0;
 }
 
-.tweets {
-  /* border: 1px solid green; */
-}
+/* .tweets {
+  border: 1px solid green;
+} */
 </style>
