@@ -128,7 +128,32 @@ body {
   line-height: 1;
   /* 字體設定 */
   font-family: "Noto Sans TC", "Montserrat", sans-serif;
-  font-size: 14px;
+  font-size: 16px;
+}
+h1 {
+  font-size: 68px;
+  font-weight: bold;
+  line-height: 78px;
+}
+h2 {
+  font-size: 42px;
+  font-weight: bold;
+  line-height: 52px;
+}
+h3 {
+  font-size: 28px;
+  font-weight: bold;
+  line-height: 26px;
+}
+h4 {
+  font-size: 24px;
+  font-weight: bold;
+  line-height: 26px;
+}
+h5 {
+  font-size: 18px;
+  font-weight: bold;
+  line-height: 26px;
 }
 ol,
 ul {
@@ -148,5 +173,31 @@ q:after {
 table {
   border-collapse: collapse;
   border-spacing: 0;
+}
+
+h1 {
+  font-size: 68px;
+  font-weight: bold;
+  line-height: 78px;
+}
+h2 {
+  font-size: 42px;
+  font-weight: bold;
+  line-height: 52px;
+}
+h3 {
+  font-size: 28px;
+  font-weight: bold;
+  line-height: 26px;
+}
+h4 {
+  font-size: 24px;
+  font-weight: bold;
+  line-height: 26px;
+}
+h5 {
+  font-size: 18px;
+  font-weight: bold;
+  line-height: 26px;
 }
 </style>
