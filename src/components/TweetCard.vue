@@ -1,5 +1,6 @@
 <template>
   <div class="tweet">
+    <h1>123</h1>
     <div class="tweet-img">
       <img :src="user.image" alt="" class="user-photo" />
     </div>
@@ -50,17 +51,18 @@ export default {
   flex-wrap: wrap;
 }
 
-.tweet-img {
+/* .tweet-img {
   margin-right: 8px;
-}
+} */
 
 img {
   width: 50px;
   height: 50px;
+  margin: 0 8px 0 24px;
 }
 
 .tweet-right {
-  width: calc(100% - 60px);
+  width: calc(100% - 106px);
 }
 
 .tweet-content {

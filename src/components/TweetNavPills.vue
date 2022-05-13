@@ -1,18 +1,5 @@
 <template>
-  <div class="wrapper-tweet-nav-pills">
-    <header>
-      <a href="#">
-        <img
-          class="vector-primary"
-          src="https://i.imgur.com/PYbiwrX.png"
-          alt=""
-        />
-      </a>
-      <div class="title">
-        <h5>John Doe</h5>
-        <p>29 推文</p>
-      </div>
-    </header>
+  <div class="wrapper-tweet-nav-pills">    
     <ul>
       <a href="#"><li>推文</li></a>
       <a href="#"><li>回覆</li></a>

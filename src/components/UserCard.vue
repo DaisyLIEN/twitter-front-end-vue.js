@@ -15,9 +15,9 @@
     </header>
     <div class="profile">
       <img class="cover-image" src="https://i.imgur.com/H3ADasp.png" alt="" />
-      <img src="https://i.imgur.com/sFuDF3M.png" alt="" class="avatar" />
+      <img class="avatar" src="https://i.imgur.com/sFuDF3M.png" alt=""  />
       <a href="#">
-        <button class="edit">編輯個人資料</button>
+        <button class="btn-edit">編輯個人資料</button>
       </a>
       <div class="info">
         <div class="names">
@@ -37,45 +37,6 @@
 </template>
 
 <script>
-// const dummyData = {
-//   profile: {
-//     id: 1,
-//     cover: "https://i.imgur.com/H3ADasp.png",
-//     avatar: "",
-//     userName: "user1",
-//     userAccount: "user1",
-//     description: "Hello, I am user1.",
-//     followingsCount: 34,
-//     followersCount: 59,
-//     tweet: [
-//       {
-//         // replyName: "",
-//         // replyAccount: '',
-//         description: "This is my first tweet.",
-//         replyCount: 13,
-//         likeCount: 25,
-//         updatedAt: "2019-06-22T09:00:43.000Z",
-//       },
-//       {
-//         // replyName: "",
-//         // replyAccount: '',
-//         description: "This is my second tweet.",
-//         replyCount: 13,
-//         likeCount: 25,
-//         updatedAt: "2019-06-23T09:00:43.000Z",
-//       },
-//       {
-//         // replyName: "",
-//         // replyAccount: '',
-//         description: "This is my third tweet.",
-//         replyCount: 13,
-//         likeCount: 25,
-//         updatedAt: "2019-06-24T09:00:43.000Z",
-//       },
-//     ],
-//   },
-// };
-
 export default {
   data() {
     return {};
@@ -88,7 +49,6 @@ export default {
   margin-bottom: 31px;
 }
 header {
-  outline: 1px solid red;
   height: 74px;
   width: 100%;
   display: flex;
@@ -106,7 +66,6 @@ header {
   color: #6c757d;
 }
 .profile {
-  outline: 1px solid green;
   position: relative;
 }
 .cover-image {
@@ -123,7 +82,7 @@ header {
   left: 16px;
   top: 124px;
 }
-button.edit {
+.btn-edit {
   position: absolute;
   top: 216px;
   right: 16px;
@@ -149,6 +108,7 @@ button.edit {
 }
 .description,
 .follow-ship a {
+  text-decoration: none;
   color: #171725;
 }
 .description {
