@@ -1,6 +1,6 @@
 <template>
   <div class="popular-container">
-    <h1 class="popular-title">Popular</h1>
+    <h1 class="popular-title">跟隨誰</h1>
     <ul class="popular-list">
       <li
         @click="routerToUser(user.id)"
@@ -137,15 +137,16 @@ export default {
 
 <style scoped>
 .popular-container {
-  width: 350px;
   border-radius: 14px;
   background-color: #f5f8fa;
+  border-top: 1px solid white;
+  /* border: 1px solid red; */
 }
 .popular-title {
-  line-height: 45px;
-  padding-left: 15px;
-  font-size: 18px;
+  margin: 24px 0 24px 24px;
   font-weight: 700;
+  font-size: 24px;
+  line-height: 26px;
 }
 .popular-item {
   position: relative;
@@ -153,7 +154,7 @@ export default {
   align-items: center;
   justify-content: space-between;
   border-top: 1px solid #e6ecf0;
-  padding: 10px 15px;
+  padding: 16px;
 }
 .popular-item:hover {
   cursor: pointer;
@@ -164,6 +165,7 @@ export default {
   width: 50px;
   height: 50px;
   border-radius: 25px;
+  margin-right: 8px;
 }
 
 .popular-info {

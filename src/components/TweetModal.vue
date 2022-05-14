@@ -1,15 +1,5 @@
 <template>
   <div class="tweet-modal">
-    <button
-      type="button"
-      class="btn btn-primary"
-      data-toggle="modal"
-      data-target="#tweetModal"
-    >
-      推文
-    </button>
-
-    <!-- Modal -->
     <div
       class="modal fade"
       id="tweetModal"

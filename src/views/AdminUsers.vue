@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="user-container">
     <div class="left-content">
       <Navbar />
     </div>
@@ -26,7 +26,7 @@ const dummyData = {
       id: 1,
       name: "Apple",
       account: "apple",
-      avatar: "https://i.imgur.com/sFuDF3M.png",
+      avatar: "https://img.onl/d0RNIH",
       coverImage:"https://i.imgur.com/Y20gp8R.png",
       createdAt: "2022-05-11T02:16:16.000Z",
       updatedAt: "2022-05-11T02:16:16.000Z",
@@ -137,37 +137,40 @@ export default {
 </script>
 
 <style scoped>
-.container {
+.user-container {
   display: flex;
+  padding: 0;
+  margin: 0;
 }
 
 .left-content {
-  width: 378px;
-  /* border: 1px solid red; */
+  width: 178px;
+  border: 1px solid red;
 }
 
 .right-content {
-  width: 1076px;
+  /* width: 1176px; */
   /* width: 77%; */
-  padding: 24px 0 0 24px;
-  /* border: 1px solid blue; */
+  margin-left: 24px;
+  border-left: 1px solid #E6ECF0;
 }
 
 header {
   border-bottom: 1px solid #E6ECF0;
-  margin-bottom: 16px;
+  margin-top: 24px;
 }
 
 h4 {
-  margin: 0 0 24px 24px;
   font-weight: 700;
   font-size: 24px;
   line-height: 26px;
   color:#171725;
+  margin: 0 0 24px 24px;
 }
 
 .admin-user-cards {
   display: flex;
   flex-wrap: wrap;
+  margin: 16px 8px 0 0;
 }
 </style>

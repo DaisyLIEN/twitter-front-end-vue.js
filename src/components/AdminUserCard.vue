@@ -40,9 +40,10 @@ export default {
 <style scoped>
 .wrapper-admin-user-card {
   position: relative;
-  width: 245px;
+  width: 249px;
   height: 314px;
   border-radius: 10px;
+  margin: 0 0 16px 16px;
 }
 .cover-image {
   display: block;
@@ -57,6 +58,8 @@ export default {
   position: absolute;
   top: 64px;
   left: 72px;
+  border: 4px solid #ffffff;
+  border-radius: 50px;
 }
 .info {
   margin-top: 32px;
