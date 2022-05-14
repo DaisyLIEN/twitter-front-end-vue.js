@@ -1,6 +1,9 @@
 <template>
-  <div class="container">
-    <Navbar />
+  <div class="main-container">
+    <div class="left-content">
+      <Navbar />
+    </div>
+    
 
     <div class="middle-content">
       <h4 class="title">首頁</h4>
@@ -30,6 +33,10 @@
       <!-- TweetModal -->
       <TweetModal />
     </div>
+
+    <div class="right-content">
+      <PopularList />
+    </div>
   </div>
 </template>
 
@@ -37,6 +44,7 @@
 import Navbar from "./../components/Navbar";
 import TweetCard from "./../components/TweetCard";
 import TweetModal from "./../components/TweetModal";
+import PopularList from "../components/PopularList.vue";
 
 const dummyData = {
   users: [
@@ -120,6 +128,7 @@ export default {
     Navbar,
     TweetCard,
     TweetModal,
+    PopularList
   },
   data() {
     return {
@@ -138,8 +147,11 @@ export default {
 </script>
 
 <style scoped>
-.container {
-  display: flex;
+
+
+.main-container {
+  display: grid;
+  grid-template-columns: ;
 }
 
 h4 {
