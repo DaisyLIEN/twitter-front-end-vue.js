@@ -1,9 +1,9 @@
 <template>
-  <div class="main-container">
+  <div class="container">
+    <!-- Navbar -->
     <div class="left-content">
-      <Navbar />
+      <Navbar ref="navbarRef" />
     </div>
-    
 
     <div class="middle-content">
       <h4 class="title">首頁</h4>
@@ -29,14 +29,14 @@
       <div class="tweets">
         <TweetCard v-for="user in users" :key="user.id" :initial-user="user" />
       </div>
-
-      <!-- TweetModal -->
-      <TweetModal />
     </div>
 
     <div class="right-content">
       <PopularList />
     </div>
+
+    <!-- TweetModal -->
+    <TweetModal ref="tweetModalRef" />
   </div>
 </template>
 
@@ -44,7 +44,7 @@
 import Navbar from "./../components/Navbar";
 import TweetCard from "./../components/TweetCard";
 import TweetModal from "./../components/TweetModal";
-import PopularList from "../components/PopularList.vue";
+import PopularList from "./../components/PopularList";
 
 const dummyData = {
   users: [
@@ -128,7 +128,11 @@ export default {
     Navbar,
     TweetCard,
     TweetModal,
+<<<<<<< HEAD
     PopularList
+=======
+    PopularList,
+>>>>>>> e694d7638dbe37cbeecd514ac130597a9b3b1ee1
   },
   data() {
     return {
@@ -147,24 +151,50 @@ export default {
 </script>
 
 <style scoped>
+<<<<<<< HEAD
 
 
 .main-container {
   display: grid;
   grid-template-columns: ;
+=======
+.container {
+  display: grid;
+  grid-template-columns: 178px 641px 273px;
+  grid-gap: 24px;
+  width: 1140px;
+  padding: 0;
+  /* border: 1px solid black; */
+>>>>>>> e694d7638dbe37cbeecd514ac130597a9b3b1ee1
 }
 
-h4 {
-  margin: 24px 0 24px 24px;
+.left-content {
+  grid-column: 1/2;
+  /* border: 1px solid blue; */
 }
 
 .middle-content {
-  width: 46%;
+  /* width: 46%; */
   padding: 0px;
   border: 1px solid #e6ecf0;
   border-top: 1px solid white;
   border-bottom: 1px solid white;
+  grid-column: 2/3;
   /* border: 1px solid red; */
+}
+
+.right-content {
+  grid-column: 3/4;
+  margin-top: 16px;
+  /* border: 1px solid green; */
+}
+
+h4 {
+  margin: 24px 0 24px 24px;
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 26px;
+  color: #171725;
 }
 
 .title {
@@ -213,7 +243,7 @@ h4 {
   background-color: #ff6600;
   border: none;
   border-radius: 50px;
-  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  /* box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25); */
   font-weight: 400;
   font-size: 16px;
   line-height: 24px;

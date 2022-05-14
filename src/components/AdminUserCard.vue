@@ -1,11 +1,11 @@
 <template>
   <div class="wrapper-admin-user-card">
-    <img class="cover-image" src="https://i.imgur.com/Y20gp8R.png" alt="" />
-    <img class="avatar" src="https://i.imgur.com/sFuDF3M.png" alt="" />
+    <img class="cover-image" :src="user.coverImage" alt="" />
+    <img class="avatar" :src="user.avatar" alt="" />
     <div class="info">
       <div class="names">
-        <p class="user-name">John Doe</p>
-        <p class="user-account">@John Doe</p>
+        <p class="user-name">{{ user.name }}</p>
+        <p class="user-account">@{{ user.account }}</p>
       </div>
       <div class="counts">
         <img class="tweet-count" src="https://i.imgur.com/41M4NLK.png" alt="" />
@@ -14,19 +14,36 @@
         <span>20k</span>
       </div>
       <div class="follow-ship">
-        <span>34 個</span><span>追隨中</span>
-        <span>59 位</span><span>追隨者</span>
+        <span>{{ user.foiiowingNum }}個</span><span>追隨中</span>
+        <span>{{ user.followerNum }}位</span><span>追隨者</span>
       </div>
     </div>
   </div>
 </template>
 
+<script>
+export default {
+  props: {
+    initialUser: {
+      type: Object,
+      required: true,
+    },
+  },
+  data() {
+    return {
+      user: this.initialUser,
+    };
+  },
+};
+</script>
+
 <style scoped>
-.wrapper-admin-user-card {  
+.wrapper-admin-user-card {
   position: relative;
-  width: 245px;
+  width: 249px;
   height: 314px;
   border-radius: 10px;
+  margin: 0 0 16px 16px;
 }
 .cover-image {
   display: block;
@@ -41,9 +58,11 @@
   position: absolute;
   top: 64px;
   left: 72px;
+  border: 4px solid #ffffff;
+  border-radius: 50px;
 }
-.info {  
-  margin-top: 32px;  
+.info {
+  margin-top: 32px;
   height: 118px;
   display: flex;
   flex-flow: column nowrap;
@@ -57,7 +76,7 @@
   color: #171725;
 }
 .user-account {
-  font-size: 14px;  
+  font-size: 14px;
   line-height: 22px;
   color: #6c757d;
 }
