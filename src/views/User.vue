@@ -1,28 +1,27 @@
 <template>
-  <!-- Navbar -->
-
-  <div class="container">
-    <UserCard />
-
-    <TweetNavPills />
-
-    <TweetCard />
-
-    <EditModal />    
-
-    <!-- UserSelfReplyList -->
-    <!-- UserSelfLikeList -->
+  <div class="container-user">
+    <div class="left-content">
+      <Navbar />
+    </div>
+    <div class="middle-content">
+      <UserCard />
+      <TweetNavPills />
+      <TweetCard />
+    </div>
+    <div class="right-content">
+      <PopularList />
+    </div>
+    <!-- <EditModal />       -->
   </div>
-  <!-- PopularList -->
-
-  <!-- UserSelfEditModal -->
 </template>
 
 <script>
+import Navbar from "../components/Navbar.vue";
 import UserCard from "../components/UserCard.vue";
 import TweetNavPills from "../components/TweetNavPills.vue";
 import TweetCard from "../components/TweetCard.vue";
-import EditModal from "../components/EditModal.vue";
+import PopularList from "../components/PopularList.vue";
+// import EditModal from "../components/EditModal.vue";
 
 // const dummyData = {
 //   profile: {
@@ -65,10 +64,12 @@ import EditModal from "../components/EditModal.vue";
 
 export default {
   components: {
+    Navbar,
     UserCard,
     TweetNavPills,
     TweetCard,
-    EditModal    
+    PopularList,
+    // EditModal,
   },
   data() {
     return {};
@@ -77,9 +78,20 @@ export default {
 </script>
 
 <style scoped>
-.container {
+.container-user {
+  grid-template-columns: 130px 639px 273px 130px;
+  grid-column-gap: 24px;
+}
+.left-content {
+  grid-column: 1 / 2;
+}
+.middle-content {
   /* outline: 1px solid blue; */
+  grid-column: 2 / 3;
   width: 639px;
   padding: 0;
+}
+.right-content {
+  grid-column: 3 /4;
 }
 </style>
