@@ -1,6 +1,9 @@
 <template>
   <div class="container">
-    <Navbar />
+    <!-- Navbar -->
+    <div class="left-content">
+      <Navbar />
+    </div>
 
     <div class="middle-content">
       <h4 class="title">首頁</h4>
@@ -133,17 +136,22 @@ export default {
     fetchUsers() {
       this.users = dummyData.users;
     },
-  },
+  }
 };
 </script>
 
 <style scoped>
 .container {
   display: flex;
+  /* margin: 0 130px; */
+ justify-content: center;
 }
 
-h4 {
-  margin: 24px 0 24px 24px;
+.left-content {
+  width: 378px;
+  height: 100vh;
+  border-right: 1px solid #e6ecf0;
+  border: 1px solid blue;
 }
 
 .middle-content {
@@ -152,7 +160,16 @@ h4 {
   border: 1px solid #e6ecf0;
   border-top: 1px solid white;
   border-bottom: 1px solid white;
-  /* border: 1px solid red; */
+  margin-left: 24px;
+  border: 1px solid red;
+}
+
+h4 {
+  margin: 24px 0 24px 24px;
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 26px;
+  color:#171725;
 }
 
 .title {

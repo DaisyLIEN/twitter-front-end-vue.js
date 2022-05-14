@@ -121,7 +121,7 @@ export default {
 }
 
 .btn-submit {
-  width: 210px;
+  width: 210px; 
   height: 38px;
   background-color: #ff6600;
   border: none;
