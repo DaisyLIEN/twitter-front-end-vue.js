@@ -1,14 +1,14 @@
 <!-- 測試component的地方 -->
 <template>
-  <AdminNavbar />
+  <Navbar />
 </template>
 
 <script>
-import AdminNavbar from "../components/AdminNavbar.vue";
+import Navbar from "../components/Navbar.vue";
 
 export default {
   components: {
-    AdminNavbar,
+    Navbar,
   },
 };
 </script>
