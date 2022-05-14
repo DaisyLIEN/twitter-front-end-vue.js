@@ -14,15 +14,15 @@
         <span>20k</span>
       </div>
       <div class="follow-ship">
-        <span>34 個</span><span>追隨中</span>
-        <span>59 位</span><span>追隨者</span>
+        <span>34 個</span><span>追隨中</span> <span>59 位</span
+        ><span>追隨者</span>
       </div>
     </div>
   </div>
 </template>
 
 <style scoped>
-.wrapper-admin-user-card {  
+.wrapper-admin-user-card {
   position: relative;
   width: 245px;
   height: 314px;
@@ -42,8 +42,8 @@
   top: 64px;
   left: 72px;
 }
-.info {  
-  margin-top: 32px;  
+.info {
+  margin-top: 32px;
   height: 118px;
   display: flex;
   flex-flow: column nowrap;
@@ -57,7 +57,7 @@
   color: #171725;
 }
 .user-account {
-  font-size: 14px;  
+  font-size: 14px;
   line-height: 22px;
   color: #6c757d;
 }
