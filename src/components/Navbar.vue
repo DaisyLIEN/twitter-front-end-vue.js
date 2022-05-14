@@ -1,48 +1,46 @@
 <template>
-  <div class="left-content">
-    <div class="nav-container">
-      <div class="logo">
-        <img
-          src="https://upload.cc/i1/2022/05/10/LycK2A.png"
-          alt="logo-img"
-          class="logo-img"
-        />
+  <div class="nav-container">
+    <div class="logo">
+      <img
+        src="https://upload.cc/i1/2022/05/10/LycK2A.png"
+        alt="logo-img"
+        class="logo-img"
+      />
+    </div>
+    <div class="navigation">
+      <div
+        @click.stop.prevent="mainPage"
+        :class="['nav-item', { 'current-page': currentPage === 'main' }]"
+      >
+        <span class="nav-item-font icon-home-img"></span>
+        <span class="nav-item-title">首頁</span>
       </div>
-      <div class="navigation">
-        <div
-          @click.stop.prevent="mainPage"
-          :class="['nav-item', { 'current-page': currentPage === 'main' }]"
-        >
-          <span class="nav-item-font icon-home-img"></span>
-          <span class="nav-item-title">首頁</span>
-        </div>
-        <div
-          @click="selfPage"
-          :class="['nav-item', { 'current-page': currentPage === 'self' }]"
-        >
-          <span class="nav-item-font icon-self-img"></span>
-          <span class="nav-item-title">個人資料</span>
-        </div>
-        <div
-          @click="settingPage"
-          :class="['nav-item', { 'current-page': $route.name === 'setting' }]"
-        >
-          <span class="nav-item-font icon-setting-img"></span>
-          <span class="nav-item-title">設定</span>
-        </div>
-        <div class="nav-item tweet">
-          <button class="btn-submit btn btn-lg btn-primary btn-block">
-            推文
-          </button>
-        </div>
-        <div class="nav-item logo-out">
-          <img
-            src="https://upload.cc/i1/2022/05/12/NqlER9.png"
-            alt="setting-img"
-            class="nav-item-img"
-          />
-          <span class="nav-item-title">登出</span>
-        </div>
+      <div
+        @click="selfPage"
+        :class="['nav-item', { 'current-page': currentPage === 'self' }]"
+      >
+        <span class="nav-item-font icon-self-img"></span>
+        <span class="nav-item-title">個人資料</span>
+      </div>
+      <div
+        @click="settingPage"
+        :class="['nav-item', { 'current-page': $route.name === 'setting' }]"
+      >
+        <span class="nav-item-font icon-setting-img"></span>
+        <span class="nav-item-title">設定</span>
+      </div>
+      <div class="nav-item tweet">
+        <button class="btn-submit btn btn-lg btn-primary btn-block">
+          推文
+        </button>
+      </div>
+      <div class="nav-item logo-out">
+        <img
+          src="https://upload.cc/i1/2022/05/12/NqlER9.png"
+          alt="setting-img"
+          class="nav-item-img"
+        />
+        <span class="nav-item-title">登出</span>
       </div>
     </div>
   </div>
@@ -71,11 +69,11 @@ export default {
 </script>
 
 <style scoped>
-.left-content {
+/* .left-content {
   width: 378px;
   height: 100vh;
   border-right: 1px solid #e6ecf0;
-}
+} */
 .nav-container {
   width: 235px;
   margin-left: 113px;
@@ -127,7 +125,7 @@ export default {
 }
 
 .btn-submit {
-  width: 210px;
+  width: 210px; 
   height: 38px;
   background-color: #ff6600;
   border: none;

@@ -80,10 +80,10 @@ img {
 
 .user-account {
   font-weight: 400;
-  font-size: 16px;
-  line-height: 26px;
+  font-size: 14px;
+  line-height: 22px;
   text-align: left;
-  color: #171725;
+  color: #6C757D;
 }
 
 .tweet-content {
