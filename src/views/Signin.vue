@@ -49,7 +49,7 @@
         </p>
         <p>‧</p>
         <p>
-          <router-link class="admin-login" to="/admin/signin"> 後台登入 </router-link>
+          <router-link class="admin-login" to="/admin"> 後台登入 </router-link>
         </p>
       </div>
     </form>

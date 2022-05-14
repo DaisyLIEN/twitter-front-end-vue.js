@@ -9,38 +9,31 @@
     </div>
     <div class="navigation">
       <router-link
-        to="/main"
-        :class="['nav-item', { 'current-page': currentPage === 'main' }]"
+        to="/admin/tweets"
+        :class="[
+          'nav-item',
+          { 'current-page': currentPage === 'admin-tweets' },
+        ]"
       >
         <span class="nav-item-font icon-home-img"></span>
-        <span class="nav-item-title">首頁</span>
+        <span class="nav-item-title">推文清單</span>
       </router-link>
+
       <router-link
-        to="/users/:id"
-        :class="['nav-item', { 'current-page': currentPage === 'user' }]"
+        to="/admin/users"
+        :class="['nav-item', { 'current-page': currentPage === 'admin-users' }]"
       >
         <span class="nav-item-font icon-self-img"></span>
-        <span class="nav-item-title">個人資料</span>
+        <span class="nav-item-title">使用者列表</span>
       </router-link>
-      <router-link
-        to="/setting"
-        :class="['nav-item', { 'current-page': currentPage === 'setting' }]"
-      >
-        <span class="nav-item-font icon-setting-img"></span>
-        <span class="nav-item-title">設定</span>
-      </router-link>
-      <div class="nav-item tweet">
-        <button class="btn-submit btn btn-lg btn-primary btn-block">
-          推文
-        </button>
-      </div>
+
       <div class="nav-item logo-out">
         <img
           src="https://upload.cc/i1/2022/05/12/NqlER9.png"
           alt="setting-img"
           class="nav-item-img"
         />
-        <span class="nav-item-title">登出</span>
+        <span @click="logout" class="nav-item-title">登出</span>
       </div>
     </div>
   </div>
@@ -67,6 +60,8 @@ export default {
 
 <style scoped>
 .nav-container {
+  position: relative;
+  height: 100vh;
   width: 235px;
 }
 .logo-img {
@@ -86,18 +81,13 @@ export default {
   padding-right: 30px;
   color: #1c1c1c;
 }
+
 .nav-item:hover {
   background: rgb(234, 232, 232);
   cursor: pointer;
   text-decoration: none;
 }
 
-.nav-item:not(:nth-child(4)):hover {
-  background: rgb(234, 232, 232);
-}
-.tweet:hover {
-  opacity: 0.9;
-}
 .nav-item-font {
   position: relative;
   top: 2px;
@@ -117,11 +107,12 @@ export default {
 
 .logo-out {
   position: absolute;
+  left: 0;
   bottom: 0;
 }
 
 .btn-submit {
-  width: 210px; 
+  width: 210px;
   height: 38px;
   background-color: #ff6600;
   border: none;
