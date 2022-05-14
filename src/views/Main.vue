@@ -2,7 +2,7 @@
   <div class="container">
     <!-- Navbar -->
     <div class="left-content">
-      <Navbar />
+      <Navbar ref="navbarRef" />
     </div>
 
     <div class="middle-content">
@@ -29,10 +29,14 @@
       <div class="tweets">
         <TweetCard v-for="user in users" :key="user.id" :initial-user="user" />
       </div>
-
-      <!-- TweetModal -->
-      <TweetModal />
     </div>
+
+    <div class="right-content">
+      <PopularList />
+    </div>
+
+    <!-- TweetModal -->
+    <TweetModal ref="tweetModalRef" />
   </div>
 </template>
 
@@ -40,6 +44,7 @@
 import Navbar from "./../components/Navbar";
 import TweetCard from "./../components/TweetCard";
 import TweetModal from "./../components/TweetModal";
+import PopularList from "./../components/PopularList";
 
 const dummyData = {
   users: [
@@ -123,6 +128,7 @@ export default {
     Navbar,
     TweetCard,
     TweetModal,
+    PopularList,
   },
   data() {
     return {
@@ -136,32 +142,39 @@ export default {
     fetchUsers() {
       this.users = dummyData.users;
     },
-  }
+  },
 };
 </script>
 
 <style scoped>
 .container {
-  display: flex;
-  /* margin: 0 130px; */
- justify-content: center;
+  display: grid;
+  grid-template-columns: 178px 641px 273px;
+  grid-gap: 24px;
+  width: 1140px;
+  padding: 0;
+  /* border: 1px solid black; */
 }
 
 .left-content {
-  width: 378px;
-  height: 100vh;
-  border-right: 1px solid #e6ecf0;
-  border: 1px solid blue;
+  grid-column: 1/2;
+  /* border: 1px solid blue; */
 }
 
 .middle-content {
-  width: 46%;
+  /* width: 46%; */
   padding: 0px;
   border: 1px solid #e6ecf0;
   border-top: 1px solid white;
   border-bottom: 1px solid white;
-  margin-left: 24px;
-  border: 1px solid red;
+  grid-column: 2/3;
+  /* border: 1px solid red; */
+}
+
+.right-content {
+  grid-column: 3/4;
+  margin-top: 16px;
+  /* border: 1px solid green; */
 }
 
 h4 {
@@ -169,7 +182,7 @@ h4 {
   font-weight: 700;
   font-size: 24px;
   line-height: 26px;
-  color:#171725;
+  color: #171725;
 }
 
 .title {
@@ -218,7 +231,7 @@ h4 {
   background-color: #ff6600;
   border: none;
   border-radius: 50px;
-  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  /* box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25); */
   font-weight: 400;
   font-size: 16px;
   line-height: 24px;

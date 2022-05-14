@@ -141,7 +141,11 @@ export default {
 
 <style scoped>
 .container {
-  display: flex;
+  display: grid;
+  grid-template-columns: 178px 938px;
+  grid-gap: 24px;
+  width: 1140px;
+  padding: 0;
 }
 
 .middle-content {
