@@ -45,6 +45,7 @@ import Navbar from "./../components/Navbar";
 import TweetCard from "./../components/TweetCard";
 import TweetModal from "./../components/TweetModal";
 import PopularList from "./../components/PopularList";
+import tweetsAPI from './../apis/tweets'
 
 const dummyData = {
   users: [
@@ -139,9 +140,17 @@ export default {
     this.fetchUsers();
   },
   methods: {
-    fetchUsers() {
+    async fetchUsers() {
+      try {
+        const response = await tweetsAPI.getTweets()
+        const reply = await tweetsAPI.getReplyTweets(14)
+        console.log(response)
+        console.log(reply)
+      } catch (error) {
+        console.log(error)
+      }
       this.users = dummyData.users;
-    },
+    }
   },
 };
 </script>

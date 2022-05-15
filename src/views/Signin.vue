@@ -57,6 +57,8 @@
 </template>
 
 <script>
+import authorizationAPI from './../apis/authorization'
+
 export default {
   data() {
     return {
@@ -67,17 +69,58 @@ export default {
     };
   },
   methods: {
-    handleSubmit() {
-      const data = JSON.stringify({
-        account: this.account,
-        password: this.password,
-      });
+     async handleSubmit () {
+      try {
 
-      // TODO: 向後端驗證使用者登入資訊是否合法
-      console.log("data", data);
-      // 成功登入後轉址到餐聽首頁
-      this.$router.push("/main");
-    },
+        // if (!this.email || !this.password) {
+        //   Toast.fire({
+        //     icon: 'warning',
+        //     title: '請填入 email 和 password'
+        //   })
+        //   return
+        // }
+
+        // this.isProcessing = true
+
+        const response = await authorizationAPI.signIn({
+          account: this.account,
+          password: this.password
+        })
+        console.log('response', response)
+        const { data, statusText } = response
+
+        if (statusText !== 'OK' || data.status !== 'success') {
+          throw new Error(statusText)
+        }
+
+        localStorage.setItem('token', data.data.token)
+      
+        // 將資料傳到Vuex中
+        // this.$store.commit('setCurrentUser', data.user)
+
+        this.$router.push('/main')
+      } catch (error) {
+        this.password = ''
+        console.log(error)
+        // this.isProcessing = false
+
+        // Toast.fire({
+        //   icon: 'warning',
+        //   title: '請確認您輸入了正確的帳號密碼'
+        // })
+      }
+    }
+    // handleSubmit() {
+    //   const data = JSON.stringify({
+    //     account: this.account,
+    //     password: this.password,
+    //   });
+
+    //   // TODO: 向後端驗證使用者登入資訊是否合法
+    //   console.log("data", data);
+    //   // 成功登入後轉址到餐聽首頁
+    //   this.$router.push("/main");
+    // },
   },
 };
 </script>

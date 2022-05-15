@@ -1,7 +1,7 @@
 <template>
   <div class="user-container">
     <div class="left-content">
-      <Navbar />
+      <AdminNavbar />
     </div>
 
     <div class="right-content">
@@ -10,15 +10,20 @@
       </header>
 
       <div class="admin-user-cards">
-        <AdminUserCard v-for="user in users" :key="user.id" :initial-user="user"/>
+        <AdminUserCard
+          v-for="user in users"
+          :key="user.id"
+          :initial-user="user"
+        />
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import Navbar from "./../components/Navbar";
+import AdminNavbar from "./../components/AdminNavbar";
 import AdminUserCard from "./../components/AdminUserCard";
+import adminAPI from "./../apis/admin";
 
 const dummyData = {
   users: [
@@ -27,7 +32,7 @@ const dummyData = {
       name: "Apple",
       account: "apple",
       avatar: "https://img.onl/d0RNIH",
-      coverImage:"https://i.imgur.com/Y20gp8R.png",
+      coverImage: "https://i.imgur.com/Y20gp8R.png",
       createdAt: "2022-05-11T02:16:16.000Z",
       updatedAt: "2022-05-11T02:16:16.000Z",
       content:
@@ -35,14 +40,14 @@ const dummyData = {
       replyNum: 13,
       likeNum: 76,
       foiiowingNum: 34,
-      followerNum: 59
+      followerNum: 59,
     },
     {
       id: 2,
       name: "Jane Cathy",
       account: "jamjane1999",
       avatar: "https://i.imgur.com/sFuDF3M.png",
-      coverImage:"https://i.imgur.com/Y20gp8R.png",
+      coverImage: "https://i.imgur.com/Y20gp8R.png",
       createdAt: "2022-04-25T02:16:16.000Z",
       updatedAt: "2022-04-25T02:16:16.000Z",
       content:
@@ -50,14 +55,14 @@ const dummyData = {
       replyNum: 10,
       likeNum: 80,
       foiiowingNum: 78,
-      followerNum: 69
+      followerNum: 69,
     },
     {
       id: 3,
       name: "Cheery",
       account: "cheerysweet",
       avatar: "https://i.imgur.com/sFuDF3M.png",
-      coverImage:"https://i.imgur.com/Y20gp8R.png",
+      coverImage: "https://i.imgur.com/Y20gp8R.png",
       createdAt: "2022-04-19T02:16:16.000Z",
       updatedAt: "2022-04-19T02:16:16.000Z",
       content:
@@ -65,14 +70,14 @@ const dummyData = {
       replyNum: 17,
       likeNum: 55,
       foiiowingNum: 34,
-      followerNum: 59
+      followerNum: 59,
     },
     {
       id: 4,
       name: "Dana",
       account: "danagirl",
       avatar: "https://i.imgur.com/sFuDF3M.png",
-      coverImage:"https://i.imgur.com/Y20gp8R.png",
+      coverImage: "https://i.imgur.com/Y20gp8R.png",
       createdAt: "2022-04-19T02:16:16.000Z",
       updatedAt: "2022-04-19T02:16:16.000Z",
       content:
@@ -80,14 +85,14 @@ const dummyData = {
       replyNum: 10,
       likeNum: 88,
       foiiowingNum: 34,
-      followerNum: 59
+      followerNum: 59,
     },
     {
       id: 5,
       name: "Gorden",
       account: "gordenball2022",
       avatar: "https://i.imgur.com/sFuDF3M.png",
-      coverImage:"https://i.imgur.com/Y20gp8R.png",
+      coverImage: "https://i.imgur.com/Y20gp8R.png",
       createdAt: "2022-04-19T02:16:16.000Z",
       updatedAt: "2022-04-19T02:16:16.000Z",
       content:
@@ -95,14 +100,14 @@ const dummyData = {
       replyNum: 13,
       likeNum: 76,
       foiiowingNum: 34,
-      followerNum: 59
+      followerNum: 59,
     },
     {
       id: 6,
       name: "LuLu",
       account: "lulupig",
       avatar: "https://i.imgur.com/sFuDF3M.png",
-      coverImage:"https://i.imgur.com/Y20gp8R.png",
+      coverImage: "https://i.imgur.com/Y20gp8R.png",
       createdAt: "2022-04-19T02:16:16.000Z",
       updatedAt: "2022-04-19T02:16:16.000Z",
       content:
@@ -110,15 +115,15 @@ const dummyData = {
       replyNum: 17,
       likeNum: 68,
       foiiowingNum: 34,
-      followerNum: 59
+      followerNum: 59,
     },
   ],
 };
 
 export default {
   components: {
-    Navbar,
-    AdminUserCard
+    AdminNavbar,
+    AdminUserCard,
   },
   data() {
     return {
@@ -129,34 +134,40 @@ export default {
     this.fetchUsers();
   },
   methods: {
-    fetchUsers() {
+    async fetchUsers() {
+      try {
+        const response = await adminAPI.getAdminUsers();
+        console.log(response);
+      } catch (error) {
+        console.log(error);
+      }
       this.users = dummyData.users;
     },
-  }
-}
+  },
+};
 </script>
 
 <style scoped>
 .user-container {
-  display: flex;
-  padding: 0;
-  margin: 0;
+  display: grid;
+  grid-template-columns: 130px 178px 24px 1076px;
+  border: 1px solid green;
 }
 
 .left-content {
   width: 178px;
+  grid-column: 2/3;
   border: 1px solid red;
 }
 
 .right-content {
-  /* width: 1176px; */
-  /* width: 77%; */
-  margin-left: 24px;
-  border-left: 1px solid #E6ECF0;
+  border-left: 1px solid #e6ecf0;
+  grid-column: 4/5;
+  border: 1px solid blue;
 }
 
 header {
-  border-bottom: 1px solid #E6ECF0;
+  border-bottom: 1px solid #e6ecf0;
   margin-top: 24px;
 }
 
@@ -164,7 +175,7 @@ h4 {
   font-weight: 700;
   font-size: 24px;
   line-height: 26px;
-  color:#171725;
+  color: #171725;
   margin: 0 0 24px 24px;
 }
 
