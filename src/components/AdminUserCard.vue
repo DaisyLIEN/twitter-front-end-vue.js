@@ -44,6 +44,8 @@ export default {
   height: 314px;
   border-radius: 10px;
   margin: 0 0 16px 16px;
+  background-color: #F6F7F8;
+  border-radius: 10px;
 }
 .cover-image {
   display: block;

@@ -64,47 +64,48 @@ export default {
     };
   },
   methods: {
-    async handleSubmit() {
+    async handleSubmit () {
       try {
-        if (!this.adminAccount || !this.adminPassword) {
-          Toast.fire({
-            icon: "warning",
-            title: "請填入 email 和 password",
-          });
-          return;
+
+        // if (!this.email || !this.password) {
+        //   Toast.fire({
+        //     icon: 'warning',
+        //     title: '請填入 email 和 password'
+        //   })
+        //   return
+        // }
+
+        // this.isProcessing = true
+
+        const response = await adminAPI.AdminSignin({
+          account: this.adminAccount,
+          password: this.adminPassword
+        })
+        console.log('response', response)
+        const { data, statusText } = response
+
+        if (statusText !== 'OK' || data.status !== 'success') {
+          throw new Error(statusText)
         }
 
-        this.isProcessing = true;
-
-        // 使用 authorizationAPI 的 signIn 方法
-        // 並且帶入使用者填寫的 email 和 password
-        const response = await adminAPI.signIn({
-          adminAccount: this.adminAccount,
-          adminPassword: this.adminPassword,
-        });
-
-        const { data } = response;
+        localStorage.setItem('token', data.data.token)
         console.log(data)
 
-        if (data.status !== "success") {
-          throw new Error(data.message);
-        }
+        // 將資料傳到Vuex中
+        // this.$store.commit('setCurrentUser', data.user)
 
-        // 將 token 存放在 localStorage 內
-        localStorage.setItem("token", data.token);
-
-        // 成功登入後轉址到餐聽首頁
-        this.$router.push("/restaurants");
+        this.$router.push('/admin/tweets')
       } catch (error) {
-        this.password = "";
-        this.isProcessing = false;
+        this.adminPassword = ''
+        console.log(error)
+        // this.isProcessing = false
 
-        Toast.fire({
-          icon: "warning",
-          title: "請確認您輸入了正確的帳號密碼",
-        });
+        // Toast.fire({
+        //   icon: 'warning',
+        //   title: '請確認您輸入了正確的帳號密碼'
+        // })
       }
-    },
+    }
     // handleSubmit() {
     //   const data = JSON.stringify({
     //     adminAccount: this.adminAccount,
