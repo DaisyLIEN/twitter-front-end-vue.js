@@ -183,7 +183,7 @@ export default {
     // UserCard：GET /api/users/:id
     async fetchUserCard() {
       try {
-        const { data } = await tweetsAPI.getUserCard(14);
+        const { data } = await tweetsAPI.getUserCard(2);
         console.log("fetchUserCard", data);
 
         const {

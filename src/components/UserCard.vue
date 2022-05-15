@@ -1,13 +1,13 @@
 <template>
   <div class="wrapper">
     <header>
-      <a href="#">
+      <router-link to="#">
         <img
           class="vector-primary"
           src="https://i.imgur.com/PYbiwrX.png"
           alt=""
         />
-      </a>
+      </router-link>
       <div class="title">
         <h5>{{ profile.name }}</h5>
         <p>29 推文</p>
@@ -56,13 +56,13 @@ export default {
     };
   },
   watch: {
-    initialUserProfile (newValue) {
+    initialUserProfile(newValue) {
       this.profile = {
         ...this.profile,
-        ...newValue
-      }
-    }
-  }
+        ...newValue,
+      };
+    },
+  },
 };
 </script>
 

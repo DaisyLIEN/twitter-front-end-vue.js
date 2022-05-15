@@ -55,7 +55,7 @@
                   id="cancel"
                   type="button"
                   class="form-control-file-cancel"
-                  @change="handleCoverCancel"
+                  @click="handleCoverCancel"
                 />
               </label>
             </div>
@@ -113,7 +113,13 @@
                 <span>20</span><span>/160</span>
               </div>
             </div>
-            <button @submit.stop.prevent="handleSubmit" type="submit" class="btn-submit">儲存</button>
+            <button
+              @submit.stop.prevent="handleSubmit"
+              type="submit"
+              class="btn-submit"
+            >
+              儲存
+            </button>
           </form>
         </div>
       </div>
@@ -137,30 +143,40 @@ export default {
         name: "",
         introduction: "",
         avatar: "",
-        cover: "",        
+        cover: "",
       },
-      isProcessing: false      
+      isProcessing: false,
     };
   },
   method: {
     // EditModal：PUT /api/users/:id
-    handleCoverChange() {},
+    handleCoverChange(e) {
+      const { files } = e.target;
+      console.log("files", files);
+
+      // if (files.length === 0) {
+      //   this.profile.cover = "";
+      // } else {
+      //   const imageURL = window.URL.createObjectURL(files[0]);
+      //   this.profile.cover = imageURL;
+      // }
+    },
     handleAvatarChange() {},
     handleCoverCancel() {},
   },
   watch: {
-    initialUserProfile (newValue) {
+    initialUserProfile(newValue) {
       this.profile = {
         ...this.profile,
-        ...newValue
-      }
-    }
-  }
+        ...newValue,
+      };
+    },
+  },
 };
 </script>
 
 <style scoped>
-.modal-content {  
+.modal-content {
   position: relative;
   width: 634px;
   height: 610px;
