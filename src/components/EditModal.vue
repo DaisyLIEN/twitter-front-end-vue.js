@@ -1,100 +1,123 @@
 <template>
   <div class="wrapper-edit-modal">
-    <header>
-      <a href="#">
-        <img
-          class="vector-cancel"
-          src="https://i.imgur.com/l2QyIgw.png"
-          alt=""
-        />
-      </a>
-      <h5>編輯個人資料</h5>
-    </header>
-    <form action="" method="post">
-      <div class="form-group form-group-image">
-        <img class="image-cover" :src="user.cover" width="634" height="200" />
-        <label class="label-cover" for="cover">
-          <img
-            class="upload-icon upload-icon-cover"
-            src="https://i.imgur.com/Y4hTUuO.png"
-            alt=""
-          />
-          <input
-            id="cover"
-            type="file"
-            name="cover"
-            accept="image/*"
-            class="form-control-file-cover"
-            @change="handleCoverChange"
-          />
-        </label>
+    <div
+      class="modal fade"
+      id="editModal"
+      tabindex="-1"
+      role="dialog"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span class="vector-cancel" aria-hidden="true">×</span>
+            </button>
+            <h5>編輯個人資料</h5>
+          </div>
 
-        <label class="label-cancel" for="cancel">
-          <img
-            class="upload-icon upload-icon-cancel"
-            src="https://i.imgur.com/KG3NVHl.png"
-            alt=""
-          />
-          <input
-            id="cancel"
-            type="button"
-            class="form-control-file-cancel"
-            @change="handleCoverCancel"
-          />
-        </label>
-      </div>
+          <form action="" method="post">
+            <div class="form-group form-group-image">
+              <img
+                class="image-cover"
+                :src="user.cover"
+                width="634"
+                height="200"
+              />
+              <label class="label-cover" for="cover">
+                <img
+                  class="upload-icon upload-icon-cover"
+                  src="https://i.imgur.com/Y4hTUuO.png"
+                  alt=""
+                />
+                <input
+                  id="cover"
+                  type="file"
+                  name="cover"
+                  accept="image/*"
+                  class="form-control-file-cover"
+                  @change="handleCoverChange"
+                />
+              </label>
 
-      <div class="form-group form-group-image form-group-avatar">
-        <img class="image-avatar" :src="user.avatar" width="140" height="140" />
-        <label class="label-avatar" for="avatar">
-          <img
-            class="upload-icon upload-icon-avatar"
-            src="https://i.imgur.com/Y4hTUuO.png"
-            alt=""
-          />
-          <input
-            id="avatar"
-            type="file"
-            name="avatar"
-            accept="image/*"
-            class="form-control-file-avatar"
-            @change="handleAvatarChange"
-          />
-        </label>
-      </div>
+              <label class="label-cancel" for="cancel">
+                <img
+                  class="upload-icon upload-icon-cancel"
+                  src="https://i.imgur.com/KG3NVHl.png"
+                  alt=""
+                />
+                <input
+                  id="cancel"
+                  type="button"
+                  class="form-control-file-cancel"
+                  @change="handleCoverCancel"
+                />
+              </label>
+            </div>
 
-      <div class="form-group form-group-text form-group-name">
-        <label class="text-name" for="name">名稱</label>
-        <input
-          id="name"
-          v-model="user.name"
-          type="text"
-          class="form-control-text form-control-name"
-          name="name"
-          required
-        />
-        <div class="text-count text-count-name">
-          <span>8</span><span>/50</span>
+            <div class="form-group form-group-image form-group-avatar">
+              <img
+                class="image-avatar"
+                :src="user.avatar"
+                width="140"
+                height="140"
+              />
+              <label class="label-avatar" for="avatar">
+                <img
+                  class="upload-icon upload-icon-avatar"
+                  src="https://i.imgur.com/Y4hTUuO.png"
+                  alt=""
+                />
+                <input
+                  id="avatar"
+                  type="file"
+                  name="avatar"
+                  accept="image/*"
+                  class="form-control-file-avatar"
+                  @change="handleAvatarChange"
+                />
+              </label>
+            </div>
+
+            <div class="form-group form-group-text form-group-name">
+              <label class="text-name" for="name">名稱</label>
+              <input
+                id="name"
+                v-model="user.name"
+                type="text"
+                class="form-control-text form-control-name"
+                name="name"
+                required
+              />
+              <div class="text-count text-count-name">
+                <span>8</span><span>/50</span>
+              </div>
+            </div>
+
+            <div class="form-group form-group-text form-group-description">
+              <label class="text-description" for="description">自我介紹</label>
+              <textarea
+                id="description"
+                v-model="user.description"
+                class="form-control-text form-control-description"
+                rows="4"
+                name="description"
+                required
+              />
+              <div class="text-count text-count-description">
+                <span>20</span><span>/160</span>
+              </div>
+            </div>
+            <button type="submit" class="btn-submit">儲存</button>
+          </form>
         </div>
       </div>
-
-      <div class="form-group form-group-text form-group-description">
-        <label class="text-description" for="description">自我介紹</label>
-        <textarea
-          id="description"
-          v-model="user.description"
-          class="form-control-text form-control-description"
-          rows="4"
-          name="description"
-          required
-        />
-        <div class="text-count text-count-description">
-          <span>20</span><span>/160</span>
-        </div>
-      </div>
-
-      <button type="submit" class="btn-submit">儲存</button>
-    </form>
+    </div>
   </div>
 </template>
 
@@ -119,26 +142,31 @@ export default {
 </script>
 
 <style scoped>
-.wrapper-edit-modal {
-  outline: 1px solid blue;
+.modal-content {  
   position: relative;
   width: 634px;
   height: 610px;
   background: #ffffff;
   border-radius: 14px;
 }
+.modal-dialog {
+  margin: 56px auto auto;
+}
 /* header */
-header {
+.modal-header {
   height: 57px;
   width: 100%;
   display: flex;
   flex-flow: row nowrap;
+  justify-content: flex-start;
   align-items: center;
+  padding-left: 20px;
 }
-.vector-cancel {
-  width: 15px;
-  height: 15px;
-  margin: auto 36.5px auto 19.5px;
+button.close {
+  padding: 0;
+  color: #ff6600;
+  opacity: 1;
+  margin: 0 36.5px 0 0;
 }
 .btn-submit {
   position: absolute;
@@ -178,8 +206,10 @@ form {
   top: 181px;
   left: 16px;
 }
-.image-cover {
+.image-cover,
+.image-avatar {
   display: block;
+  /* opacity: 0.5;   */
 }
 .label-cover,
 .label-cancel,

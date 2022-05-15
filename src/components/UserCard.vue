@@ -9,27 +9,33 @@
         />
       </a>
       <div class="title">
-        <h5>John Doe</h5>
+        <h5>{{ profile.userName }}</h5>
         <p>29 推文</p>
       </div>
     </header>
     <div class="profile">
-      <img class="cover-image" src="https://i.imgur.com/H3ADasp.png" alt="" />
-      <img class="avatar" src="https://i.imgur.com/sFuDF3M.png" alt=""  />
-      <a href="#">
-        <button class="btn-edit">編輯個人資料</button>
-      </a>
+      <img class="cover-image" :src="profile.cover" alt="" />
+      <img class="avatar" :src="profile.avatar" alt="" />
+      <div class="user-item-edit">
+        <button class="btn-edit" data-toggle="modal" data-target="#editModal">
+          編輯個人資料
+        </button>
+      </div>
       <div class="info">
         <div class="names">
-          <h5 class="user-name">John Doe</h5>
-          <p class="user-account">@John Doe</p>
+          <h5 class="user-name">{{ profile.userName }}</h5>
+          <p class="user-account">@{{ profile.userAccount }}</p>
         </div>
-        <p class="description">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+        <p class="introduction">
+          {{ profile.introduction }}
         </p>
         <div class="follow-ship">
-          <a class="following" href="#">34個<span>追隨中</span></a>
-          <a class="follower" href="#">59位<span>追隨者</span></a>
+          <a class="following" href="#"
+            >{{ profile.followingsCount }}個<span>追隨中</span></a
+          >
+          <a class="follower" href="#"
+            >{{ profile.followersCount }}位<span>追隨者</span></a
+          >
         </div>
       </div>
     </div>
@@ -38,8 +44,16 @@
 
 <script>
 export default {
+  props: {
+    initialUserProfile: {
+      type: Object,
+      required: true,
+    },
+  },
   data() {
-    return {};
+    return {
+      profile: this.initialUserProfile,
+    };
   },
 };
 </script>
@@ -106,12 +120,12 @@ header {
 .follow-ship > a > span {
   color: #6c757d;
 }
-.description,
+.introduction,
 .follow-ship a {
   text-decoration: none;
   color: #171725;
 }
-.description {
+.introduction {
   margin-top: 6px;
   margin-bottom: 8px;
 }
