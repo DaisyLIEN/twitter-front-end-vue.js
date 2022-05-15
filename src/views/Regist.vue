@@ -10,7 +10,7 @@
     </div>
     <h1>建立你的帳號</h1>
     <form class="w-100" @submit.prevent.stop="handleSubmit">
-      <div class="form-label-group">
+      <div :class="['form-label-group', { 'wrong-form': isWronging.account }]">
         <label for="name">帳號</label>
         <input
           id="account"
@@ -21,8 +21,9 @@
           required
           autofocus
         />
+        <span class="words-length">{{ account.length }}/15</span>
       </div>
-      <div class="form-label-group">
+      <div :class="['form-label-group', { 'wrong-form': isWronging.name }]">
         <label for="name">名稱</label>
         <input
           id="name"
@@ -36,7 +37,7 @@
         />
       </div>
 
-      <div class="form-label-group">
+      <div :class="['form-label-group', { 'wrong-form': isWronging.email }]">
         <label for="email">Email</label>
         <input
           id="email"
@@ -49,7 +50,7 @@
         />
       </div>
 
-      <div class="form-label-group">
+      <div :class="['form-label-group', { 'wrong-form': isWronging.password }]">
         <label for="password">密碼</label>
         <input
           id="password"
@@ -62,7 +63,12 @@
         />
       </div>
 
-      <div class="form-label-group">
+      <div
+        :class="[
+          'form-label-group',
+          { 'wrong-form': isWronging.passwordCheck },
+        ]"
+      >
         <label for="password-check">密碼確認</label>
         <input
           id="password-check"
@@ -97,6 +103,14 @@ export default {
       email: "",
       password: "",
       passwordCheck: "",
+
+      isWronging: {
+        account: false,
+        name: false,
+        email: false,
+        password: false,
+        passwordCheck: false,
+      },
     };
   },
   methods: {
@@ -144,6 +158,7 @@ h1 {
 }
 
 .form-label-group {
+  position: relative;
   height: 54px;
   margin-bottom: 30px;
   background: #f5f8fa;
@@ -174,6 +189,27 @@ label {
   left: 12px;
   font-weight: 500;
   color: #657786;
+}
+
+/* 字數上限提示 */
+.words-length {
+  position: absolute;
+  right: 0;
+  top: 58px;
+  font-size: 12px;
+  font-weight: 500px;
+  color: #696974;
+}
+
+/* 錯誤訊息提示 */
+.wrong-form:focus-within {
+  border-color: #fc5a5a;
+}
+
+.wrong-message {
+  margin-top: 12px;
+  color: #fc5a5a;
+  font-size: 12px;
 }
 
 .btn-primary {
