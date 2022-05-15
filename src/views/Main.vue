@@ -128,11 +128,7 @@ export default {
     Navbar,
     TweetCard,
     TweetModal,
-<<<<<<< HEAD
-    PopularList
-=======
     PopularList,
->>>>>>> e694d7638dbe37cbeecd514ac130597a9b3b1ee1
   },
   data() {
     return {
@@ -151,25 +147,13 @@ export default {
 </script>
 
 <style scoped>
-<<<<<<< HEAD
-
-
-.main-container {
-  display: grid;
-  grid-template-columns: ;
-=======
-.container {
-  display: grid;
-  grid-template-columns: 178px 641px 273px;
-  grid-gap: 24px;
+<<<<<<< HEAD .main-container {
   width: 1140px;
   padding: 0;
   /* border: 1px solid black; */
->>>>>>> e694d7638dbe37cbeecd514ac130597a9b3b1ee1
 }
 
 .left-content {
-  grid-column: 1/2;
   /* border: 1px solid blue; */
 }
 
