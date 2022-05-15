@@ -25,7 +25,7 @@
             <div class="form-group form-group-image">
               <img
                 class="image-cover"
-                :src="user.cover"
+                :src="profile.cover"
                 width="634"
                 height="200"
               />
@@ -63,7 +63,7 @@
             <div class="form-group form-group-image form-group-avatar">
               <img
                 class="image-avatar"
-                :src="user.avatar"
+                :src="profile.avatar"
                 width="140"
                 height="140"
               />
@@ -88,7 +88,7 @@
               <label class="text-name" for="name">名稱</label>
               <input
                 id="name"
-                v-model="user.name"
+                v-model="profile.name"
                 type="text"
                 class="form-control-text form-control-name"
                 name="name"
@@ -103,7 +103,7 @@
               <label class="text-description" for="description">自我介紹</label>
               <textarea
                 id="description"
-                v-model="user.description"
+                v-model="profile.introduction"
                 class="form-control-text form-control-description"
                 rows="4"
                 name="description"
@@ -113,7 +113,7 @@
                 <span>20</span><span>/160</span>
               </div>
             </div>
-            <button type="submit" class="btn-submit">儲存</button>
+            <button @submit.stop.prevent="handleSubmit" type="submit" class="btn-submit">儲存</button>
           </form>
         </div>
       </div>
@@ -123,21 +123,39 @@
 
 <script>
 export default {
+  props: {
+    initialUserProfile: {
+      type: Object,
+      required: true,
+    },
+  },
   data() {
     return {
-      user: {
-        name: "John Doe",
-        cover: "https://i.imgur.com/H3ADasp.png",
-        avatar: "https://i.imgur.com/sFuDF3M.png",
-        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      profile: {
+        id: -1,
+        account: "",
+        name: "",
+        introduction: "",
+        avatar: "",
+        cover: "",        
       },
+      isProcessing: false      
     };
   },
   method: {
+    // EditModal：PUT /api/users/:id
     handleCoverChange() {},
     handleAvatarChange() {},
     handleCoverCancel() {},
   },
+  watch: {
+    initialUserProfile (newValue) {
+      this.profile = {
+        ...this.profile,
+        ...newValue
+      }
+    }
+  }
 };
 </script>
 

@@ -9,7 +9,7 @@
         />
       </a>
       <div class="title">
-        <h5>{{ profile.userName }}</h5>
+        <h5>{{ profile.name }}</h5>
         <p>29 推文</p>
       </div>
     </header>
@@ -23,8 +23,8 @@
       </div>
       <div class="info">
         <div class="names">
-          <h5 class="user-name">{{ profile.userName }}</h5>
-          <p class="user-account">@{{ profile.userAccount }}</p>
+          <h5 class="user-name">{{ profile.name }}</h5>
+          <p class="user-account">@{{ profile.account }}</p>
         </div>
         <p class="introduction">
           {{ profile.introduction }}
@@ -55,6 +55,14 @@ export default {
       profile: this.initialUserProfile,
     };
   },
+  watch: {
+    initialUserProfile (newValue) {
+      this.profile = {
+        ...this.profile,
+        ...newValue
+      }
+    }
+  }
 };
 </script>
 
