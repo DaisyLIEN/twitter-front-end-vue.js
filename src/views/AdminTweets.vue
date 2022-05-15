@@ -2,7 +2,7 @@
   <div class="container">
     <!-- Navbar -->
     <div class="left-content">
-      <Navbar />
+      <AdminNavbar />
     </div>
 
     <!-- middle-content -->
@@ -40,7 +40,8 @@
 </template>
 
 <script>
-import Navbar from "./../components/Navbar";
+import AdminNavbar from "./../components/AdminNavbar";
+import adminAPI from './../apis/admin'
 
 const dummyData = {
   users: [
@@ -121,7 +122,7 @@ const dummyData = {
 
 export default {
   components: {
-    Navbar
+    AdminNavbar,
   },
   data() {
     return {
@@ -132,10 +133,16 @@ export default {
     this.fetchUsers();
   },
   methods: {
-    fetchUsers() {
+    async fetchUsers() {
+      try {
+        const response = await adminAPI.getAdminTweets()
+        console.log(response)
+      } catch (error) {
+        console.log(error)
+      }
       this.users = dummyData.users;
     },
-  }
+  },
 };
 </script>
 
@@ -144,19 +151,24 @@ export default {
   display: grid;
   grid-template-columns: 178px 938px;
   grid-gap: 24px;
-  width: 1140px;
   padding: 0;
+  /* border: 1px solid green; */
+}
+
+.left-content {
+  grid-column: 1/2;
+  /* border: 1px solid red; */
 }
 
 .middle-content {
-  width: 67%;
-  margin: 0 130px 0 24px;
-  border-right: 1px solid #E6ECF0;
-  border-left: 1px solid #E6ECF0;
+  border-right: 1px solid #e6ecf0;
+  border-left: 1px solid #e6ecf0;
+  grid-column: 2/3;
+  /* border: 1px solid blue; */
 }
 
 header {
-  border-bottom: 1px solid #E6ECF0;
+  border-bottom: 1px solid #e6ecf0;
 }
 
 h4 {
@@ -164,12 +176,12 @@ h4 {
   font-weight: 700;
   font-size: 24px;
   line-height: 26px;
-  color:#171725;
+  color: #171725;
 }
 
 .tweet {
   display: flex;
-  border-bottom: 1px solid #E6ECF0;
+  border-bottom: 1px solid #e6ecf0;
   margin: 16px 0;
 }
 
@@ -181,6 +193,7 @@ h4 {
 
 .tweet-right {
   margin-left: 8px;
+  width: 855px;
 }
 
 .tweet-right-top {
@@ -201,7 +214,7 @@ h4 {
   font-size: 14px;
   line-height: 22px;
   text-align: left;
-  color: #6C757D;
+  color: #6c757d;
 }
 
 .fa-xmark {
