@@ -57,7 +57,8 @@
 </template>
 
 <script>
-import authorizationAPI from './../apis/authorization'
+import authorizationAPI from "./../apis/authorization";
+import { Toast } from "../utils/helpers";
 
 export default {
   data() {
@@ -69,58 +70,46 @@ export default {
     };
   },
   methods: {
-     async handleSubmit () {
+    async handleSubmit() {
       try {
+        if (!this.account || !this.password) {
+          Toast.fire({
+            icon: "warning",
+            title: "請填入 account 和 password",
+          });
+          return;
+        }
 
-        // if (!this.email || !this.password) {
-        //   Toast.fire({
-        //     icon: 'warning',
-        //     title: '請填入 email 和 password'
-        //   })
-        //   return
-        // }
-
-        // this.isProcessing = true
+        this.isProcessing = true;
 
         const response = await authorizationAPI.signIn({
           account: this.account,
-          password: this.password
-        })
-        console.log('response', response)
-        const { data, statusText } = response
+          password: this.password,
+        });
+        console.log("response", response);
+        const { data, statusText } = response;
 
-        if (statusText !== 'OK' || data.status !== 'success') {
-          throw new Error(statusText)
+        if (statusText !== "OK" || data.status !== "success") {
+          throw new Error(statusText);
         }
 
-        localStorage.setItem('token', data.data.token)
-      
+        localStorage.setItem("token", data.data.token);
+
         // 將資料傳到Vuex中
         // this.$store.commit('setCurrentUser', data.user)
 
-        this.$router.push('/main')
+        this.$router.push("/main");
       } catch (error) {
-        this.password = ''
-        console.log(error)
-        // this.isProcessing = false
+        this.password = "";
+        console.log(error);
+        this.isProcessing = false;
 
-        // Toast.fire({
-        //   icon: 'warning',
-        //   title: '請確認您輸入了正確的帳號密碼'
-        // })
+        Toast.fire({
+          icon: "error",
+          title: "帳號不存在或密碼錯誤，請重新輸入",
+        });
       }
-    }
-    // handleSubmit() {
-    //   const data = JSON.stringify({
-    //     account: this.account,
-    //     password: this.password,
-    //   });
-
-    //   // TODO: 向後端驗證使用者登入資訊是否合法
-    //   console.log("data", data);
-    //   // 成功登入後轉址到餐聽首頁
-    //   this.$router.push("/main");
-    // },
+    },
   },
 };
 </script>

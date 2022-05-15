@@ -95,6 +95,9 @@
 </template>
 
 <script>
+import { Toast } from "../utils/helpers";
+import authorizationAPI from "../apis/authorization";
+
 export default {
   data() {
     return {
@@ -114,17 +117,33 @@ export default {
     };
   },
   methods: {
-    handleSubmit() {
-      const data = JSON.stringify({
-        account: this.account,
-        name: this.name,
-        email: this.email,
-        password: this.password,
-        passwordCheck: this.passwordCheck,
-      });
+    async handleSubmit() {
+      if (this.password !== this.passwordCheck) {
+        this.password = "";
+        this.passwordCheck = "";
+        Toast.fire({
+          icon: "warning",
+          title: "密碼與密碼確認不符，請重新輸入",
+        });
+        return;
+      }
+      try {
+        const response = await authorizationAPI.regist({
+          account: this.account,
+          name: this.name,
+          email: this.email,
+          password: this.password,
+          passwordCheck: this.passwordCheck,
+        });
 
-      // TODO: 向後端驗證使用者登入資訊是否合法
-      console.log("data", data);
+        console.log(response);
+      } catch (error) {
+        console.log("error", error);
+        Toast.fire({
+          icon: "error",
+          title: "無法註冊，請稍後再試",
+        });
+      }
     },
   },
 };

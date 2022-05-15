@@ -30,8 +30,11 @@
         <span class="nav-item-title">設定</span>
       </router-link>
       <div class="nav-item-tweet">
-        <button class="btn-submit btn btn-lg btn-primary btn-block" data-toggle="modal"
-      data-target="#tweetModal">
+        <button
+          class="btn-submit btn btn-lg btn-primary btn-block"
+          data-toggle="modal"
+          data-target="#tweetModal"
+        >
           推文
         </button>
       </div>
@@ -60,8 +63,9 @@ export default {
   methods: {
     logout() {
       // 待串接API後取消token
+      localStorage.removeItem("token");
       this.$router.push("/signin");
-    }
+    },
   },
 };
 </script>
@@ -118,7 +122,7 @@ export default {
 }
 
 .btn-submit {
-  width: 178px; 
+  width: 178px;
   height: 46px;
   background-color: #ff6600;
   border: none;

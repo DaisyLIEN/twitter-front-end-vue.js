@@ -7,6 +7,11 @@ Vue.use(VueRouter)
 
 const routes = [
   {
+    path: '/',
+    name: 'root',
+    redirect: '/signin'
+  },
+  {
     path: '/regist',
     name: 'regist',
     component: () => import('../views/Regist.vue')
@@ -71,5 +76,20 @@ const routes = [
 const router = new VueRouter({
   routes
 })
+
+//驗證是否有取得token，否則無法進入其他頁面
+router.beforeEach((to, from, next) => {
+  const token = localStorage.getItem('token')
+  // 登入頁（首頁）不用驗證
+  if (to.fullPath === '/signin' || to.fullPath === '/admin' || to.fullPath === '/regist') {
+    next()
+    return
+  }
+  if (!token) {
+    next('/signin')
+  }
+  next()
+})
+
 
 export default router
