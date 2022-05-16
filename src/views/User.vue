@@ -5,7 +5,7 @@
     </div>
     <div class="middle-content">
       <UserCard :initial-user-profile="profile" />
-      <!-- <TweetNavPills /> -->
+      <!-- TweetNavPills -->
       <div class="wrapper-tweet-nav-pills">
         <ul>
           <li @click.stop.prevent="switchNavPill('tweets')">推文</li>
@@ -302,8 +302,7 @@ li {
   cursor: pointer;
 }
 li:hover,
-li:focus,
-li:checked {
+li:focus {
   color: #ff6600;
   border-bottom: 2px solid #ff6600;
 }

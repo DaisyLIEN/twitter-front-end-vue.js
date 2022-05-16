@@ -31,5 +31,15 @@ export default {
     return apiHelper.put(`/users/${userId}`, formData, {
       headers: { Authorization: `Bearer ${getToken()}` }
     })
-  }
+  },
+  getFollowersTweets(userId) {
+    return apiHelper.get(`/users/${userId}/followers`, {
+      headers: { Authorization: `Bearer ${getToken()}` }
+    })
+  },
+  getFollowingsTweets(userId) {
+    return apiHelper.get(`/users/${userId}/followings`, {
+      headers: { Authorization: `Bearer ${getToken()}` }
+    })
+  },  
 }

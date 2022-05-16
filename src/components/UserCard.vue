@@ -1,13 +1,12 @@
 <template>
   <div class="wrapper">
     <header>
-      <router-link to="#">
-        <img
-          class="vector-primary"
-          src="https://i.imgur.com/PYbiwrX.png"
-          alt=""
-        />
-      </router-link>
+      <img
+        @click="$router.back()"
+        class="vector-primary"
+        src="https://i.imgur.com/PYbiwrX.png"
+        alt=""
+      />
       <div class="title">
         <h5>{{ profile.name }}</h5>
         <p>{{ profile.totalTweetCount }} 推文</p>
@@ -30,11 +29,11 @@
           {{ profile.introduction }}
         </p>
         <div class="follow-ship">
-          <a class="following" href="#"
-            >{{ profile.followingsCount }}個<span>追隨中</span></a
+          <router-link class="following" :to="{ name: 'follow' }"
+            >{{ profile.followingsCount }}個<span>追隨中</span></router-link
           >
-          <a class="follower" href="#"
-            >{{ profile.followersCount }}位<span>追隨者</span></a
+          <router-link class="following" :to="{ name: 'follow' }"
+            >{{ profile.followersCount }}位<span>追隨者</span></router-link
           >
         </div>
       </div>
@@ -81,6 +80,7 @@ header {
   width: 17px;
   height: 14px;
   margin: auto 28px auto 19px;
+  cursor: pointer;
 }
 .title p {
   font-size: 13px;

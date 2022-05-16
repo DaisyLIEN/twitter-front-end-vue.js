@@ -92,10 +92,20 @@
                 type="text"
                 class="form-control-text form-control-name"
                 name="name"
+                maxlength="51"
                 required
               />
-              <div class="text-count text-count-name">
-                <span>8</span><span>/50</span>
+              <div
+                class="text-hint text-hint-name"
+                :class="{ error: textNameLength === 51 }"
+              >
+                <div v-show="textNameLength === 51" class="text-limit-error">
+                  字數超出上限！
+                </div>
+                <div class="text-count text-count-name">
+                  <span>{{ textNameLength }}</span
+                  ><span>/50</span>
+                </div>
               </div>
             </div>
 
@@ -109,10 +119,23 @@
                 class="form-control-text form-control-introduction"
                 rows="4"
                 name="introduction"
+                maxlength="161"
                 required
               />
-              <div class="text-count text-count-introduction">
-                <span>20</span><span>/160</span>
+              <div
+                class="text-hint text-hint-introduction"
+                :class="{ error: textIntroductionLength === 161 }"
+              >
+                <div
+                  v-show="textIntroductionLength === 161"
+                  class="text-limit-error"
+                >
+                  字數超出上限！
+                </div>
+                <div class="text-count text-count-introduction">
+                  <span>{{ textIntroductionLength }}</span
+                  ><span>/160</span>
+                </div>
               </div>
             </div>
             <button
@@ -146,10 +169,8 @@ export default {
         introduction: "",
         avatar: "",
         cover: "",
-        // followersCount: 0,
-        // followingsCount: 0,
       },
-      isProcessing: false,
+      // isProcessing: false,
     };
   },
   methods: {
@@ -165,6 +186,12 @@ export default {
     },
     handleCoverCancel() {},
     handleSubmit(e) {
+      if (
+        this.profile.name.length > 50 ||
+        this.profile.introduction.length > 160
+      )
+        return;
+
       const form = e.target;
       const formData = new FormData(form);
 
@@ -172,10 +199,18 @@ export default {
       //   console.log(name + ': ' + value)
       // }
       console.log("editmodalsend");
-      
+
       this.$emit("after-submit", formData);
 
-      this.isProcessing = true;
+      // this.isProcessing = true;
+    },
+  },
+  computed: {
+    textNameLength() {
+      return this.profile.name.length;
+    },
+    textIntroductionLength() {
+      return this.profile.introduction.length;
     },
   },
   watch: {
@@ -326,7 +361,7 @@ form {
   background: #f5f8fa;
   font-weight: 400;
   font-size: 16px;
-  line-height: 25px;
+  line-height: 26px;
   border: 0 none;
 }
 .form-control-text:focus {
@@ -334,20 +369,28 @@ form {
 }
 .form-control-introduction {
   resize: none;
+  flex-basis: 121px;
   flex-shrink: 0;
 }
-.text-count {
+.text-hint {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
   font-weight: 500;
   font-size: 12px;
   line-height: 20px;
+  margin-left: -18px;
+  padding-top: 4px;
+}
+.error {
+  border-top: 2px solid #fc5a5a;
+  justify-content: space-between;
+}
+.text-limit-error {
+  color: #fc5a5a;
+}
+.text-count {
   color: #696974;
-  text-align: right;
-}
-.text-count-name {
-  margin-top: 8px;
-}
-.text-count-introduction {
-  margin-top: 24px;
 }
 .text-name,
 .text-introduction {
@@ -355,5 +398,6 @@ form {
   font-weight: 400;
   font-size: 14px;
   line-height: 22px;
+  margin-top: 2px;
 }
 </style>
