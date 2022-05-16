@@ -1,9 +1,9 @@
 <template>
-  <div class="wrapper-tweet-nav-pills">    
+  <div class="wrapper-tweet-nav-pills">
     <ul>
       <a href="#"><li>推文</li></a>
       <a href="#"><li>回覆</li></a>
-      <a href="#"><li>喜歡的內容</li></a>      
+      <a href="#"><li>喜歡的內容</li></a>
     </ul>
   </div>
 </template>
@@ -12,9 +12,9 @@
 .wrapper-tweet-nav-pills {
   height: 52px;
 }
-ul {  
+ul {
   height: 100%;
-  display: flex;  
+  display: flex;
   border-bottom: 1px solid #e6ecf0;
 }
 a {
@@ -23,14 +23,14 @@ a {
   color: #657786;
   width: 130px;
 }
-li {  
+li {
   height: 52px;
   text-align: center;
   padding: 15px;
-  line-height: 22px;  
+  line-height: 22px;
   color: #657786;
   font-weight: 700;
-  font-size: 15px;  
+  font-size: 15px;
 }
 li:hover,
 li:focus,
@@ -41,7 +41,7 @@ li:focus::after {
 }
 li::after {
   content: "";
-  border-bottom: 2px solid #ff6600;  
+  border-bottom: 2px solid #ff6600;
   position: absolute;
   right: 0;
   left: 0;

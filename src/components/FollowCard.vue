@@ -1,7 +1,9 @@
 <template>
   <div class="tweet">
     <div class="tweet-img">
+      <router-link :to="{ name: 'user', params: { id: user.id } }">
       <img :src="user.image" alt="" class="user-photo" />
+      </router-link>
     </div>
     <div class="tweet-right">
       <div class="tweet-right-top">
@@ -61,6 +63,8 @@ export default {
         isFollow: false,
       };
     },
+    // 追隨：POST /followships?id=2
+    // 取消追隨：DETELE /followships/:followingId
   },
 };
 </script>
