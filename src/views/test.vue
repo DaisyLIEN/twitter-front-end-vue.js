@@ -1,19 +1,16 @@
 <!-- 測試component的地方 -->
 <template>
   <div>
-    <Navbar />
-    <PopularList />
+    <ReplyModal />
   </div>
 </template>
 
 <script>
-import Navbar from "../components/Navbar.vue";
-import PopularList from "../components/PopularList.vue";
+import ReplyModal from "../components/ReplyModal.vue";
 
 export default {
   components: {
-    Navbar,
-    PopularList,
+    ReplyModal
   },
 };
 </script>

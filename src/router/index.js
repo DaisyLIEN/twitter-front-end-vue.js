@@ -77,7 +77,7 @@ const router = new VueRouter({
   routes
 })
 
-//驗證是否有取得token，否則無法進入其他頁面
+// 驗證是否有取得token，否則無法進入其他頁面
 // router.beforeEach((to, from, next) => {
 //   const token = localStorage.getItem('token')
 //   // 登入頁（首頁）不用驗證
