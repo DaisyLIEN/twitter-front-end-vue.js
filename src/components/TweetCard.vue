@@ -3,7 +3,7 @@
     <div class="tweet">
       <div class="tweet-img">
         <router-link :to="{ name: 'user', params: { id: user.id } }">
-          <img :src="user.image" alt="" class="user-photo" />
+          <img :src="user.avatar" alt="" class="user-photo" />
         </router-link>
       </div>
       <div class="tweet-right">
@@ -14,16 +14,16 @@
           >
         </div>
         <div class="tweet-content">
-          {{ user.content }}
+          {{ user.description }}
         </div>
         <div class="tweet-actions">
           <div class="tweet-action">
             <font-awesome-icon icon="fa-regular fa-comment" />
-            <p class="reply-number">{{ user.replyNum }}</p>
+            <p class="reply-number">{{ user.replyCount }}</p>
           </div>
           <div class="tweet-action">
             <font-awesome-icon icon="fa-regular fa-heart" />
-            <p class="like-number">{{ user.likeNum }}</p>
+            <p class="like-number">{{ user.likeCount }}</p>
           </div>
         </div>
       </div>

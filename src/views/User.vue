@@ -8,18 +8,35 @@
       <!-- TweetNavPills -->
       <div class="wrapper-tweet-nav-pills">
         <ul>
-          <li @click.stop.prevent="switchNavPill('tweets')">推文</li>
-          <li @click.stop.prevent="switchNavPill('repliedTweets')">回覆</li>
-          <li @click.stop.prevent="switchNavPill('likes')">喜歡的內容</li>
+          <li
+            :class="[{ 'current-page': currentPill === 'tweets' }]"
+            @click.stop.prevent="switchNavPill('tweets')"
+          >
+            推文
+          </li>
+          <li
+            :class="[{ 'current-page': currentPill === 'repliedTweets' }]"
+            @click.stop.prevent="switchNavPill('repliedTweets')"
+          >
+            回覆
+          </li>
+          <li
+            :class="[{ 'current-page': currentPill === 'likes' }]"
+            @click.stop.prevent="switchNavPill('likes')"
+          >
+            喜歡的內容
+          </li>
         </ul>
       </div>
 
+      <div class="tweet-cards">
       <TweetCard
         v-for="user in UsersTweets"
         :key="user.id"
         :initial-user="user"
         v-show="currentPill === 'tweets'"
       />
+      </div>
 
       <ReplyCard v-show="currentPill === 'repliedTweets'" />
 
@@ -301,8 +318,11 @@ li {
   font-size: 15px;
   cursor: pointer;
 }
-li:hover,
-li:focus {
+li:hover {
+  color: #ff6600;
+  border-bottom: 2px solid #ff6600;
+}
+.current-page {
   color: #ff6600;
   border-bottom: 2px solid #ff6600;
 }
