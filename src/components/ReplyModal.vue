@@ -79,9 +79,6 @@
 </template>
 
 <script>
-import { v4 as uuidv4 } from "uuid";
-import moment from "moment";
-
 export default {
   name: "Replication",
   props: {
@@ -98,8 +95,6 @@ export default {
   methods: {
     handleSubmit() {
       this.$emit("after-reply", {
-        replyId: uuidv4(),
-        createTime: moment(),
         tweetId: this.tweetId,
         replyContent: this.replyContent,
       });
