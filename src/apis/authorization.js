@@ -9,14 +9,14 @@ export default {
       password
     })
   },
-  regist({ account, name, email, password, passwordCheck }) {
+  regist({ account, name, email, password, checkPassword }) {
     //這裡return的會是一個Promise
     return apiHelper.post('/users', {
       account,
       name,
       email,
       password,
-      passwordCheck
+      checkPassword
     })
   },
   AdminSignin({ account, password }) {

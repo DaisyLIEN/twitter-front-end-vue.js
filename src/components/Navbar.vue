@@ -44,7 +44,7 @@
           alt="setting-img"
           class="nav-item-img"
         />
-        <span class="nav-item-title">登出</span>
+        <span @click="logout()" class="nav-item-title">登出</span>
       </div>
     </div>
   </div>

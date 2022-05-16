@@ -66,14 +66,14 @@
       <div
         :class="[
           'form-label-group',
-          { 'wrong-form': isWronging.passwordCheck },
+          { 'wrong-form': isWronging.checkPassword },
         ]"
       >
         <label for="password-check">密碼確認</label>
         <input
           id="password-check"
-          v-model="passwordCheck"
-          name="passwordCheck"
+          v-model="checkPassword"
+          name="checkPassword"
           type="password"
           class="form-control"
           autocomplete="new-password"
@@ -105,22 +105,22 @@ export default {
       name: "",
       email: "",
       password: "",
-      passwordCheck: "",
+      checkPassword: "",
 
       isWronging: {
         account: false,
         name: false,
         email: false,
         password: false,
-        passwordCheck: false,
+        checkPassword: false,
       },
     };
   },
   methods: {
     async handleSubmit() {
-      if (this.password !== this.passwordCheck) {
+      if (this.password !== this.checkPassword) {
         this.password = "";
-        this.passwordCheck = "";
+        this.checkPassword = "";
         Toast.fire({
           icon: "warning",
           title: "密碼與密碼確認不符，請重新輸入",
@@ -133,7 +133,7 @@ export default {
           name: this.name,
           email: this.email,
           password: this.password,
-          passwordCheck: this.passwordCheck,
+          checkPassword: this.checkPassword,
         });
 
         console.log(response);
