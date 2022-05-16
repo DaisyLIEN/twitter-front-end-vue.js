@@ -118,17 +118,13 @@ export default {
 </script>
 
 <style scoped>
-.container {
-  display: grid;
-  grid-template-columns: 178px 641px 273px;
-  grid-gap: 24px;
+.main-container {
   width: 1140px;
   padding: 0;
   /* border: 1px solid black; */
 }
 
 .left-content {
-  grid-column: 1/2;
   /* border: 1px solid blue; */
 }
 

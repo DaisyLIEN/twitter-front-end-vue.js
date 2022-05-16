@@ -1,14 +1,16 @@
 <!-- 測試component的地方 -->
 <template>
-  <Navbar />
+  <div>
+    <ReplyModal />
+  </div>
 </template>
 
 <script>
-import Navbar from "../components/Navbar.vue";
+import ReplyModal from "../components/ReplyModal.vue";
 
 export default {
   components: {
-    Navbar,
+    ReplyModal
   },
 };
 </script>

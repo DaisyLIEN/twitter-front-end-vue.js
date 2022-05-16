@@ -51,7 +51,8 @@
 </template>
 
 <script>
-import adminAPI from './../apis/admin'
+import authorization from "../apis/authorization";
+import { Toast } from "../utils/helpers";
 
 export default {
   data() {
@@ -66,17 +67,17 @@ export default {
     async handleSubmit () {
       try {
 
-        // if (!this.email || !this.password) {
-        //   Toast.fire({
-        //     icon: 'warning',
-        //     title: '請填入 email 和 password'
-        //   })
-        //   return
-        // }
+        if (!this.adminAccount || !this.adminPassword) {
+          Toast.fire({
+            icon: 'warning',
+            title: '請填入帳號和密碼'
+          })
+          return
+        }
 
-        // this.isProcessing = true
+        this.isProcessing = true
 
-        const response = await adminAPI.AdminSignin({
+        const response = await authorization.AdminSignin({
           account: this.adminAccount,
           password: this.adminPassword
         })
@@ -97,19 +98,14 @@ export default {
       } catch (error) {
         this.adminPassword = ''
         console.log(error)
-        // this.isProcessing = false
+        this.isProcessing = false
 
-        // Toast.fire({
-        //   icon: 'warning',
-        //   title: '請確認您輸入了正確的帳號密碼'
-        // })
+        Toast.fire({
+          icon: 'warning',
+          title: '請確認您輸入了正確的帳號密碼'
+        })
       }
     }
-    // handleSubmit() {
-    //   const data = JSON.stringify({
-    //     adminAccount: this.adminAccount,
-    //     adminPassword: this.adminPassword,
-    //   });
 
     //   // TODO: 向後端驗證使用者登入資訊是否合法
     //   console.log("data", data);

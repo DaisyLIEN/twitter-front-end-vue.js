@@ -1,31 +1,35 @@
 <template>
-  <div class="tweet">
-    <div class="tweet-img">
-      <img :src="user.avatar" alt="" class="user-photo" />
-    </div>
-    <div class="tweet-right">
-      <div class="user">
-        <span class="user-name">{{ user.name }}</span>
-        <span class="user-account"
-          >@{{ user.account }} ‧ {{ user.createdAt | fromNow }}</span
-        >
+  <router-link :to="{ name: 'replylist', params: { tweet_id: user.id } }">
+    <div class="tweet">
+      <div class="tweet-img">
+        <router-link :to="{ name: 'user', params: { id: user.id } }">
+          <img :src="user.image" alt="" class="user-photo" />
+        </router-link>
       </div>
-      <div class="tweet-content">
-        {{ user.description }}
-      </div>
-      <div class="tweet-actions">
-        <div class="tweet-action">
-          <font-awesome-icon icon="fa-regular fa-comment" />
-          <p class="reply-number">{{ user.replyCount }}</p>
+      <div class="tweet-right">
+        <div class="user">
+          <span class="user-name">{{ user.name }}</span>
+          <span class="user-account"
+            >@{{ user.account }} ‧ {{ user.createdAt | fromNow }}小時</span
+          >
         </div>
-        <div class="tweet-action">
-          <font-awesome-icon icon="fa-regular fa-heart" />
-          <p class="like-number">{{ user.likeCount }}</p>
+        <div class="tweet-content">
+          {{ user.content }}
+        </div>
+        <div class="tweet-actions">
+          <div class="tweet-action">
+            <font-awesome-icon icon="fa-regular fa-comment" />
+            <p class="reply-number">{{ user.replyNum }}</p>
+          </div>
+          <div class="tweet-action">
+            <font-awesome-icon icon="fa-regular fa-heart" />
+            <p class="like-number">{{ user.likeNum }}</p>
+          </div>
         </div>
       </div>
+      <hr class="hr1" />
     </div>
-    <hr class="hr1" />
-  </div>
+  </router-link>
 </template>
 
 <script>
@@ -50,7 +54,7 @@ export default {
     return {
       user: this.initialUser,
     };
-  },  
+  },
 };
 </script>
 
