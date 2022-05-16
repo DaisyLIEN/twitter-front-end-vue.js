@@ -1,26 +1,26 @@
 <template>
   <div class="tweet">
     <div class="tweet-img">
-      <img :src="user.image" alt="" class="user-photo" />
+      <img :src="user.avatar" alt="" class="user-photo" />
     </div>
     <div class="tweet-right">
       <div class="user">
         <span class="user-name">{{ user.name }}</span>
         <span class="user-account"
-          >@{{ user.account }} ‧ {{ user.createdAt | fromNow }}小時</span
+          >@{{ user.account }} ‧ {{ user.createdAt | fromNow }}</span
         >
       </div>
       <div class="tweet-content">
-        {{ user.content }}
+        {{ user.description }}
       </div>
       <div class="tweet-actions">
         <div class="tweet-action">
           <font-awesome-icon icon="fa-regular fa-comment" />
-          <p class="reply-number">{{ user.replyNum }}</p>
+          <p class="reply-number">{{ user.replyCount }}</p>
         </div>
         <div class="tweet-action">
           <font-awesome-icon icon="fa-regular fa-heart" />
-          <p class="like-number">{{ user.likeNum }}</p>
+          <p class="like-number">{{ user.likeCount }}</p>
         </div>
       </div>
     </div>
@@ -29,16 +29,16 @@
 </template>
 
 <script>
-import moment from 'moment'
+import moment from "moment";
 
 export default {
   filters: {
     fromNow(datetime) {
       if (!datetime) {
-        return '-'
+        return "-";
       }
-      return moment(datetime).fromNow()
-    }
+      return moment(datetime).fromNow();
+    },
   },
   props: {
     initialUser: {
@@ -50,7 +50,7 @@ export default {
     return {
       user: this.initialUser,
     };
-  }
+  },  
 };
 </script>
 
@@ -83,7 +83,7 @@ img {
   font-size: 14px;
   line-height: 22px;
   text-align: left;
-  color: #6C757D;
+  color: #6c757d;
 }
 
 .tweet-content {

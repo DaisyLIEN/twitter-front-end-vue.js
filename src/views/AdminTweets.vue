@@ -14,7 +14,7 @@
       <div class="tweets">
         <div class="tweet" v-for="user in users" :key="user.id">
           <div class="tweet-img">
-            <img :src="user.image" alt="" class="user-photo" />
+            <img :src="user.avatar" alt="" class="user-photo" />
           </div>
           <div class="tweet-right">
             <div class="tweet-right-top">
@@ -30,7 +30,7 @@
               </div>
             </div>
             <div class="tweet-content">
-              {{ user.content }}
+              {{ user.description }}
             </div>
           </div>
         </div>
@@ -42,83 +42,7 @@
 <script>
 import AdminNavbar from "./../components/AdminNavbar";
 import adminAPI from './../apis/admin'
-
-const dummyData = {
-  users: [
-    {
-      id: 1,
-      name: "Apple",
-      account: "apple",
-      image: "https://img.onl/Dwojms",
-      createdAt: "2022-05-11T02:16:16.000Z",
-      updatedAt: "2022-05-11T02:16:16.000Z",
-      content:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec sed lacinia justo. Cras mi ipsum, venenatis vitae pretium quis, interdum non orci. Suspendisse blandit libero sit amet nisl blandit, vitae fermentum leo tincidunt.",
-      replyNum: 13,
-      likeNum: 76,
-    },
-    {
-      id: 2,
-      name: "Jane Cathy",
-      account: "jamjane1999",
-      image: "https://img.onl/KW4sJV",
-      createdAt: "2022-04-25T02:16:16.000Z",
-      updatedAt: "2022-04-25T02:16:16.000Z",
-      content:
-        "Cras blandit libero nibh, nec scelerisque lorem condimentum sit amet. Nam sapien eros, ultricies sit amet arcu non, iaculis venenatis nulla. Integer efficitur varius neque, viverra vestibulum ligula. Duis libero odio, convallis a elit ac, fermentum luctus velit.",
-      replyNum: 10,
-      likeNum: 80,
-    },
-    {
-      id: 3,
-      name: "Cheery",
-      account: "cheerysweet",
-      image: "https://img.onl/H5eDF2",
-      createdAt: "2022-04-19T02:16:16.000Z",
-      updatedAt: "2022-04-19T02:16:16.000Z",
-      content:
-        "Integer odio tellus, viverra eget vestibulum vitae, auctor sed magna. Sed sed gravida diam. Praesent volutpat tincidunt risus a sagittis. Vestibulum quis purus venenatis, sodales justo eu, faucibus tortor.",
-      replyNum: 17,
-      likeNum: 55,
-    },
-    {
-      id: 4,
-      name: "Dana",
-      account: "danagirl",
-      image: "https://img.onl/HM4fxm",
-      createdAt: "2022-04-19T02:16:16.000Z",
-      updatedAt: "2022-04-19T02:16:16.000Z",
-      content:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam porttitor, orci imperdiet condimentum sagittis, nisl enim commodo sem, nec ornare augue libero ut purus.",
-      replyNum: 10,
-      likeNum: 88,
-    },
-    {
-      id: 5,
-      name: "Gorden",
-      account: "gordenball2022",
-      image: "https://img.onl/25RyTE",
-      createdAt: "2022-04-19T02:16:16.000Z",
-      updatedAt: "2022-04-19T02:16:16.000Z",
-      content:
-        "Nullam eu ante nisi. In convallis non augue ac rutrum. Fusce eu ullamcorper quam. Duis at aliquet tortor.",
-      replyNum: 13,
-      likeNum: 76,
-    },
-    {
-      id: 6,
-      name: "LuLu",
-      account: "lulupig",
-      image: "https://img.onl/1XTVZ",
-      createdAt: "2022-04-19T02:16:16.000Z",
-      updatedAt: "2022-04-19T02:16:16.000Z",
-      content:
-        "Integer ut pulvinar augue, ac molestie diam. Aliquam sagittis luctus elit, vitae auctor enim euismod nec.",
-      replyNum: 17,
-      likeNum: 68,
-    },
-  ],
-};
+import {Toast} from './../utils/helpers'
 
 export default {
   components: {
@@ -136,11 +60,23 @@ export default {
     async fetchUsers() {
       try {
         const response = await adminAPI.getAdminTweets()
-        console.log(response)
+        console.log('response', response)
+
+        const {data} = response
+
+        if(data.status !== 'success') {
+          throw new Error(data.statusText)
+        }
+
+        this.users = data.data;
       } catch (error) {
         console.log(error)
+
+        Toast.fire({
+          icon: 'error',
+          title: '無法取得後台推文資料，請稍後再試'
+        })
       }
-      this.users = dummyData.users;
     },
   },
 };

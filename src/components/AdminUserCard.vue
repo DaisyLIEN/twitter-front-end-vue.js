@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper-admin-user-card">
-    <img class="cover-image" :src="user.coverImage" alt="" />
+    <img class="cover-image" :src="user.cover" alt="" />
     <img class="avatar" :src="user.avatar" alt="" />
     <div class="info">
       <div class="names">
@@ -9,13 +9,13 @@
       </div>
       <div class="counts">
         <img class="tweet-count" src="https://i.imgur.com/41M4NLK.png" alt="" />
-        <span>1.5k</span>
+        <span>{{user.totalTweetCount}}</span>
         <img class="like-count" src="https://i.imgur.com/dQXJ6Mp.png" alt="" />
-        <span>20k</span>
+        <span>{{user.totalLikeCount}}</span>
       </div>
       <div class="follow-ship">
-        <span>{{ user.foiiowingNum }}個</span><span>追隨中</span>
-        <span>{{ user.followerNum }}位</span><span>追隨者</span>
+        <span>{{ user.followingsCount }}個</span><span>追隨中</span>
+        <span>{{ user.followersCount }}位</span><span>追隨者</span>
       </div>
     </div>
   </div>

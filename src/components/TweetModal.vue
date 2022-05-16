@@ -22,15 +22,15 @@
           <div class="modal-body">
             <div class="posting">
               <img class="photo" src="https://img.onl/d0RNIH" alt="" />
-              <input
-                type="text"
-                class="new-post"
-                autofocus
-                placeholder="有什麼新鮮事？"
-              />
+              <textarea v-model="newTweet" name="new-post" class="new-post" maxlength="140" rows="3" placeholder="有什麼新鮮事？"></textarea>
             </div>
             <div class="btn">
-              <button type="button" class="btn-submit" data-bs-dismiss="modal">
+              <button
+                type="button"
+                class="btn-submit"
+                data-dismiss="modal"
+                @click="addTweet"
+              >
                 推文
               </button>
             </div>
@@ -40,6 +40,23 @@
     </div>
   </div>
 </template>
+
+<script>
+export default {
+  data() {
+    return {
+      newTweet: "",
+    };
+  },
+  methods: {
+    addTweet() {
+      // const newTweet = this.newTweet;
+      this.$emit("after-addTweet", this.newTweet);
+      this.newTweet = "";
+    },
+  },
+};
+</script>
 
 <style scoped>
 /* Modal */
@@ -65,6 +82,10 @@
   margin-left: 0px;
 }
 
+.post {
+  height: auto;
+}
+
 .posting {
   display: flex;
   padding: 0;
@@ -77,9 +98,14 @@
 }
 
 .new-post {
+  width: 526px;
+  /* min-height: 121px; */
   margin-left: 8px;
-  border: none;
-  outline: medium;
+  padding-top: 12px;
+  border: none;  /*去除邊框*/
+  outline: none;  /*去除選中後的邊框*/
+  resize: none;  /*移除小三角，關閉調整大小功能*/
+  overflow: hidden;
   font-weight: 400;
   font-size: 16px;
   line-height: 26px;
@@ -89,7 +115,7 @@
 .btn {
   display: flex;
   justify-content: flex-end;
-  margin-top: 121px;
+  margin-top: 14px;
   padding: 0;
 }
 

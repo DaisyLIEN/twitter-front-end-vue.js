@@ -2,7 +2,7 @@
   <div class="container">
     <!-- Navbar -->
     <div class="left-content">
-      <Navbar ref="navbarRef" />
+      <Navbar />
     </div>
 
     <div class="middle-content">
@@ -12,15 +12,20 @@
       <div class="post">
         <div class="posting">
           <img class="photo" src="https://img.onl/d0RNIH" alt="" />
-          <input
-            type="text"
+          <textarea
+            v-model="newTweet2"
+            name="new-post"
             class="new-post"
+            maxlength="140"
+            rows="3"
             autofocus
             placeholder="有什麼新鮮事？"
-          />
+          ></textarea>
         </div>
         <div class="btn">
-          <button class="btn-submit" type="submit">推文</button>
+          <button class="btn-submit" type="submit" @click="handleAddTweet2">
+            推文
+          </button>
         </div>
         <hr class="hr2" />
       </div>
@@ -36,7 +41,7 @@
     </div>
 
     <!-- TweetModal -->
-    <TweetModal ref="tweetModalRef" />
+    <TweetModal @after-addTweet="handleAddTweet" />
   </div>
 </template>
 
@@ -45,84 +50,8 @@ import Navbar from "./../components/Navbar";
 import TweetCard from "./../components/TweetCard";
 import TweetModal from "./../components/TweetModal";
 import PopularList from "./../components/PopularList";
-import tweetsAPI from './../apis/tweets'
-
-const dummyData = {
-  users: [
-    {
-      id: 1,
-      name: "Apple",
-      account: "apple",
-      image: "https://img.onl/Dwojms",
-      createdAt: "2022-05-11T02:16:16.000Z",
-      updatedAt: "2022-05-11T02:16:16.000Z",
-      content:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec sed lacinia justo. Cras mi ipsum, venenatis vitae pretium quis, interdum non orci. Suspendisse blandit libero sit amet nisl blandit, vitae fermentum leo tincidunt.",
-      replyNum: 13,
-      likeNum: 76,
-    },
-    {
-      id: 2,
-      name: "Jane Cathy",
-      account: "jamjane1999",
-      image: "https://img.onl/KW4sJV",
-      createdAt: "2022-04-25T02:16:16.000Z",
-      updatedAt: "2022-04-25T02:16:16.000Z",
-      content:
-        "Cras blandit libero nibh, nec scelerisque lorem condimentum sit amet. Nam sapien eros, ultricies sit amet arcu non, iaculis venenatis nulla. Integer efficitur varius neque, viverra vestibulum ligula. Duis libero odio, convallis a elit ac, fermentum luctus velit.",
-      replyNum: 10,
-      likeNum: 80,
-    },
-    {
-      id: 3,
-      name: "Cheery",
-      account: "cheerysweet",
-      image: "https://img.onl/H5eDF2",
-      createdAt: "2022-04-19T02:16:16.000Z",
-      updatedAt: "2022-04-19T02:16:16.000Z",
-      content:
-        "Integer odio tellus, viverra eget vestibulum vitae, auctor sed magna. Sed sed gravida diam. Praesent volutpat tincidunt risus a sagittis. Vestibulum quis purus venenatis, sodales justo eu, faucibus tortor.",
-      replyNum: 17,
-      likeNum: 55,
-    },
-    {
-      id: 4,
-      name: "Dana",
-      account: "danagirl",
-      image: "https://img.onl/HM4fxm",
-      createdAt: "2022-04-19T02:16:16.000Z",
-      updatedAt: "2022-04-19T02:16:16.000Z",
-      content:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam porttitor, orci imperdiet condimentum sagittis, nisl enim commodo sem, nec ornare augue libero ut purus.",
-      replyNum: 10,
-      likeNum: 88,
-    },
-    {
-      id: 5,
-      name: "Gorden",
-      account: "gordenball2022",
-      image: "https://img.onl/25RyTE",
-      createdAt: "2022-04-19T02:16:16.000Z",
-      updatedAt: "2022-04-19T02:16:16.000Z",
-      content:
-        "Nullam eu ante nisi. In convallis non augue ac rutrum. Fusce eu ullamcorper quam. Duis at aliquet tortor.",
-      replyNum: 13,
-      likeNum: 76,
-    },
-    {
-      id: 6,
-      name: "LuLu",
-      account: "lulupig",
-      image: "https://img.onl/1XTVZ",
-      createdAt: "2022-04-19T02:16:16.000Z",
-      updatedAt: "2022-04-19T02:16:16.000Z",
-      content:
-        "Integer ut pulvinar augue, ac molestie diam. Aliquam sagittis luctus elit, vitae auctor enim euismod nec.",
-      replyNum: 17,
-      likeNum: 68,
-    },
-  ],
-};
+import tweetsAPI from "./../apis/tweets";
+import { Toast } from "./../utils/helpers";
 
 export default {
   components: {
@@ -134,6 +63,7 @@ export default {
   data() {
     return {
       users: [],
+      newTweet2: "",
     };
   },
   created() {
@@ -142,15 +72,47 @@ export default {
   methods: {
     async fetchUsers() {
       try {
-        const response = await tweetsAPI.getTweets()
-        const reply = await tweetsAPI.getReplyTweets(14)
-        console.log(response)
-        console.log(reply)
+        const data = await tweetsAPI.getTweets();
+        console.log("data", data);
+
+        if (data.statusText !== "OK") {
+          throw new Error(data.statusText);
+        }
+
+        this.users = data.data;
       } catch (error) {
-        console.log(error)
+        console.log(error);
+
+        Toast.fire({
+          icon: "error",
+          title: "無法取得推文資料，請稍後再試",
+        });
       }
-      this.users = dummyData.users;
-    }
+    },
+    async handleAddTweet(newTweet) {
+      // console.log(newTweet);
+      if (!newTweet) {
+        Toast.fire({
+          icon: "error",
+          title: "推文內容不可以為空白",
+        });
+        return;
+      } else if (newTweet.length >= 140) {
+        Toast.fire({
+          icon: "error",
+          title: "推文字數不可超過140字",
+        });
+        return;
+      }
+
+      const data = await tweetsAPI.addTweet({ description: newTweet });
+      // console.log(data)
+      this.users = data.data;
+    },
+    handleAddTweet2() {
+      this.handleAddTweet(this.newTweet2);
+      this.newTweet2 = "";
+    },
   },
 };
 </script>
@@ -218,10 +180,13 @@ h4 {
 }
 
 .new-post {
-  /* margin: 0 auto; */
+  width: 526px;
   margin-left: 8px;
-  border: none;
-  outline: medium;
+  padding-top: 12px;
+  border: none; /*去除邊框*/
+  outline: none; /*去除選中後的邊框*/
+  resize: none; /*移除小三角，關閉調整大小功能*/
+  overflow: hidden;
   font-weight: 700;
   font-size: 18px;
   line-height: 26px;
