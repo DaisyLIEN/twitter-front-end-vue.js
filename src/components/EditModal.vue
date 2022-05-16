@@ -21,7 +21,7 @@
             <h5>編輯個人資料</h5>
           </div>
 
-          <form action="" method="post">
+          <form action="" method="post" @submit.stop.prevent="handleSubmit">
             <div class="form-group form-group-image">
               <img
                 class="image-cover"
@@ -99,24 +99,26 @@
               </div>
             </div>
 
-            <div class="form-group form-group-text form-group-description">
-              <label class="text-description" for="description">自我介紹</label>
+            <div class="form-group form-group-text form-group-introduction">
+              <label class="text-introduction" for="introduction"
+                >自我介紹</label
+              >
               <textarea
-                id="description"
+                id="introduction"
                 v-model="profile.introduction"
-                class="form-control-text form-control-description"
+                class="form-control-text form-control-introduction"
                 rows="4"
-                name="description"
+                name="introduction"
                 required
               />
-              <div class="text-count text-count-description">
+              <div class="text-count text-count-introduction">
                 <span>20</span><span>/160</span>
               </div>
             </div>
             <button
-              @submit.stop.prevent="handleSubmit"
               type="submit"
               class="btn-submit"
+              :data-dismiss="isProcessing ? 'modal' : ''"
             >
               儲存
             </button>
@@ -144,28 +146,41 @@ export default {
         introduction: "",
         avatar: "",
         cover: "",
+        // followersCount: 0,
+        // followingsCount: 0,
       },
       isProcessing: false,
     };
   },
-  method: {
-    // EditModal：PUT /api/users/:id
+  methods: {
     handleCoverChange(e) {
       const { files } = e.target;
-      console.log("files", files);
-
-      // if (files.length === 0) {
-      //   this.profile.cover = "";
-      // } else {
-      //   const imageURL = window.URL.createObjectURL(files[0]);
-      //   this.profile.cover = imageURL;
-      // }
+      const imageURL = window.URL.createObjectURL(files[0]);
+      this.profile.cover = imageURL;
     },
-    handleAvatarChange() {},
+    handleAvatarChange(e) {
+      const { files } = e.target;
+      const imageURL = window.URL.createObjectURL(files[0]);
+      this.profile.avatar = imageURL;
+    },
     handleCoverCancel() {},
+    handleSubmit(e) {
+      const form = e.target;
+      const formData = new FormData(form);
+
+      // for (let [name, value] of formData.entries()) {
+      //   console.log(name + ': ' + value)
+      // }
+      console.log("editmodalsend");
+      
+      this.$emit("after-submit", formData);
+
+      this.isProcessing = true;
+    },
   },
   watch: {
     initialUserProfile(newValue) {
+      console.log("editNewValue", newValue);
       this.profile = {
         ...this.profile,
         ...newValue,
@@ -182,6 +197,7 @@ export default {
   height: 610px;
   background: #ffffff;
   border-radius: 14px;
+  border: none;
 }
 .modal-dialog {
   margin: 56px auto auto;
@@ -243,7 +259,12 @@ form {
 .image-cover,
 .image-avatar {
   display: block;
+  object-fit: cover;
   /* opacity: 0.5;   */
+}
+.image-avatar {
+  border-radius: 50%;
+  border: 4px solid #ffffff;
 }
 .label-cover,
 .label-cancel,
@@ -283,7 +304,7 @@ form {
   margin-top: 80px;
   margin-bottom: 32px;
 }
-.form-group-description {
+.form-group-introduction {
   height: 147px;
 }
 .form-group-text {
@@ -311,7 +332,7 @@ form {
 .form-control-text:focus {
   outline: none;
 }
-.form-control-description {
+.form-control-introduction {
   resize: none;
   flex-shrink: 0;
 }
@@ -325,11 +346,11 @@ form {
 .text-count-name {
   margin-top: 8px;
 }
-.text-count-description {
-  margin-top: 4px;
+.text-count-introduction {
+  margin-top: 24px;
 }
 .text-name,
-.text-description {
+.text-introduction {
   color: #696974;
   font-weight: 400;
   font-size: 14px;

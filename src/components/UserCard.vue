@@ -10,7 +10,7 @@
       </router-link>
       <div class="title">
         <h5>{{ profile.name }}</h5>
-        <p>29 推文</p>
+        <p>{{ profile.totalTweetCount }} 推文</p>
       </div>
     </header>
     <div class="profile">
@@ -100,9 +100,12 @@ header {
   display: block;
   width: 140px;
   height: 140px;
+  border-radius: 50%;
+  border: 4px solid #ffffff;
   position: absolute;
   left: 16px;
   top: 124px;
+  object-fit: cover;
 }
 .btn-edit {
   position: absolute;

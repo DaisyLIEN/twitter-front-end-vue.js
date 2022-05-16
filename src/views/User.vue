@@ -35,7 +35,11 @@
     </div>
 
     <!-- <EditModal />       -->
-    <EditModal :initial-user-profile="profile" ref="editModalRef" />
+    <EditModal
+      :initial-user-profile="profile"
+      @after-submit="handleAfterSubmit"
+      ref="editModalRef"
+    />
   </div>
 </template>
 
@@ -161,6 +165,7 @@ export default {
         cover: "",
         followingsCount: 0,
         followersCount: 0,
+        totalTweetCount: 0,
       },
       currentPill: "tweets",
     };
@@ -217,7 +222,7 @@ export default {
       try {
         const { data } = await tweetsAPI.getTweets(14);
         console.log("fetchUsersTweets", data);
-        this.UsersTweets = data
+        this.UsersTweets = data;
       } catch (error) {
         console.log("fetchUsersTweets", error);
       }
@@ -234,13 +239,22 @@ export default {
     // 喜歡的內容：GET /api/users/:id/likes
     async fetchLikes() {
       try {
+        console.log("fetchLikes");
         const { data } = await tweetsAPI.getLikeTweets(14);
         console.log("getLikeTweets", data);
-        this.UsersTweets = data
+        this.UsersTweets = data;
       } catch (error) {
         console.log("getLikeTweets", error);
       }
-    },    
+    },
+    handleAfterSubmit(formData) {
+      // EditModal：PUT /api/users/:id
+      // 透過 API 將表單資料送到伺服器
+      console.log("usercardget");
+      for (let [name, value] of formData.entries()) {
+        console.log(name + ": " + value);
+      }
+    },
   },
 };
 </script>
@@ -276,12 +290,6 @@ ul {
   border-bottom: 1px solid #e6ecf0;
   position: relative;
 }
-/* a {
-  text-decoration: none;
-  position: relative;
-  color: #657786;
-  width: 130px;
-} */
 li {
   width: 130px;
   height: 52px;
@@ -292,28 +300,11 @@ li {
   font-weight: 700;
   font-size: 15px;
   cursor: pointer;
-  /* position: relative; */
 }
 li:hover,
-li:focus {
+li:focus,
+li:checked {
   color: #ff6600;
   border-bottom: 2px solid #ff6600;
 }
-/* li:hover,
-li:focus,
-li:hover::after,
-li:focus::after {
-  color: #ff6600;
-  opacity: 1;
-} */
-/* li::after {
-  content: "";
-  width: 130px;
-  border-bottom: 2px solid #ff6600;
-  position: absolute;  
-  right: 0;
-  left: 0;
-  bottom: 0;
-  opacity: 0;
-} */
 </style>
