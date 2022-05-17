@@ -3,8 +3,7 @@
     <div class="logo">
       <img
         class="logo-img"
-        src="https://upload.cc/i1/2022/05/10/LycK2A.png
-"
+        src="https://upload.cc/i1/2022/05/10/LycK2A.png"
         alt="AC-logo"
       />
     </div>
@@ -86,8 +85,11 @@ export default {
           account: this.account,
           password: this.password,
         });
-        console.log("response", response);
         const { data, statusText } = response;
+        console.log(data);
+
+        //待傳遞該值
+        console.log(data.data.user);
 
         if (statusText !== "OK" || data.status !== "success") {
           throw new Error(statusText);
