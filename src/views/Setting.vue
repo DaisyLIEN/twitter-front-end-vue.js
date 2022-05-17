@@ -68,10 +68,11 @@
             required
           />
         </div>
-
-        <button class="btn btn-lg btn-primary btn-block mb-3" type="submit">
-          註冊
-        </button>
+        <div class="button-container">
+          <button class="btn btn-lg btn-primary btn-block mb-3" type="submit">
+            儲存
+          </button>
+        </div>
       </form>
     </div>
   </div>
@@ -87,11 +88,16 @@ export default {
       name: "",
       email: "",
       password: "",
-      passwordCheck: "",
+      checkPassword: "",
     };
   },
   components: {
     Navbar,
+  },
+  methods: {
+    fetchAccount() {
+      
+    },
   },
 };
 </script>
@@ -161,7 +167,12 @@ label {
   color: #657786;
 }
 
+.button-container {
+  display: flex;
+  justify-content: flex-end;
+}
 .btn-primary {
+  width: 88px;
   background: #ff6600;
   border-radius: 50px;
   border: none;
