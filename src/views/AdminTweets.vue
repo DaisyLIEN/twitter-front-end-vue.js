@@ -14,23 +14,37 @@
       <div class="tweets">
         <div class="tweet" v-for="user in users" :key="user.id">
           <div class="tweet-img">
-            <img :src="user.avatar" alt="" class="user-photo" />
+            <router-link :to="{ name: 'user', params: { id: user.id } }">
+              <img :src="user.avatar" alt="" class="user-photo" />
+            </router-link>
           </div>
           <div class="tweet-right">
             <div class="tweet-right-top">
               <div class="user">
-                <span class="user-name">{{ user.name }}</span>
-                <span class="user-account"
-                  >@{{ user.account }} ‧
-                  {{ user.createdAt | fromNow }}小時</span
+                <router-link :to="{ name: 'user', params: { id: user.id } }">
+                  <span class="user-name">{{ user.name }}</span>
+                  <span class="user-account">@{{ user.account }} ‧ </span>
+                </router-link>
+                <router-link
+                  :to="{ name: 'replylist', params: { tweet_id: user.id } }"
                 >
+                  <span class="tweet-time">{{ user.createdAt | fromNow }}</span>
+                </router-link>
               </div>
+
               <div class="delete-tweet">
-                <font-awesome-icon icon="fa-solid fa-xmark" />
+                <font-awesome-icon
+                  icon="fa-solid fa-xmark"
+                  @click="deleteTweet(user.id)"
+                />
               </div>
             </div>
             <div class="tweet-content">
-              {{ user.description }}
+              <router-link
+                :to="{ name: 'replylist', params: { tweet_id: user.id } }"
+              >
+                <span class="tweet-content">{{ user.description }}</span>
+              </router-link>
             </div>
           </div>
         </div>
@@ -41,10 +55,19 @@
 
 <script>
 import AdminNavbar from "./../components/AdminNavbar";
-import adminAPI from './../apis/admin'
-import {Toast} from './../utils/helpers'
+import adminAPI from "./../apis/admin";
+import { Toast } from "./../utils/helpers";
+import moment from "moment";
 
 export default {
+  filters: {
+    fromNow(datetime) {
+      if (!datetime) {
+        return "-";
+      }
+      return moment(datetime).fromNow();
+    },
+  },
   components: {
     AdminNavbar,
   },
@@ -59,23 +82,38 @@ export default {
   methods: {
     async fetchUsers() {
       try {
-        const response = await adminAPI.getAdminTweets()
-        console.log('response', response)
+        const response = await adminAPI.getAdminTweets();
+        // console.log('response', response)
 
-        const {data} = response
+        const { data } = response;
 
-        if(data.status !== 'success') {
-          throw new Error(data.statusText)
+        if (data.status !== "success") {
+          throw new Error(data.statusText);
         }
 
         this.users = data.data;
       } catch (error) {
-        console.log(error)
+        console.log(error);
 
         Toast.fire({
-          icon: 'error',
-          title: '無法取得後台推文資料，請稍後再試'
-        })
+          icon: "error",
+          title: "無法取得後台推文資料，請稍後再試",
+        });
+      }
+    },
+    async deleteTweet(tweetId) {
+      try {
+        const response = await adminAPI.deleteTweet({ tweetId });
+        // console.log('response', response)
+        const { data } = response;
+        this.users = data;
+      } catch (error) {
+        console.log(error);
+
+        Toast.fire({
+          icon: "error",
+          title: "無法刪除後台推文資料，請稍後再試",
+        });
       }
     },
   },
@@ -85,21 +123,22 @@ export default {
 <style scoped>
 .container {
   display: grid;
-  grid-template-columns: 178px 938px;
-  grid-gap: 24px;
+  grid-template-columns: 130px 178px 24px 938px;
+  /* grid-gap: 24px; */
   padding: 0;
+  margin: 0;
   /* border: 1px solid green; */
 }
 
 .left-content {
-  grid-column: 1/2;
+  grid-column: 2/3;
   /* border: 1px solid red; */
 }
 
 .middle-content {
   border-right: 1px solid #e6ecf0;
   border-left: 1px solid #e6ecf0;
-  grid-column: 2/3;
+  grid-column: 4/5;
   /* border: 1px solid blue; */
 }
 
@@ -145,7 +184,8 @@ h4 {
   color: #171725;
 }
 
-.user-account {
+.user-account,
+.tweet-time {
   font-weight: 400;
   font-size: 14px;
   line-height: 22px;
@@ -166,5 +206,13 @@ h4 {
   line-height: 26px;
   text-align: left;
   color: #171725;
+}
+
+/* 去除底線 */
+a {
+  text-decoration: none;
+}
+.router-link-active {
+  text-decoration: none;
 }
 </style>

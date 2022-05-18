@@ -9,13 +9,13 @@
       </div>
       <div class="counts">
         <img class="tweet-count" src="https://i.imgur.com/41M4NLK.png" alt="" />
-        <span>{{user.totalTweetCount}}</span>
+        <span>{{user.totalTweetNum}}</span>
         <img class="like-count" src="https://i.imgur.com/dQXJ6Mp.png" alt="" />
-        <span>{{user.totalLikeCount}}</span>
+        <span>{{user.totalLikeNum}}</span>
       </div>
       <div class="follow-ship">
-        <span>{{ user.followingsCount }}個</span><span>追隨中</span>
-        <span>{{ user.followersCount }}位</span><span>追隨者</span>
+        <span>{{ user.followersNum }}個</span><span>追隨中</span>
+        <span>{{ user.followingsNum }}位</span><span>追隨者</span>
       </div>
     </div>
   </div>
@@ -45,13 +45,13 @@ export default {
   border-radius: 10px;
   margin: 0 0 16px 16px;
   background-color: #F6F7F8;
-  border-radius: 10px;
 }
 .cover-image {
   display: block;
   width: 100%;
   height: 140px;
   object-fit: cover;
+  border-radius: 10px;
 }
 .avatar {
   display: block;

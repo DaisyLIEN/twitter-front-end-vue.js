@@ -22,7 +22,14 @@
           <div class="modal-body">
             <div class="posting">
               <img class="photo" src="https://img.onl/d0RNIH" alt="" />
-              <textarea v-model="newTweet" name="new-post" class="new-post" maxlength="140" rows="3" placeholder="有什麼新鮮事？"></textarea>
+              <textarea
+                v-model="newTweet"
+                :style="{ 'height': height }"
+                name="new-post"
+                class="new-post"
+                maxlength="140"
+                placeholder="有什麼新鮮事？"
+              ></textarea>
             </div>
             <div class="btn">
               <button
@@ -46,7 +53,15 @@ export default {
   data() {
     return {
       newTweet: "",
+      height: "",
     };
+  },
+  watch: {
+    newTweet() {
+      // console.log(this.newTweet.length);
+      if (this.newTweet.length > 70) this.height = "126px"
+      else this.height = "66px"
+    },
   },
   methods: {
     addTweet() {
@@ -82,9 +97,9 @@ export default {
   margin-left: 0px;
 }
 
-.post {
+/* .post {
   height: auto;
-}
+} */
 
 .posting {
   display: flex;
@@ -99,17 +114,16 @@ export default {
 
 .new-post {
   width: 526px;
-  /* min-height: 121px; */
-  margin-left: 8px;
-  padding-top: 12px;
-  border: none;  /*去除邊框*/
-  outline: none;  /*去除選中後的邊框*/
-  resize: none;  /*移除小三角，關閉調整大小功能*/
+  margin: 12px 8px 14px 8px;
+  border: none; /*去除邊框*/
+  outline: none; /*去除選中後的邊框*/
+  resize: none; /*移除小三角，關閉調整大小功能*/
   overflow: hidden;
   font-weight: 400;
   font-size: 16px;
   line-height: 26px;
   color: #6c757d;
+  min-height: 66px;
 }
 
 .btn {

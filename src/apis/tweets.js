@@ -47,4 +47,9 @@ export default {
       headers: { Authorization: `Bearer ${getToken()}` }
     })
   },  
+  getTopFollowedUser() {
+    return apiHelper.get(`/users/topFollowedUser`, {
+      headers: { Authorization: `Bearer ${getToken()}` }
+    })
+  }
 }

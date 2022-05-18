@@ -14,12 +14,12 @@
           <img class="photo" src="https://img.onl/d0RNIH" alt="" />
           <textarea
             v-model="newTweet2"
+            :style="{ 'height': height }"
             name="new-post"
             class="new-post"
             maxlength="140"
-            rows="3"
             autofocus
-            placeholder="有什麼新鮮事？"
+            placeholder="有什麼新鮮事？"          
           ></textarea>
         </div>
         <div class="btn">
@@ -64,10 +64,18 @@ export default {
     return {
       users: [],
       newTweet2: "",
+      height: "",
     };
   },
   created() {
     this.fetchUsers();
+  },
+  watch: {
+    newTweet2() {
+      // console.log(this.newTweet2.length)
+      if (this.newTweet2.length > 70) this.height = "106px";
+      else this.height = "66px";      
+    },
   },
   methods: {
     async fetchUsers() {
@@ -106,7 +114,7 @@ export default {
       }
 
       const data = await tweetsAPI.addTweet({ description: newTweet });
-      // console.log(data)
+      console.log(data)
       this.users = data.data;
     },
     handleAddTweet2() {
@@ -165,10 +173,6 @@ h4 {
   margin: 24px 0px 16px 0px;
 }
 
-/* .post {
-  border: 1px solid blue;
-} */
-
 .posting {
   display: flex;
 }
@@ -191,6 +195,7 @@ h4 {
   font-size: 18px;
   line-height: 26px;
   color: #6c757d;
+  min-height: 66px;
 }
 
 .btn {

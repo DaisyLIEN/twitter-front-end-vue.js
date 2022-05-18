@@ -2,14 +2,14 @@ import { apiHelper } from "./../utils/helpers";
 const getToken = () => localStorage.getItem('token')
 
 export default {
-  addLike({ restaurantId }) {
-    return apiHelper.post(`/like/${restaurantId}`, null, {
+  addLike(tweetId) {
+    return apiHelper.post(`/tweets/${tweetId}/like`, null, {
       headers: { Authorization: `Bearer ${getToken()}` }
     })
   },
-  deleteLike({ restaurantId }) {
-    return apiHelper.delete(`/like/${restaurantId}`, {
+  deleteLike(tweetId) {
+    return apiHelper.post(`/tweets/${tweetId}/unlike`, null, {
       headers: { Authorization: `Bearer ${getToken()}` }
     })
-  }
+  },
 }
