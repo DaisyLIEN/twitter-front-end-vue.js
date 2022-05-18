@@ -86,19 +86,18 @@ export default {
           password: this.password,
         });
         const { data, statusText } = response;
-        console.log(data);
 
-        //待傳遞該值
-        console.log(data.data.user);
+        console.log(data.data);
 
         if (statusText !== "OK" || data.status !== "success") {
           throw new Error(statusText);
         }
 
         localStorage.setItem("token", data.data.token);
+        localStorage.setItem("userId", data.data.user.id);
 
         // 將資料傳到Vuex中
-        // this.$store.commit('setCurrentUser', data.user)
+        this.$store.commit("setCurrentUser", data.data.user);
 
         this.$router.push("/main");
       } catch (error) {

@@ -135,7 +135,6 @@ export default {
           password: this.password,
           checkPassword: this.checkPassword,
         });
-
         console.log(response);
       } catch (error) {
         console.log(error);
