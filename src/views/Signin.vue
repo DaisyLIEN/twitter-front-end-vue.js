@@ -3,8 +3,7 @@
     <div class="logo">
       <img
         class="logo-img"
-        src="https://upload.cc/i1/2022/05/10/LycK2A.png
-"
+        src="https://upload.cc/i1/2022/05/10/LycK2A.png"
         alt="AC-logo"
       />
     </div>
@@ -86,8 +85,9 @@ export default {
           account: this.account,
           password: this.password,
         });
-        console.log("response", response);
         const { data, statusText } = response;
+
+        console.log(data.data);
 
         if (statusText !== "OK" || data.status !== "success") {
           throw new Error(statusText);
@@ -97,7 +97,7 @@ export default {
         localStorage.setItem("userId", data.data.user.id);
 
         // 將資料傳到Vuex中
-        // this.$store.commit('setCurrentUser', data.user)
+        this.$store.commit("setCurrentUser", data.data.user);
 
         this.$router.push("/main");
       } catch (error) {

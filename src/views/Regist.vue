@@ -135,10 +135,9 @@ export default {
           password: this.password,
           checkPassword: this.checkPassword,
         });
-
         console.log(response);
       } catch (error) {
-        console.log("error", error);
+        console.log(error);
         Toast.fire({
           icon: "error",
           title: "無法註冊，請稍後再試",

@@ -1,6 +1,7 @@
 import { apiHelper } from '../utils/helpers'
 const getToken = () => localStorage.getItem('token')
 
+
 export default {
   getTweet(tweetId) {
     return apiHelper.get(`/tweets/${tweetId}`, {
@@ -55,5 +56,10 @@ export default {
     return apiHelper.get(`/users/${userId}/followings`, {
       headers: { Authorization: `Bearer ${getToken()}` }
     })
-  },
+  },  
+  getTopFollowedUser() {
+    return apiHelper.get(`/users/topFollowedUser`, {
+      headers: { Authorization: `Bearer ${getToken()}` }
+    })
+  }
 }

@@ -11,9 +11,9 @@
         <img class="popular-avatar" :src="user.avatar" alt="user-img" />
         <div class="popular-info">
           <router-link :to="`users/${user.id}`" class="popular-name">{{
-            user.userName
+            user.name
           }}</router-link>
-          <p class="popular-account">{{ user.userAccount }}</p>
+          <p class="popular-account">{{ user.account }}</p>
         </div>
         <button
           v-show="!user.isFollowed"
@@ -33,78 +33,8 @@
 </template>
 
 <script>
-const dummyUsers = [
-  {
-    id: 1,
-    avatar: "https://i.pravatar.cc/100",
-    userName: "A",
-    userAccount: "@A",
-    isFollowed: true,
-  },
-  {
-    id: 2,
-    avatar: "https://i.pravatar.cc/100",
-    userName: "A",
-    userAccount: "@A",
-    isFollowed: false,
-  },
-  {
-    id: 3,
-    avatar: "https://i.pravatar.cc/100",
-    userName: "A",
-    userAccount: "@A",
-    isFollowed: false,
-  },
-  {
-    id: 4,
-    avatar: "https://i.pravatar.cc/100",
-    userName: "A",
-    userAccount: "@A",
-    isFollowed: false,
-  },
-  {
-    id: 5,
-    avatar: "https://i.pravatar.cc/100",
-    userName: "A",
-    userAccount: "@A",
-    isFollowed: false,
-  },
-  {
-    id: 6,
-    avatar: "https://i.pravatar.cc/100",
-    userName: "A",
-    userAccount: "@A",
-    isFollowed: false,
-  },
-  {
-    id: 7,
-    avatar: "https://i.pravatar.cc/100",
-    userName: "A",
-    userAccount: "@A",
-    isFollowed: false,
-  },
-  {
-    id: 8,
-    avatar: "https://i.pravatar.cc/100",
-    userName: "A",
-    userAccount: "@A",
-    isFollowed: false,
-  },
-  {
-    id: 9,
-    avatar: "https://i.pravatar.cc/100",
-    userName: "A",
-    userAccount: "@A",
-    isFollowed: false,
-  },
-  {
-    id: 10,
-    avatar: "https://i.pravatar.cc/100",
-    userName: "A",
-    userAccount: "@A",
-    isFollowed: false,
-  },
-];
+import tweetsAPI from './../apis/tweets'
+import { Toast } from "./../utils/helpers";
 
 export default {
   data() {
@@ -116,8 +46,20 @@ export default {
     this.fetchPopularList();
   },
   methods: {
-    fetchPopularList() {
-      this.users = dummyUsers;
+    async fetchPopularList() {
+      try {
+        const response = await tweetsAPI.getTopFollowedUser()
+        // console.log('response', response)
+        const {data} = response
+        this.users = data.newData
+        console.log(this.users)
+      } catch (error) {
+        Toast.fire({
+          icon: "error",
+          title: "無法取得跟隨誰資料，請稍後再試"
+        })
+        console.log(error)
+      }
     },
     addFollow(userID) {
       const followUser = this.users.find((user) => user.id === userID);

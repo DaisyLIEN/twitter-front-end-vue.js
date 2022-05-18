@@ -80,6 +80,7 @@ export default {
 
 .right-content {
   border-left: 1px solid #e6ecf0;
+  border-right: 1px solid #e6ecf0;
   grid-column: 4/5;
   /* border: 1px solid blue; */
 }

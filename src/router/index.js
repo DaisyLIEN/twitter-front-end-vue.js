@@ -85,20 +85,28 @@ const router = new VueRouter({
 // 驗證是否有取得token，否則無法進入其他頁面
 router.beforeEach((to, from, next) => {
   const token = localStorage.getItem('token')
-  // 登入頁（首頁）不用驗證
+  const userId = localStorage.getItem('userId')
   if (to.fullPath === '/signin' || to.fullPath === '/admin' || to.fullPath === '/regist') {
-    if (token) {
-      next('/main')
+    //要前往登入頁面時如果有token和userId則導入main主頁
+    if(token && userId) {
+      next('main')
+      return
+    } else {
+      next()
       return
     }
-    next()
-    return
+  } else {
+    //要前往其他頁面時如果缺少token或userId則導入signin頁面
+    if (token && userId) {
+      next()
+      return
+    } else {
+      next('signin')
+      return
+    }
   }
-  if (!token) {
-    next('/signin')
-  }
-  next()
 })
+
 
 
 export default router

@@ -64,6 +64,7 @@ export default {
     logout() {
       // 待串接API後取消token
       localStorage.removeItem("token");
+      localStorage.removeItem("userId");
       this.$router.push("/signin");
     },
   },
