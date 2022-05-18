@@ -9,16 +9,21 @@
       />
       <div class="title">
         <h5>{{ profile.name }}</h5>
-        <p>{{ profile.totalTweetCount }} 推文</p>
+        <p>{{ profile.tweetCount }} 推文</p>
       </div>
     </header>
     <div class="profile">
       <img class="cover-image" :src="profile.cover" alt="" />
       <img class="avatar" :src="profile.avatar" alt="" />
-      <div class="user-item-edit">
+      <div class="btn-user" v-if="initialCurrentUserId === initialParamsId">
         <button class="btn-edit" data-toggle="modal" data-target="#editModal">
           編輯個人資料
         </button>
+      </div>
+      <div class="btn-other-user" v-else>
+        <button>私訊</button>
+        <button>鈴鐺</button>
+        <button>追隨</button>
       </div>
       <div class="info">
         <div class="names">
@@ -29,10 +34,10 @@
           {{ profile.introduction }}
         </p>
         <div class="follow-ship">
-          <router-link class="following" :to="{ name: 'follow' }"
+          <router-link class="following" :to="{ name: 'following' }"
             >{{ profile.followingsCount }}個<span>追隨中</span></router-link
           >
-          <router-link class="following" :to="{ name: 'follow' }"
+          <router-link class="follower" :to="{ name: 'follower' }"
             >{{ profile.followersCount }}位<span>追隨者</span></router-link
           >
         </div>
@@ -46,6 +51,14 @@ export default {
   props: {
     initialUserProfile: {
       type: Object,
+      required: true,
+    },
+    initialCurrentUserId: {
+      type: Number,
+      required: true,
+    },
+    initialParamsId: {
+      type: Number,
       required: true,
     },
   },
@@ -107,10 +120,13 @@ header {
   top: 124px;
   object-fit: cover;
 }
-.btn-edit {
+.btn-user,
+.btn-other-user {
   position: absolute;
   top: 216px;
   right: 16px;
+}
+.btn-edit {
   background: #ffffff;
   border: 1px solid #ff6600;
   border-radius: 50px;

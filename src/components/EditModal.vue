@@ -1,5 +1,5 @@
 <template>
-  <div class="wrapper-edit-modal">
+  <div class="wrapper-edit-modal" id="edit-modal">
     <div
       class="modal fade"
       id="editModal"
@@ -21,7 +21,7 @@
             <h5>編輯個人資料</h5>
           </div>
 
-          <form action="" method="post" @submit.stop.prevent="handleSubmit">
+          <form id="userProfileForm" action="" method="">
             <div class="form-group form-group-image">
               <img
                 class="image-cover"
@@ -140,11 +140,14 @@
             </div>
             <button
               type="submit"
-              class="btn-submit"
-              :data-dismiss="isProcessing ? 'modal' : ''"
+              class="btn btn-submit"
+              @click.stop.prevent="handleSubmit"
             >
               儲存
             </button>
+            <!-- <button type="submit" class="btn btn-submit" data-dismiss="modal">
+              儲存
+            </button> -->
           </form>
         </div>
       </div>
@@ -195,14 +198,10 @@ export default {
       const form = e.target;
       const formData = new FormData(form);
 
-      // for (let [name, value] of formData.entries()) {
-      //   console.log(name + ': ' + value)
-      // }
-      console.log("editmodalsend");
+      console.log("formData", formData);
 
       this.$emit("after-submit", formData);
-
-      // this.isProcessing = true;
+      console.log("formData已傳至User");
     },
   },
   computed: {
@@ -215,7 +214,6 @@ export default {
   },
   watch: {
     initialUserProfile(newValue) {
-      console.log("editNewValue", newValue);
       this.profile = {
         ...this.profile,
         ...newValue,
@@ -285,17 +283,19 @@ form {
 .form-group-image {
   position: relative;
   margin-bottom: 0;
+  background: rgba(23, 23, 37, 0.5);
+  opacity: 0.75;
 }
 .form-group-avatar {
   position: absolute;
   top: 181px;
   left: 16px;
+  border-radius: 50%;
 }
 .image-cover,
 .image-avatar {
   display: block;
   object-fit: cover;
-  /* opacity: 0.5;   */
 }
 .image-avatar {
   border-radius: 50%;

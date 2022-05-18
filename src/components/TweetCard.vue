@@ -19,11 +19,11 @@
         <div class="tweet-actions">
           <div class="tweet-action">
             <font-awesome-icon icon="fa-regular fa-comment" />
-            <p class="reply-number">{{ user.replyCount }}</p>
+            <p class="reply-number">{{ user.replyNum }}</p>
           </div>
           <div class="tweet-action">
             <font-awesome-icon icon="fa-regular fa-heart" />
-            <p class="like-number">{{ user.likeCount }}</p>
+            <p class="like-number">{{ user.likeNum }}</p>
           </div>
         </div>
       </div>
@@ -54,6 +54,14 @@ export default {
     return {
       user: this.initialUser,
     };
+  },
+  watch: {
+    initialUser(newValue) {
+      this.user = {
+        ...this.user,
+        ...newValue,
+      };
+    },
   },
 };
 </script>

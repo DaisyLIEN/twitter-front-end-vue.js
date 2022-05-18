@@ -1,24 +1,27 @@
 <template>
   <div class="reply">
     <div class="reply-img">
-      <img :src="reply.User.image" alt="" class="user-photo" />
+      <img :src="profile.avatar" alt="" class="user-photo" />
     </div>
     <div class="reply-right">
       <div class="user">
-        <span class="user-name">{{ reply.User.name }}</span>
+        <span class="user-name">{{ profile.name }}</span>
         <span class="user-account"
-          >{{ reply.User.account }} ·{{ reply.createdAt | fromNow }}小時</span
+          >{{ reply.account }} ·{{ reply.createdAt | fromNow }}小時</span
         >
       </div>
       <div class="tweet">
         <p class="tweet-reply">
-          回覆 <sapn class="tweet-account"> @{{ reply.Tweet.account }}</sapn>
+          回覆 <span class="tweet-account"> @{{ reply.replyAccount }}</span>
         </p>
       </div>
       <div class="reply-content">
-        {{ reply.content }}
+        {{ reply.comment }}
       </div>
-      <div class="reply-actions">
+      <div
+        v-show="initialCurrentUserId !== currentParams"
+        class="reply-actions"
+      >
         <div class="reply-action">
           <font-awesome-icon icon="fa-regular fa-comment" />
           <p class="reply-number">{{ reply.replyNum }}</p>
@@ -29,13 +32,18 @@
         </div>
       </div>
     </div>
+    <ReplyModal />
   </div>
 </template>
 
 <script>
 import moment from "moment";
+import ReplyModal from "../components/ReplyModal.vue";
 
 export default {
+  components: {
+    ReplyModal,
+  },
   filters: {
     fromNow(datetime) {
       if (!datetime) {
@@ -45,6 +53,18 @@ export default {
     },
   },
   props: {
+    initialCurrentUserId: {
+      type: Number,
+      required: true,
+    },
+    initialUserReply: {
+      type: Object,
+      required: true,
+    },
+    initialProfile: {
+      type: Object,
+      required: true,
+    },
     initialReply: {
       type: Object,
       required: true,
@@ -52,8 +72,41 @@ export default {
   },
   data() {
     return {
-      reply: this.initialReply,
+      reply: this.initialUserReply,
+      profile: this.initialProfile,
+      currentParams: -1,
     };
+  },
+  created() {
+    const { id } = this.$route.params;
+    this.currentParams = Number(id);
+  },
+  watch: {
+    initialUserReply(newValue) {
+      this.reply = {
+        ...this.reply,
+        ...newValue,
+      };
+
+      // comment: "faker.lorem.text()"
+      // createAt: "2022-05-15T12:31:42.000Z"
+      // id: 4
+      // replyAccount: "user1"
+    },
+    initialReply(newValue) {
+      this.reply = {
+        ...this.reply,
+        ...newValue,
+      };
+      // account: "user2"
+      // avatar: "https://loremflickr.com/800/350/paradise/?random=75.80269215053413"
+      // comment: "faker.lorem.text()"
+      // id: 1
+      // likeCount: 0
+      // name: "user2"
+      // tweetId: 1
+      // userId: 3
+    },
   },
 };
 </script>

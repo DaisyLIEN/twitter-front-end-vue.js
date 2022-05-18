@@ -1,76 +1,66 @@
 <template>
-  <div>
-    <!-- Button trigger modal (測試按鈕，待組裝完成後刪除) -->
-    <button
-      type="button"
-      class="btn btn-primary"
-      data-toggle="modal"
-      data-target="#tweetModal"
-    >
-      Launch demo modal
-    </button>
-
-    <!-- Modal -->
-    <div
-      class="modal fade"
-      id="tweetModal"
-      tabindex="-1"
-      role="dialog"
-      aria-hidden="true"
-    >
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button
-              type="button"
-              class="close"
-              data-dismiss="modal"
-              aria-label="Close"
-            >
-              <span aria-hidden="true">×</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            <div class="posting">
-              <img class="photo" src="https://img.onl/d0RNIH" alt="" />
-              <div class="tweet-info">
-                <div class="user-info">
-                  <span class="user-name">Apple</span>
-                  <span class="user-account">@apple</span>
-                  <span>．</span>
-                  <span class="create-time">3 小時</span>
-                </div>
-                <div class="tweet-text">
-                  Nulla Lorem mollit cupidatat irure. Laborum magna nulla duis
-                  ullamco cillum dolor. Voluptate exercitation incididunt
-                  aliquip deserunt reprehenderit elit laborum.
-                </div>
-                <div class="reply-hint">回覆給@Mitsubishi</div>
+  <div
+    class="modal fade"
+    id="replyModal"
+    tabindex="-1"
+    role="dialog"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button
+            type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Close"
+          >
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="posting">
+            <img class="photo" :src="tweet.avatar" alt="" />
+            <div class="tweet-info">
+              <div class="user-info">
+                <span class="user-name">{{ tweet.name }}</span>
+                <span class="user-account">@{{ tweet.account }}</span>
+                <span>．</span>
+                <span class="create-time"
+                  >{{ tweet.createdAt | fromNow }}小時</span
+                >
               </div>
-              <div class="conect-line"></div>
+              <div class="tweet-text">
+                {{ tweet.description }}
+              </div>
+              <div class="reply-hint">回覆給@{{ tweet.account }}</div>
             </div>
-            <div class="posting">
-              <img class="photo" src="https://img.onl/d0RNIH" alt="" />
-              <textarea
-                v-model="replyContent"
-                id="note"
-                class="new-reply"
-                placeholder="推你的回覆"
-                autofocus
-                rows="5"
-              >
-              </textarea>
+            <div class="connect-line"></div>
+          </div>
+          <div class="posting">
+            <img class="photo" src="https://img.onl/d0RNIH" alt="" />
+            <textarea
+              v-model="replyContent"
+              id="note"
+              class="new-reply"
+              placeholder="推你的回覆"
+              autofocus
+              rows="5"
+            >
+            </textarea>
+          </div>
+          <div class="footer">
+            <div v-show="!replyContent.length" class="text-limit-error">
+              內容不可空白
             </div>
-            <div class="btn">
-              <button
-                @click="handleSubmit"
-                type="button"
-                class="btn-submit"
-                data-dismiss="modal"
-              >
-                回覆
-              </button>
-            </div>
+            <button
+              @click="handleSubmit"
+              type="button"
+              class="btn-submit"
+              data-dismiss="modal"
+            >
+              回覆
+            </button>
           </div>
         </div>
       </div>
@@ -82,6 +72,10 @@
 export default {
   name: "Replication",
   props: {
+    initialTweet: {
+      type: Object,
+      required: true,
+    },
     tweetId: {
       type: Number,
       required: true,
@@ -89,16 +83,31 @@ export default {
   },
   data() {
     return {
+      tweet: this.initialTweet,
       replyContent: "",
+      userId: -1,
     };
   },
   methods: {
     handleSubmit() {
+      if (this.replyContent.length === 0) return;
+
       this.$emit("after-reply", {
         tweetId: this.tweetId,
-        replyContent: this.replyContent,
+        userId: this.userId,
+        comment: this.replyContent,
       });
+
       this.replyContent = "";
+    },
+  },
+  watch: {
+    initialTweet(newValue) {
+      console.log("replyNewValue", newValue);
+      this.tweet = {
+        ...this.tweet,
+        ...newValue,
+      };
     },
   },
 };
@@ -183,7 +192,7 @@ export default {
   font-size: 14px;
   margin: 10px 0px;
 }
-.conect-line {
+.connect-line {
   position: absolute;
   top: 60px;
   left: 25px;
@@ -192,11 +201,20 @@ export default {
   background-color: #b5b5be;
 }
 
-.btn {
+.footer {
   display: flex;
   justify-content: flex-end;
+  align-items: center;
   margin-top: 20px;
   padding: 0;
+}
+
+.text-limit-error {
+  font-weight: 500;
+  font-size: 15px;
+  line-height: 15px;
+  color: #fc5a5a;
+  margin-right: 20px;
 }
 
 .btn-submit {
