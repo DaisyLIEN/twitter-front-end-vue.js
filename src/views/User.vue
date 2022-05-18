@@ -200,11 +200,11 @@ export default {
       }
     },
     // EditModal：PUT /api/users/:id
-    async handleAfterSubmit({ formData, userId }) {
+    async handleAfterSubmit({ formData }) { 
       try {
         console.log("收到子元件formData");
 
-        const { data } = await usersAPI.updateUserCard({ formData, userId });
+        const { data } = await usersAPI.updateUserCard({ formData });
 
         if (data.status !== "success") {
           throw new Error(data.message);

@@ -13,7 +13,11 @@ export default {
       headers: { Authorization: `Bearer ${getToken()}` }
     })
   },
-  getUserInfo() { },
+  getUserInfo() {
+    return apiHelper.get(`/users/${userId}`, {
+      headers: { Authorization: `Bearer ${getToken()}` }
+    })
+  },
   getUserCard(otherUserId) {
     return apiHelper.get(`/users/${otherUserId}`, {
       headers: { Authorization: `Bearer ${getToken()}` }
