@@ -4,7 +4,11 @@
       <Navbar />
     </div>
     <div class="middle-content">
-      <UserCard :initial-user-profile="profile" />
+      <UserCard
+        :initial-user-profile="profile"
+        :initial-current-user-id="currentUserId"
+        :initial-params-id="paramsId"
+      />
       <!-- TweetNavPills -->
       <div class="wrapper-tweet-nav-pills">
         <ul>
@@ -30,18 +34,25 @@
       </div>
 
       <div class="tweet-cards">
-      <TweetCard
-        v-for="user in UsersTweets"
-        :key="user.id"
-        :initial-user="user"
-        v-show="currentPill === 'tweets'"
-      />
+        <TweetCard
+          v-for="user in usersTweets"
+          :key="user.id"
+          :initial-user="user"
+          v-show="currentPill === 'tweets'"
+        />
       </div>
 
-      <ReplyCard v-show="currentPill === 'repliedTweets'" />
+      <ReplyCard
+        v-for="userReply in replyTweets"
+        :key="userReply.id"
+        :initial-user-reply="userReply"
+        :initial-profile="profile"
+        :initial-current-user-id="currentUserId"
+        v-show="currentPill === 'repliedTweets'"
+      />
 
       <TweetCard
-        v-for="user in UsersTweets"
+        v-for="user in usersTweets"
         :key="user.id"
         :initial-user="user"
         v-show="currentPill === 'likes'"
@@ -51,120 +62,29 @@
       <PopularList />
     </div>
 
-    <!-- <EditModal />       -->
     <EditModal
       :initial-user-profile="profile"
       @after-submit="handleAfterSubmit"
-      ref="editModalRef"
     />
+    <!-- ref="editModalRef" -->
   </div>
 </template>
 
 <script>
 import Navbar from "../components/Navbar.vue";
 import UserCard from "../components/UserCard.vue";
-// import TweetNavPills from "../components/TweetNavPills.vue";
 import TweetCard from "../components/TweetCard.vue";
 import ReplyCard from "../components/ReplyCard.vue";
 import PopularList from "../components/PopularList.vue";
 import EditModal from "../components/EditModal.vue";
+import usersAPI from "./../apis/users";
 import tweetsAPI from "./../apis/tweets";
-
-// const dummyDataUser = {
-//   profile: {
-//     id: 1,
-//     userAccount: "user1",
-//     userName: "John Doe",
-//     introduction: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-//     avatar: "https://i.imgur.com/sFuDF3M.png",
-//     cover: "https://i.imgur.com/H3ADasp.png",
-//     followingsCount: 34,
-//     followersCount: 59,
-//   },
-// };
-
-// const dummyDataUsersTweets = {
-//   users: [
-//     {
-//       id: 1,
-//       name: "Apple",
-//       account: "apple",
-//       image: "https://img.onl/Dwojms",
-//       createdAt: "2022-05-11T02:16:16.000Z",
-//       updatedAt: "2022-05-11T02:16:16.000Z",
-//       content:
-//         "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec sed lacinia justo. Cras mi ipsum, venenatis vitae pretium quis, interdum non orci. Suspendisse blandit libero sit amet nisl blandit, vitae fermentum leo tincidunt.",
-//       replyNum: 13,
-//       likeNum: 76,
-//     },
-//     {
-//       id: 2,
-//       name: "Jane Cathy",
-//       account: "jamjane1999",
-//       image: "https://img.onl/KW4sJV",
-//       createdAt: "2022-04-25T02:16:16.000Z",
-//       updatedAt: "2022-04-25T02:16:16.000Z",
-//       content:
-//         "Cras blandit libero nibh, nec scelerisque lorem condimentum sit amet. Nam sapien eros, ultricies sit amet arcu non, iaculis venenatis nulla. Integer efficitur varius neque, viverra vestibulum ligula. Duis libero odio, convallis a elit ac, fermentum luctus velit.",
-//       replyNum: 10,
-//       likeNum: 80,
-//     },
-//     {
-//       id: 3,
-//       name: "Cheery",
-//       account: "cheerysweet",
-//       image: "https://img.onl/H5eDF2",
-//       createdAt: "2022-04-19T02:16:16.000Z",
-//       updatedAt: "2022-04-19T02:16:16.000Z",
-//       content:
-//         "Integer odio tellus, viverra eget vestibulum vitae, auctor sed magna. Sed sed gravida diam. Praesent volutpat tincidunt risus a sagittis. Vestibulum quis purus venenatis, sodales justo eu, faucibus tortor.",
-//       replyNum: 17,
-//       likeNum: 55,
-//     },
-//     {
-//       id: 4,
-//       name: "Dana",
-//       account: "danagirl",
-//       image: "https://img.onl/HM4fxm",
-//       createdAt: "2022-04-19T02:16:16.000Z",
-//       updatedAt: "2022-04-19T02:16:16.000Z",
-//       content:
-//         "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam porttitor, orci imperdiet condimentum sagittis, nisl enim commodo sem, nec ornare augue libero ut purus.",
-//       replyNum: 10,
-//       likeNum: 88,
-//     },
-//     {
-//       id: 5,
-//       name: "Gorden",
-//       account: "gordenball2022",
-//       image: "https://img.onl/25RyTE",
-//       createdAt: "2022-04-19T02:16:16.000Z",
-//       updatedAt: "2022-04-19T02:16:16.000Z",
-//       content:
-//         "Nullam eu ante nisi. In convallis non augue ac rutrum. Fusce eu ullamcorper quam. Duis at aliquet tortor.",
-//       replyNum: 13,
-//       likeNum: 76,
-//     },
-//     {
-//       id: 6,
-//       name: "LuLu",
-//       account: "lulupig",
-//       image: "https://img.onl/1XTVZ",
-//       createdAt: "2022-04-19T02:16:16.000Z",
-//       updatedAt: "2022-04-19T02:16:16.000Z",
-//       content:
-//         "Integer ut pulvinar augue, ac molestie diam. Aliquam sagittis luctus elit, vitae auctor enim euismod nec.",
-//       replyNum: 17,
-//       likeNum: 68,
-//     },
-//   ],
-// };
+import { Toast } from "./../utils/helpers";
 
 export default {
   components: {
     Navbar,
     UserCard,
-    // TweetNavPills,
     TweetCard,
     ReplyCard,
     PopularList,
@@ -172,7 +92,10 @@ export default {
   },
   data() {
     return {
-      UsersTweets: [],
+      currentUserId: -1,
+      paramsId: -1,
+      usersTweets: [],
+      replyTweets: [],
       profile: {
         id: -1,
         account: "",
@@ -182,31 +105,37 @@ export default {
         cover: "",
         followingsCount: 0,
         followersCount: 0,
-        totalTweetCount: 0,
+        tweetCount: 0,
       },
       currentPill: "tweets",
     };
   },
   created() {
-    this.fetchUserCard();
-    this.fetchUsersTweets();
+    const { id } = this.$route.params;
+    this.paramsId = Number(id);
+    this.getCurrentUserId();
+    this.fetchUserCard(id);
+    this.fetchUsersTweets(id);
   },
   methods: {
+    getCurrentUserId() {
+      const userId = localStorage.getItem("userId");
+      this.currentUserId = Number(userId);
+    },
     switchNavPill(pillName) {
       this.currentPill = pillName;
       if (pillName === "tweets") {
-        this.fetchUsersTweets();
+        this.fetchUsersTweets(this.paramsId);
       } else if (pillName === "repliedTweets") {
-        this.fetchReplyTweets();
+        this.fetchReplyTweets(this.paramsId);
       } else {
-        this.fetchLikes();
+        this.fetchLikes(this.paramsId);
       }
     },
     // UserCard：GET /api/users/:id
-    async fetchUserCard() {
+    async fetchUserCard(paramsId) {
       try {
-        const { data } = await tweetsAPI.getUserCard(2);
-        console.log("fetchUserCard", data);
+        const { data } = await usersAPI.getUserCard(paramsId);
 
         const {
           id,
@@ -217,6 +146,7 @@ export default {
           cover,
           followingsCount,
           followersCount,
+          tweetCount,
         } = data;
 
         this.profile = {
@@ -229,49 +159,73 @@ export default {
           cover,
           followingsCount,
           followersCount,
+          tweetCount,
         };
       } catch (error) {
         console.log(error);
       }
     },
     // 推文：GET /api/users/:id/tweets
-    async fetchUsersTweets() {
+    async fetchUsersTweets(paramsId) {
       try {
-        const { data } = await tweetsAPI.getTweets(14);
-        console.log("fetchUsersTweets", data);
-        this.UsersTweets = data;
+        const { data } = await tweetsAPI.getUserTweets(paramsId);
+        console.log("getUserTweets", data);
+        this.usersTweets = data;
       } catch (error) {
         console.log("fetchUsersTweets", error);
       }
     },
     // 回覆：GET /api/users/:id/replied_tweets
-    async fetchReplyTweets() {
+    async fetchReplyTweets(paramsId) {
       try {
-        const { data } = await tweetsAPI.getReplyTweets(14);
-        console.log("getReplyTweets", data);
+        const { data } = await tweetsAPI.getReplyTweets(paramsId);
+        this.replyTweets = data;
       } catch (error) {
         console.log("getReplyTweets", error);
       }
     },
     // 喜歡的內容：GET /api/users/:id/likes
-    async fetchLikes() {
+    async fetchLikes(paramsId) {
       try {
-        console.log("fetchLikes");
-        const { data } = await tweetsAPI.getLikeTweets(14);
+        const { data } = await tweetsAPI.getLikeTweets(paramsId);
         console.log("getLikeTweets", data);
-        this.UsersTweets = data;
+
+        if (data.length === 0) {
+          this.usersTweets = [];
+        } else {
+          this.usersTweets = data;
+        }
       } catch (error) {
         console.log("getLikeTweets", error);
       }
     },
-    handleAfterSubmit(formData) {
-      // EditModal：PUT /api/users/:id
-      // 透過 API 將表單資料送到伺服器
-      console.log("usercardget");
-      for (let [name, value] of formData.entries()) {
-        console.log(name + ": " + value);
+    // EditModal：PUT /api/users/:id
+    async handleAfterSubmit({ formData, userId }) {
+      try {
+        console.log("收到子元件formData");
+
+        const { data } = await usersAPI.updateUserCard({ formData, userId });
+
+        if (data.status !== "success") {
+          throw new Error(data.message);
+        }
+
+        console.log("個人資料送後端成功");
+        this.fetchUserCard();
+      } catch (error) {
+        Toast.fire({
+          icon: "error",
+          title: "無法更新個人資料，請稍後再試",
+        });
       }
     },
+  },
+  beforeRouteUpdate(to, from, next) {
+    const { id } = to.params;
+    this.paramsId = Number(id);
+    this.fetchUserCard(id);
+    this.fetchUsersTweets(id);
+    next();
   },
 };
 </script>

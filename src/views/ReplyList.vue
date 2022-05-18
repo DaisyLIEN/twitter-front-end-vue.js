@@ -17,9 +17,47 @@
         </div>
       </header>
 
-      <!-- 推文 -->
-      
-
+      <!-- 推文區域 -->
+      <div class="tweet-section">
+        <div class="tweet-content">
+          <div class="user-avatar-name-account">
+            <router-link :to="{ name: 'user', params: { id: userId } }">
+              <img :src="tweet.avatar" alt="" class="user-avatar" />
+            </router-link>
+            <div class="user-name-account">
+              <span class="user-name">{{ tweet.name }}</span>
+              <span class="user-account">@{{ tweet.account }}</span>
+            </div>
+          </div>
+          <div class="tweet-description">
+            {{ tweet.description }}
+          </div>
+          <div class="tweet-time">{{ tweet.createdAt | fromNow }}小時</div>
+        </div>
+        <div class="tweet-counts">
+          <p class="reply-count">{{ tweet.replyCount }}<span> 回覆</span></p>
+          <p class="like-count">{{ tweet.likeCount }}<span> 喜歡次數</span></p>
+        </div>
+        <div class="tweet-actions">
+          <font-awesome-icon
+            data-toggle="modal"
+            data-target="#replyModal"
+            icon="fa-regular fa-comment"
+          />
+          <font-awesome-icon
+            v-if="tweet.isLiked"
+            @click.prevent.stop="deleteLike(tweet.id)"
+            icon="fa-regular fa-heart"
+            class="fa-heart-active"
+          />
+          <font-awesome-icon
+            v-else
+            @click.prevent.stop="addLike(tweet.id)"
+            icon="fa-regular fa-heart"
+          />
+        </div>
+        <!-- <hr class="hr1" /> -->
+      </div>
 
       <ReplyCard
         v-for="reply in replylist"
@@ -31,302 +69,145 @@
     <div class="right-content">
       <PopularList />
     </div>
+
+    <ReplyModal :initial-tweet="tweet" @after-reply="handleAfterReply" />
   </div>
 </template>
 
 <script>
+// import moment from "moment";
 import Navbar from "../components/Navbar.vue";
 import ReplyCard from "./../components/ReplyCard";
 import PopularList from "../components/PopularList.vue";
-
-const dummyData = {
-  users: [
-    {
-      id: 1,
-      name: "Apple",
-      account: "apple",
-      image: "https://img.onl/Dwojms",
-      createdAt: "2022-05-11T02:16:16.000Z",
-      updatedAt: "2022-05-11T02:16:16.000Z",
-      content:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec sed lacinia justo. Cras mi ipsum, venenatis vitae pretium quis, interdum non orci. Suspendisse blandit libero sit amet nisl blandit, vitae fermentum leo tincidunt.",
-      replyNum: 13,
-      likeNum: 76,
-    },
-    {
-      id: 2,
-      name: "Jane Cathy",
-      account: "jamjane1999",
-      image: "https://img.onl/KW4sJV",
-      createdAt: "2022-04-25T02:16:16.000Z",
-      updatedAt: "2022-04-25T02:16:16.000Z",
-      content:
-        "Cras blandit libero nibh, nec scelerisque lorem condimentum sit amet. Nam sapien eros, ultricies sit amet arcu non, iaculis venenatis nulla. Integer efficitur varius neque, viverra vestibulum ligula. Duis libero odio, convallis a elit ac, fermentum luctus velit.",
-      replyNum: 10,
-      likeNum: 80,
-    },
-    {
-      id: 3,
-      name: "Cheery",
-      account: "cheerysweet",
-      image: "https://img.onl/H5eDF2",
-      createdAt: "2022-04-19T02:16:16.000Z",
-      updatedAt: "2022-04-19T02:16:16.000Z",
-      content:
-        "Integer odio tellus, viverra eget vestibulum vitae, auctor sed magna. Sed sed gravida diam. Praesent volutpat tincidunt risus a sagittis. Vestibulum quis purus venenatis, sodales justo eu, faucibus tortor.",
-      replyNum: 17,
-      likeNum: 55,
-    },
-    {
-      id: 4,
-      name: "Dana",
-      account: "danagirl",
-      image: "https://img.onl/HM4fxm",
-      createdAt: "2022-04-19T02:16:16.000Z",
-      updatedAt: "2022-04-19T02:16:16.000Z",
-      content:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam porttitor, orci imperdiet condimentum sagittis, nisl enim commodo sem, nec ornare augue libero ut purus.",
-      replyNum: 10,
-      likeNum: 88,
-    },
-    {
-      id: 5,
-      name: "Gorden",
-      account: "gordenball2022",
-      image: "https://img.onl/25RyTE",
-      createdAt: "2022-04-19T02:16:16.000Z",
-      updatedAt: "2022-04-19T02:16:16.000Z",
-      content:
-        "Nullam eu ante nisi. In convallis non augue ac rutrum. Fusce eu ullamcorper quam. Duis at aliquet tortor.",
-      replyNum: 13,
-      likeNum: 76,
-    },
-    {
-      id: 6,
-      name: "LuLu",
-      account: "lulupig",
-      image: "https://img.onl/1XTVZ",
-      createdAt: "2022-04-19T02:16:16.000Z",
-      updatedAt: "2022-04-19T02:16:16.000Z",
-      content:
-        "Integer ut pulvinar augue, ac molestie diam. Aliquam sagittis luctus elit, vitae auctor enim euismod nec.",
-      replyNum: 17,
-      likeNum: 68,
-    },
-  ],
-  replylist: [
-    {
-      id: 1,
-      content:
-        "Ut ipsum culpa consequatur cum error sit qui totam ab. Ut ipsum culpa consequatur cum error sit qui totam ab.",
-      userId: 1,
-      tweetId: 1,
-      createdAt: "2022-04-19T02:16:16.000Z",
-      updatedAt: "2022-04-19T02:16:16.000Z",
-      replyNum: 13,
-      likeNum: 76,
-      User: {
-        id: 1,
-        name: "root",
-        email: "root@example.com",
-        account: "devon_lane",
-        image: "https://img.onl/Dwojms",
-        password:
-          "$2a$10$UMTVoVpobdowk25uWvbhkOz84BaOxA.L2qWrRJOm1I5eGuX9dCdmi",
-        isAdmin: true,
-        createdAt: "2022-04-19T02:16:16.000Z",
-        updatedAt: "2022-04-19T02:16:16.000Z",
-      },
-      Tweet: {
-        id: 1,
-        name: "Mrs. Brooks Koch",
-        account: "apple",
-        tel: "1-758-244-5096 x093",
-        address: "577 Tristian Walk",
-        opening_hours: "08:00",
-        description: "earum",
-        image:
-          "https://loremflickr.com/320/240/restaurant,food/?random=57.10351638724558",
-        viewCounts: 1,
-        createdAt: "2022-04-19T02:16:16.000Z",
-        updatedAt: "2022-04-22T04:38:14.000Z",
-        CategoryId: 3,
-      },
-    },
-    {
-      id: 1,
-      content: "Ut ipsum culpa consequatur cum error sit qui totam ab.",
-      userId: 1,
-      tweetId: 1,
-      createdAt: "2022-04-19T02:16:16.000Z",
-      updatedAt: "2022-04-19T02:16:16.000Z",
-      replyNum: 13,
-      likeNum: 76,
-      User: {
-        id: 1,
-        name: "root",
-        email: "root@example.com",
-        account: "devon_lane",
-        image: "https://img.onl/Dwojms",
-        password:
-          "$2a$10$UMTVoVpobdowk25uWvbhkOz84BaOxA.L2qWrRJOm1I5eGuX9dCdmi",
-        isAdmin: true,
-        createdAt: "2022-04-19T02:16:16.000Z",
-        updatedAt: "2022-04-19T02:16:16.000Z",
-      },
-      Tweet: {
-        id: 1,
-        name: "Mrs. Brooks Koch",
-        account: "apple",
-        tel: "1-758-244-5096 x093",
-        address: "577 Tristian Walk",
-        opening_hours: "08:00",
-        description: "earum",
-        image:
-          "https://loremflickr.com/320/240/restaurant,food/?random=57.10351638724558",
-        viewCounts: 1,
-        createdAt: "2022-04-19T02:16:16.000Z",
-        updatedAt: "2022-04-22T04:38:14.000Z",
-        CategoryId: 3,
-      },
-    },
-    {
-      id: 1,
-      content: "Ut ipsum culpa consequatur cum error sit qui totam ab.",
-      userId: 1,
-      tweetId: 1,
-      createdAt: "2022-04-19T02:16:16.000Z",
-      updatedAt: "2022-04-19T02:16:16.000Z",
-      replyNum: 13,
-      likeNum: 76,
-      User: {
-        id: 1,
-        name: "root",
-        email: "root@example.com",
-        account: "devon_lane",
-        image: "https://img.onl/Dwojms",
-        password:
-          "$2a$10$UMTVoVpobdowk25uWvbhkOz84BaOxA.L2qWrRJOm1I5eGuX9dCdmi",
-        isAdmin: true,
-        createdAt: "2022-04-19T02:16:16.000Z",
-        updatedAt: "2022-04-19T02:16:16.000Z",
-      },
-      Tweet: {
-        id: 1,
-        name: "Mrs. Brooks Koch",
-        account: "apple",
-        tel: "1-758-244-5096 x093",
-        address: "577 Tristian Walk",
-        opening_hours: "08:00",
-        description: "earum",
-        image:
-          "https://loremflickr.com/320/240/restaurant,food/?random=57.10351638724558",
-        viewCounts: 1,
-        createdAt: "2022-04-19T02:16:16.000Z",
-        updatedAt: "2022-04-22T04:38:14.000Z",
-        CategoryId: 3,
-      },
-    },
-    {
-      id: 1,
-      content: "Ut ipsum culpa consequatur cum error sit qui totam ab.",
-      userId: 1,
-      tweetId: 1,
-      createdAt: "2022-04-19T02:16:16.000Z",
-      updatedAt: "2022-04-19T02:16:16.000Z",
-      replyNum: 13,
-      likeNum: 76,
-      User: {
-        id: 1,
-        name: "root",
-        email: "root@example.com",
-        account: "devon_lane",
-        image: "https://img.onl/Dwojms",
-        password:
-          "$2a$10$UMTVoVpobdowk25uWvbhkOz84BaOxA.L2qWrRJOm1I5eGuX9dCdmi",
-        isAdmin: true,
-        createdAt: "2022-04-19T02:16:16.000Z",
-        updatedAt: "2022-04-19T02:16:16.000Z",
-      },
-      Tweet: {
-        id: 1,
-        name: "Mrs. Brooks Koch",
-        account: "apple",
-        tel: "1-758-244-5096 x093",
-        address: "577 Tristian Walk",
-        opening_hours: "08:00",
-        description: "earum",
-        image:
-          "https://loremflickr.com/320/240/restaurant,food/?random=57.10351638724558",
-        viewCounts: 1,
-        createdAt: "2022-04-19T02:16:16.000Z",
-        updatedAt: "2022-04-22T04:38:14.000Z",
-        CategoryId: 3,
-      },
-    },
-    {
-      id: 1,
-      content: "Ut ipsum culpa consequatur cum error sit qui totam ab.",
-      userId: 1,
-      tweetId: 1,
-      createdAt: "2022-04-19T02:16:16.000Z",
-      updatedAt: "2022-04-19T02:16:16.000Z",
-      replyNum: 13,
-      likeNum: 76,
-      User: {
-        id: 1,
-        name: "root",
-        email: "root@example.com",
-        account: "devon_lane",
-        image: "https://img.onl/Dwojms",
-        password:
-          "$2a$10$UMTVoVpobdowk25uWvbhkOz84BaOxA.L2qWrRJOm1I5eGuX9dCdmi",
-        isAdmin: true,
-        createdAt: "2022-04-19T02:16:16.000Z",
-        updatedAt: "2022-04-19T02:16:16.000Z",
-      },
-      Tweet: {
-        id: 1,
-        name: "Mrs. Brooks Koch",
-        account: "apple",
-        tel: "1-758-244-5096 x093",
-        address: "577 Tristian Walk",
-        opening_hours: "08:00",
-        description: "earum",
-        image:
-          "https://loremflickr.com/320/240/restaurant,food/?random=57.10351638724558",
-        viewCounts: 1,
-        createdAt: "2022-04-19T02:16:16.000Z",
-        updatedAt: "2022-04-22T04:38:14.000Z",
-        CategoryId: 3,
-      },
-    },
-  ],
-};
+import ReplyModal from "../components/ReplyModal.vue";
+import tweetsAPI from "./../apis/tweets";
 
 export default {
   components: {
     Navbar,
     ReplyCard,
-    PopularList
+    PopularList,
+    ReplyModal,
   },
   data() {
     return {
+      user: {
+        Id: -1,
+      },
+      tweet: {
+        id: -1,
+        name: "",
+        account: "",
+        avatar: "",
+        description: "",
+        createdAt: "",
+        likeCount: 0,
+        replyCount: 0,
+        isLiked: false,
+      },
       users: [],
       replylist: [],
     };
   },
   created() {
-    this.fetchData();
+    this.fetchTweet();
+    this.fetchTweetReplies();
   },
   methods: {
-    fetchData() {
-      this.users = dummyData.users;
-      this.replylist = dummyData.replylist;
-    },
     // GET /tweets/:tweet_id
+    async fetchTweet() {
+      try {
+        const { data } = await tweetsAPI.getTweet(1);
+        console.log("fetchTweet", data);
+
+        const {
+          id,
+          name,
+          account,
+          avatar,
+          description,
+          createdAt,
+          likeCount,
+          replyCount,
+        } = data;
+
+        this.tweet = {
+          ...this.tweet,
+          id,
+          name,
+          account,
+          avatar,
+          description,
+          createdAt,
+          likeCount,
+          replyCount,
+        };
+      } catch (error) {
+        console.log(error);
+      }
+    },
     // GET /api/tweets/:tweet_id/replies
+    async fetchTweetReplies() {
+      try {
+        const { data } = await tweetsAPI.getTweetReplies(1);
+        console.log("getTweetReplies", data);
+        this.replylist = data;
+      } catch (error) {
+        console.log("getTweetReplies", error);
+      }
+    },
     // POST /tweets/:tweet_id/replies
+    async handleAfterReply(payload) {
+      try {
+        console.log("handleAfterReply", payload);
+        const { tweetId, userId, comment } = payload;
+        const { data } = await tweetsAPI.createTweetReply({
+          tweetId,
+          userId,
+          comment,
+        });
+
+        if (data.status !== "success") {
+          throw new Error(data.message);
+        }
+      } catch (error) {
+        console.log("createTweetReply", error);
+      }
+    },
+    // POST /tweets/:id/like
+    addLike() {
+      this.tweet = {
+        ...this.tweet,
+        isLiked: true,
+      };
+    },
+    deleteLike() {
+      this.tweet = {
+        ...this.tweet,
+        isLiked: false,
+      };
+    },
+
+    // async addLike(userId) {
+    //   try {
+    //     const { data } = await usersAPI.addLike({ restaurantId });
+
+    //     if (data.status !== "success") {
+    //       throw new Error(data.message);
+    //     }
+
+    //     this.restaurant = {
+    //     ...this.restaurant,
+    //     isLiked: true,
+    //   };
+    //   } catch (error) {
+    //     Toast.fire({
+    //       icon: "error",
+    //       title: "無法增加Like ，請稍後再試",
+    //     });
+    //   }
+    // },
+    // POST /tweets/:id/unlike
   },
 };
 </script>
@@ -347,6 +228,7 @@ export default {
   grid-column: 2 / 3;
   width: 639px;
   padding: 0;
+  border: 1px solid #e6ecf0;
 }
 .right-content {
   grid-column: 3 /4;
@@ -364,5 +246,95 @@ header {
   height: 14px;
   margin: auto 28px auto 19px;
   cursor: pointer;
+}
+/* twitter-section */
+.tweet-section {
+  width: 639px;
+  /* min-height: 351px; */
+  margin-bottom: 16px;
+  border-top: 1px solid #e6ecf0;
+  border-bottom: 1px solid #e6ecf0;
+  display: flex;
+  flex-flow: column nowrap;
+}
+.tweet-content {
+  margin: 16px 21px 0 16px;
+  padding-bottom: 8px;
+  display: flex;
+  flex-flow: column nowrap;
+}
+.user-avatar-name-account {
+  display: flex;
+}
+.user-avatar {
+  width: 50px;
+  height: 50px;
+  display: block;
+  object-fit: cover;
+  margin-right: 8px;
+  border-radius: 50%;
+}
+.user-name-account {
+  display: flex;
+  flex-flow: column nowrap;
+}
+.user-name {
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 26px;
+  color: #171725;
+}
+.user-account {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 22px;
+  color: #6c757d;
+}
+.tweet-description {
+  margin: 10px 0 8px;
+  font-size: 24px;
+  font-weight: 400;
+  line-height: 36px;
+  color: #171725;
+}
+.tweet-time {
+  font-size: 14px;
+  line-height: 22px;
+  color: #6c757d;
+}
+.tweet-counts {
+  height: 60px;
+  margin: 0 21px 0 16px;
+  display: flex;
+  align-items: center;
+  border-top: 1px solid #e6ecf0;
+  border-bottom: 1px solid #e6ecf0;
+  font-size: 19px;
+  font-weight: 700;
+  line-height: 23.16px;
+  color: #171725;
+}
+.tweet-counts > p > span {
+  font-weight: 500;
+  line-height: 27.51px;
+  color: #6c757d;
+}
+.reply-count {
+  margin-right: 24px;
+}
+.tweet-actions {
+  height: 60px;
+  margin: 0 21px 0 16px;
+  display: flex;
+  align-items: center;
+  font-size: 30px;
+  color: #6c757d;
+  cursor: pointer;
+}
+.fa-comment {
+  margin-right: 128px;
+}
+.fa-heart-active {
+  color: red;
 }
 </style>

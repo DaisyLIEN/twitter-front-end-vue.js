@@ -2,13 +2,32 @@ import { apiHelper } from '../utils/helpers'
 const getToken = () => localStorage.getItem('token')
 
 export default {
-  getUserCard(userId) {
-    return apiHelper.get(`/users/${userId}`, {
+  getTweet(tweetId) {
+    return apiHelper.get(`/tweets/${tweetId}`, {
+      headers: { Authorization: `Bearer ${getToken()}` }
+    })
+  },
+  getTweetReplies(tweetId) {
+    return apiHelper.get(`/tweets/${tweetId}/replies`, {
+      headers: { Authorization: `Bearer ${getToken()}` }
+    })
+  },
+  createTweetReply({ tweetId, userId, comment }) {
+    return apiHelper.post(`/tweets/${tweetId}/replies`, {
+      tweetId,
+      userId,
+      comment
+    }, {
       headers: { Authorization: `Bearer ${getToken()}` }
     })
   },
   getTweets() {
     return apiHelper.get('/tweets', {
+      headers: { Authorization: `Bearer ${getToken()}` }
+    })
+  },
+  addTweet({ description }) {
+    return apiHelper.post('/tweets', { description }, {
       headers: { Authorization: `Bearer ${getToken()}` }
     })
   },
@@ -22,18 +41,8 @@ export default {
       headers: { Authorization: `Bearer ${getToken()}` }
     })
   },
-  addTweet({ description }) {
-    return apiHelper.post('/tweets', { description }, {
-      headers: { Authorization: `Bearer ${getToken()}` }
-    })
-  },
   getLikeTweets(userId) {
     return apiHelper.get(`/users/${userId}/likes`, {
-      headers: { Authorization: `Bearer ${getToken()}` }
-    })
-  },
-  updateUserCard({ userId, formData }) {
-    return apiHelper.put(`/users/${userId}`, formData, {
       headers: { Authorization: `Bearer ${getToken()}` }
     })
   },

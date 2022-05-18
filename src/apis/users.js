@@ -1,5 +1,6 @@
 import { apiHelper } from "./../utils/helpers";
 const getToken = () => localStorage.getItem('token')
+// const userId = () => localStorage.getItem('userId')
 
 export default {
   addLike(tweetId) {
