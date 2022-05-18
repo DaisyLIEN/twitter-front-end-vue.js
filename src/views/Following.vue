@@ -13,18 +13,18 @@
           alt=""
         />
         <div class="title">
-          <h5>Jone Doe</h5>
-          <!-- <h5>{{ user.name }}</h5> -->
-          <p>0 推文</p>
-          <!-- <p>{{ user.totalTweetCount }} 推文</p> -->
+          <h5>{{ user.name }}</h5>
+          <p>{{ user.totalTweetCount }} 推文</p>
         </div>
       </header>
 
       <!-- FollowNavPills -->
       <div class="wrapper-follow-nav-pills">
         <ul>
-          <li @click.stop.prevent="switchNavPill('follows')">追隨者</li>
-          <li @click.stop.prevent="switchNavPill('followings')">正在追隨</li>
+          <router-link class="to-follower" :to="{ name: 'follower' }">
+            <li>追隨者</li>
+          </router-link>
+          <li class="active">正在追隨</li>
         </ul>
       </div>
 
@@ -41,6 +41,7 @@
 import Navbar from "../components/Navbar.vue";
 import FollowCard from "./../components/FollowCard";
 import PopularList from "../components/PopularList.vue";
+import usersAPI from "./../apis/users";
 import tweetsAPI from "./../apis/tweets";
 
 // const dummyData = {
@@ -147,33 +148,36 @@ export default {
   },
   data() {
     return {
+      user: {
+        id: -1,
+        name: "",
+        totalTweetCount: 0,
+      },
       users: [],
-      currentPill: "follows",
     };
   },
   created() {
-    this.fetchFollowsTweets();
+    this.fetchUserCard()
+    this.fetchFollowingsTweets();
   },
   methods: {
-    switchNavPill(pillName) {
-      this.currentPill = pillName;
-      if (pillName === "follows") {
-        this.fetchFollowsTweets();
-      } else {
-        this.fetchFollowingsTweets();
-      }
-    },
-    // fetchUsers() {
-    //   this.users = dummyData.users;
-    // },
-    // GET /api/users/:id/followers
-    async fetchFollowsTweets() {
+    // GET /api/users/:id，取id、名稱、總推文數
+    async fetchUserCard() {
       try {
-        const { data } = await tweetsAPI.getFollowersTweets(2);
-        console.log("getFollowersTweets", data);
-        this.users = data;
+        const { data } = await usersAPI.getUserCard(2);
+
+        console.log("getUserCard", data);
+
+        const { id, name, totalTweetCount } = data;
+
+        this.user = {
+          ...this.user,
+          id,
+          name,
+          totalTweetCount,
+        };
       } catch (error) {
-        console.log("getFollowersTweets", error);
+        console.log("fetchUserCard", error);
       }
     },
     // GET /api/users/:id/followings
@@ -252,9 +256,11 @@ li {
   cursor: pointer;
 }
 li:hover,
-li:focus,
-li:active {
+.active {
   color: #ff6600;
   border-bottom: 2px solid #ff6600;
+}
+.to-follower {
+  text-decoration: none;
 }
 </style>

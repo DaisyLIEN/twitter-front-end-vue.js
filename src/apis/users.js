@@ -3,18 +3,19 @@ const getToken = () => localStorage.getItem('token')
 const userId = localStorage.getItem("userId");
 
 export default {
-  addLike({ restaurantId }) {
-    return apiHelper.post(`/like/${restaurantId}`, null, {
+  addLike(userId) {
+    return apiHelper.post(`/like/${userId}`, null, {
       headers: { Authorization: `Bearer ${getToken()}` }
     })
   },
-  deleteLike({ restaurantId }) {
-    return apiHelper.delete(`/like/${restaurantId}`, {
+  deleteLike(userId) {
+    return apiHelper.delete(`/like/${userId}`, {
       headers: { Authorization: `Bearer ${getToken()}` }
     })
   },
-  getUserInfo() {
-    return apiHelper.get(`/users/${userId}`, {
+  getUserInfo() { },
+  getUserCard(otherUserId) {
+    return apiHelper.get(`/users/${otherUserId}`, {
       headers: { Authorization: `Bearer ${getToken()}` }
     })
   },
@@ -28,5 +29,10 @@ export default {
     }, {
       headers: { Authorization: `Bearer ${getToken()}` }
     })
-  }
+  },
+  updateUserCard({ formData }) {
+    return apiHelper.put(`/users/${userId}`, { formData, userId }, {
+      headers: { Authorization: `Bearer ${getToken()}` }
+    })
+  },
 }
