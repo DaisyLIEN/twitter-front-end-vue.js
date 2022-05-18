@@ -52,7 +52,31 @@ export default {
   },
   data() {
     return {
-      user: this.initialUser,
+      user: {
+        id: -1, //
+        description: "",
+        UserId: -1,
+        createdAt: "", //
+        updatedAt: "",
+        User: {
+          id: -1,
+          account: "", //
+          name: "", //
+          email: "",
+          password: "",
+          avatar: "",
+          introduction: "",
+          cover: "",
+          role: "",
+          createdAt: "",
+          updatedAt: "",
+        },
+      },
+    };
+  },
+  created() {
+    this.user = {
+      ...this.user,
     };
   },
   watch: {
