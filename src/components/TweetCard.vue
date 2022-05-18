@@ -71,7 +71,7 @@ export default {
   methods: {
     async addLike(tweetId) {
       try {
-        const response = await usersAPI.addLike(tweetId)
+        const response = await usersAPI.addTweetLike(tweetId)
         console.log('response', response)
 
         const {data} =response
@@ -89,7 +89,7 @@ export default {
     },
     async deleteLike(tweetId) {
       try {
-        const response = await usersAPI.deleteLike(tweetId)
+        const response = await usersAPI.deleteTweetLike(tweetId)
         console.log('response', response)
 
         const {data} =response

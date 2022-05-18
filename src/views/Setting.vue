@@ -52,6 +52,7 @@
             type="password"
             class="form-control"
             autocomplete="new-password"
+            placeholder="請設定密碼"
             required
           />
         </div>
@@ -60,18 +61,20 @@
           <label for="password-check">密碼確認</label>
           <input
             id="password-check"
-            v-model="passwordCheck"
-            name="passwordCheck"
+            v-model="checkPassword"
+            name="checkPassword"
             type="password"
             class="form-control"
             autocomplete="new-password"
+            placeholder="請再次輸入密碼"
             required
           />
         </div>
-
-        <button class="btn btn-lg btn-primary btn-block mb-3" type="submit">
-          註冊
-        </button>
+        <div class="button-container">
+          <button class="btn btn-lg btn-primary btn-block mb-3" type="submit">
+            儲存
+          </button>
+        </div>
       </form>
     </div>
   </div>
@@ -79,6 +82,8 @@
 
 <script>
 import Navbar from "../components/Navbar.vue";
+import usersAPI from "../apis/users";
+import { mapState } from "vuex";
 
 export default {
   data() {
@@ -87,11 +92,48 @@ export default {
       name: "",
       email: "",
       password: "",
-      passwordCheck: "",
+      checkPassword: "",
     };
   },
   components: {
     Navbar,
+  },
+  created() {
+    this.fetchAccount();
+  },
+  methods: {
+    //從API取得user資訊
+    async fetchAccount() {
+      try {
+        const response = await usersAPI.getUserInfo();
+        console.log(response.data)
+        const { account, name, email } = response.data;
+        this.account = account;
+        this.name = name;
+        this.email = email;
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    //將user設定的資料傳到後台
+    async handleSubmit() {
+      try {
+        const response = await usersAPI.accountSetting({
+          account: this.account,
+          name: this.name,
+          email: this.email,
+          password: this.password,
+          checkPassword: this.checkPassword,
+        });
+        console.log('你有按了')
+        console.log(response);
+      } catch (error) {
+        console.log(error);
+      }
+    },
+  },
+  computed: {
+    ...mapState(["currentUser", "isAuthenticated"]),
   },
 };
 </script>
@@ -141,6 +183,10 @@ h1 {
   border-color: #50b5ff;
 }
 
+::placeholder {
+  opacity: 0.5;
+}
+
 .form-control {
   height: 26px;
   margin-top: 5px;
@@ -161,7 +207,12 @@ label {
   color: #657786;
 }
 
+.button-container {
+  display: flex;
+  justify-content: flex-end;
+}
 .btn-primary {
+  width: 88px;
   background: #ff6600;
   border-radius: 50px;
   border: none;
