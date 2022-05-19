@@ -43,14 +43,14 @@ import { emptyImageFilter } from "../utils/mixins";
 export default {
   mixins: [emptyImageFilter],
   props: {
-    initialUser: {
+    initialFollow: {
       type: Object,
       required: true,
     },
   },
   data() {
     return {
-      user: this.initialUser,
+      user: this.initialFollow,
     };
   },
   methods: {

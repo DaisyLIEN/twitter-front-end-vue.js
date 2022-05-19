@@ -85,7 +85,7 @@ export default {
     async fetchUsers() {
       try {
         const response = await adminAPI.getAdminTweets();
-        // console.log('response', response)
+        console.log('response', response)
 
         const { data } = response;
 
@@ -105,10 +105,13 @@ export default {
     },
     async deleteTweet(tweetId) {
       try {
-        const response = await adminAPI.deleteTweet({ tweetId });
-        // console.log('response', response)
-        const { data } = response;
-        this.users = data;
+        const deleteResponse = await adminAPI.deleteTweet({ tweetId });
+        console.log('deleteResponse', deleteResponse)
+        
+        const getResponse = await adminAPI.getAdminTweets();
+        console.log('getResponse', getResponse)
+        const {data} = getResponse
+        this.users = data.data;
       } catch (error) {
         console.log(error);
 

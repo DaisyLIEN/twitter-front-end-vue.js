@@ -21,7 +21,7 @@
         </div>
         <button
           v-show="!user.isFollowed"
-          @click.stop.prevent="addFollow(user.id)"
+          @click.stop.prevent="addFollow(user)"
           class="btn-follow"
         >
           跟隨
@@ -37,7 +37,7 @@
 </template>
 
 <script>
-import tweetsAPI from "./../apis/tweets";
+import usersAPI from "./../apis/users";
 import { Toast } from "./../utils/helpers";
 
 export default {
@@ -52,10 +52,11 @@ export default {
   methods: {
     async fetchPopularList() {
       try {
-        const response = await tweetsAPI.getTopFollowedUser();
+        const response = await usersAPI.getTopFollowedUser();
         // console.log('response', response)
         const { data } = response;
-        this.users = data.newData;
+        // console.log('data.data', data.data)
+        this.users = data.data;
         console.log(this.users);
       } catch (error) {
         Toast.fire({
@@ -65,12 +66,39 @@ export default {
         console.log(error);
       }
     },
-    addFollow(userID) {
-      const followUser = this.users.find((user) => user.id === userID);
-      followUser.isFollowed = true;
+    async addFollow(TopFollowedUser) {
+      try {
+        const { data } = await usersAPI.addFollow(TopFollowedUser);
+        // console.log('data', data)
+        this.users = this.users.map((user) => {
+          if (user.id !== data.followship.followingId) {
+            return user;
+          } else {
+            return {
+              ...user,
+              isFollowed: true,
+            };
+          }
+        });
+        // console.log(this.users)
+      } catch (error) {
+        Toast.fire({
+          icon: "error",
+          title: "無法加入追蹤，請稍後再試",
+        });
+      }
     },
-    removeFollow(userID) {
-      const followUser = this.users.find((user) => user.id === userID);
+    async removeFollow(userId) {
+      try {
+        const { data } = await usersAPI.removeFollow(userId);
+        console.log("data", data);
+      } catch (error) {
+        Toast.fire({
+          icon: "error",
+          title: "無法取消追蹤，請稍後再試",
+        });
+      }
+      const followUser = this.users.find((user) => user.id === userId);
       followUser.isFollowed = false;
     },
     routerToUser(userID) {

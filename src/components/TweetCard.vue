@@ -32,11 +32,10 @@
           />
           <p class="reply-number">{{ user.replyNum }}</p>
         </div>
-        <div class="tweet-action">
+        <div class="tweet-action" :class="{ active: user.isLike }">
           <font-awesome-icon
             icon="fa-regular fa-heart"
             v-if="user.isLike"
-            class="active"
             @click.stop.prevent="deleteLike(user.id)"
           />
           <font-awesome-icon
@@ -53,6 +52,7 @@
 
 <script>
 import usersAPI from "./../apis/users";
+import { Toast } from "./../utils/helpers";
 import moment from "moment";
 
 export default {
@@ -97,42 +97,40 @@ export default {
   },
   methods: {
     openReplyModal(tweetId) {
-      this.$emit('after-reply-modal-open', tweetId)
+      this.$emit("after-reply-modal-open", tweetId);
     },
     async addLike(tweetId) {
       try {
         const response = await usersAPI.addTweetLike(tweetId);
-        console.log("response", response);
-
+        // console.log('response', response)
         const { data } = response;
-        console.log("data", data);
-
         this.user = {
           ...this.user,
-          likeNum: data[0].likeNum,
-          isLike: data[0].isLike,
+          isLike: data.isLike,
+          likeNum: data.likeNum,
         };
-        console.log("this.user", this.user);
       } catch (error) {
-        console.log(error);
+        Toast.fire({
+          icon: "error",
+          title: "無法成功按讚，請稍後再試",
+        });
       }
     },
     async deleteLike(tweetId) {
       try {
         const response = await usersAPI.deleteTweetLike(tweetId);
-        console.log("response", response);
-
+        // console.log('response', response)
         const { data } = response;
-        console.log("data", data);
-
         this.user = {
           ...this.user,
-          likeNum: data[tweetId].likeNum,
-          isLike: data[tweetId].isLike,
+          likeNum: data.likeNum,
+          isLike: data.isLike,
         };
-        console.log("this.user", this.user);
       } catch (error) {
-        console.log(error);
+        Toast.fire({
+          icon: "error",
+          title: "無法收回按讚，請稍後再試",
+        });
       }
     },
   },
