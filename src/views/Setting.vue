@@ -84,6 +84,7 @@
 import Navbar from "../components/Navbar.vue";
 import usersAPI from "../apis/users";
 import { mapState } from "vuex";
+import { Toast } from "./../utils/helpers";
 
 export default {
   data() {
@@ -106,7 +107,7 @@ export default {
     async fetchAccount() {
       try {
         const response = await usersAPI.getUserInfo();
-        console.log(response.data)
+        console.log(response.data);
         const { account, name, email } = response.data;
         this.account = account;
         this.name = name;
@@ -125,10 +126,36 @@ export default {
           password: this.password,
           checkPassword: this.checkPassword,
         });
-        console.log('你有按了')
-        console.log(response);
+
+        console.log("你有按了");
+        console.log("update", response);
+
+        Toast.fire({
+          icon: "success",
+          title: "修改成功",
+        });
       } catch (error) {
-        console.log(error);
+        console.log("catch-error", error);
+        console.log("error.response", error.response);
+
+        if (error.response.data.message === "此帳戶已經有人使用") {
+          Toast.fire({
+            icon: "error",
+            title: "您的帳號與其他人重複，請更換其他帳號",
+          });
+        } else if (
+          error.response.data.message === "此信箱已經有人使用，請更換其他信箱"
+        ) {
+          Toast.fire({
+            icon: "error",
+            title: "您的Email與其他人重複，請更換其他Email",
+          });
+        } else {
+          Toast.fire({
+            icon: "error",
+            title: "密碼與確認密碼不一致，請重新輸入",
+          });
+        }
       }
     },
   },

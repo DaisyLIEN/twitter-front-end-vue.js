@@ -67,6 +67,7 @@
         v-for="reply in replylist"
         :key="reply.id"
         :initial-reply="reply"
+        @after-reply-modal-open="handleReplyModal"
       />
     </div>
 
@@ -74,7 +75,8 @@
       <PopularList />
     </div>
 
-    <ReplyModal :initial-tweet="tweet" @after-reply="handleAfterReply" />
+    <ReplyModal :initial-tweet="tweet"
+    :initial-reply-modal-reply="replyModalReply" @after-reply="handleAfterReply" />
   </div>
 </template>
 
@@ -113,6 +115,8 @@ export default {
       },
       users: [],
       replylist: [],
+      replyModalReplyId: "",
+      replyModalReply: {}
     };
   },
   created() {
@@ -179,6 +183,11 @@ export default {
       } catch (error) {
         console.log("createTweetReply", error);
       }
+    },
+    handleReplyModal(replyId) {
+      this.replyModalReplyId = replyId;
+      const replyModalReply = this.replylist.find( (reply) => reply.id === replyId )
+      this.replyModalReply = replyModalReply
     },
     // POST /tweets/:id/like
     addLike() {

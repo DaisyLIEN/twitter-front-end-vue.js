@@ -27,7 +27,7 @@
             data-toggle="modal"
             data-target="#replyModal"
             icon="fa-regular fa-comment"
-            @click.stop.prevent="handleReplyModel"
+            @click="openReplyModal(reply.id)"
           />
           <p class="reply-number">{{ reply.replyNum }}</p>
         </div>
@@ -84,8 +84,8 @@ export default {
     this.currentParams = Number(id);
   },
   methods: {
-    handleReplyModel() {
-      
+    handleReplyModal(replyId) {
+      this.$emit("after-reply-modal-open", replyId);
     },
   },
   watch: {

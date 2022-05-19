@@ -86,6 +86,10 @@ export default {
       type: Object,
       required: true,
     },
+    initialReplyModalReply: {
+      type: Object,
+      required: true,
+    },
   },
   data() {
     return {
@@ -116,6 +120,20 @@ export default {
       };
     },
     initialReplyModalTweet(newValue) {
+      this.tweet = {
+        ...this.tweet,
+        ...newValue,
+      };
+    },
+    //  "id": 4,
+    //     "comment": "faker.lorem.text()",
+    //     "tweetId": 2,
+    //     "userId": 2,
+    //     "name": "user123",
+    //     "avatar": "https://loremflickr.com/800/350/paradise/?random=65.49809548972685",
+    //     "account": "user123",
+    //     "likeCount": 0
+    initialReplyModalReply(newValue) {
       this.tweet = {
         ...this.tweet,
         ...newValue,
