@@ -4,6 +4,7 @@ const userId = localStorage.getItem("userId");
 
 export default {
   addTweetLike(tweetId) {
+    console.log(tweetId)
     return apiHelper.post(`/tweets/${tweetId}/like`, null, {
       headers: { Authorization: `Bearer ${getToken()}` }
     })
@@ -15,6 +16,21 @@ export default {
   },
   deleteLike(userId) {
     return apiHelper.delete(`/like/${userId}`, {
+      headers: { Authorization: `Bearer ${getToken()}` }
+    })
+  },
+  getTopFollowedUser() {
+    return apiHelper.get(`/users/topFollowedUser`, {
+      headers: { Authorization: `Bearer ${getToken()}` }
+    })
+  },
+  addFollow(TopFollowedUser) {
+    return apiHelper.post('/followships', TopFollowedUser, {
+      headers: { Authorization: `Bearer ${getToken()}` }
+    })
+  },
+  removeFollow(userId) {
+    return apiHelper.delete(`/followships/${userId}`, {
       headers: { Authorization: `Bearer ${getToken()}` }
     })
   },

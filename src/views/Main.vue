@@ -225,8 +225,4 @@ h4 {
   margin: 10px 0 16px 0;
   background-color: #e6ecf0;
 }
-
-/* .tweets {
-  border: 1px solid green;
-} */
 </style>

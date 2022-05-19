@@ -27,15 +27,16 @@
           <font-awesome-icon icon="fa-regular fa-comment" />
           <p class="reply-number">{{ user.replyNum }}</p>
         </div>
-        <div class="tweet-action">
-          <font-awesome-icon icon="fa-regular fa-heart"
-          v-if="user.isLike"
-           class="active"
-          @click.stop.prevent="deleteLike(user.id)"
+        <div class="tweet-action" :class="{ active: user.isLike }">
+          <font-awesome-icon
+            icon="fa-regular fa-heart"
+            v-if="user.isLike"
+            @click.stop.prevent="deleteLike(user.id)"
           />
-          <font-awesome-icon icon="fa-regular fa-heart" 
-          v-else         
-          @click.stop.prevent="addLike(user.id)"
+          <font-awesome-icon
+            icon="fa-regular fa-heart"
+            v-else
+            @click.stop.prevent="addLike(user.id)"
           />
           <p class="like-number">{{ user.likeNum }}</p>
         </div>
@@ -45,7 +46,8 @@
 </template>
 
 <script>
-import usersAPI from './../apis/users'
+import usersAPI from "./../apis/users";
+import { Toast } from "./../utils/helpers";
 import moment from "moment";
 
 export default {
@@ -71,41 +73,39 @@ export default {
   methods: {
     async addLike(tweetId) {
       try {
-        const response = await usersAPI.addTweetLike(tweetId)
-        console.log('response', response)
-
-        const {data} =response
-        console.log('data', data)
-
+        const response = await usersAPI.addTweetLike(tweetId);
+        // console.log('response', response)
+        const { data } = response;
         this.user = {
           ...this.user,
-          likeNum: data[0].likeNum,
-          isLike: data[0].isLike
-        }
-        console.log('this.user', this.user)
+          isLike: data.isLike,
+          likeNum: data.likeNum,
+        };
       } catch (error) {
-        console.log(error)
+        Toast.fire({
+          icon: "error",
+          title: "無法成功按讚，請稍後再試",
+        });
       }
     },
     async deleteLike(tweetId) {
       try {
-        const response = await usersAPI.deleteTweetLike(tweetId)
-        console.log('response', response)
-
-        const {data} =response
-        console.log('data', data)
-        
+        const response = await usersAPI.deleteTweetLike(tweetId);
+        // console.log('response', response)
+        const { data } = response;
         this.user = {
           ...this.user,
-          likeNum: data[tweetId].likeNum,
-          isLike: data[tweetId].isLike
-        }
-        console.log('this.user', this.user)
+          likeNum: data.likeNum,
+          isLike: data.isLike,
+        };
       } catch (error) {
-        console.log(error)
+        Toast.fire({
+          icon: "error",
+          title: "無法收回按讚，請稍後再試",
+        });
       }
-    }
-  }
+    },
+  },
 };
 </script>
 
