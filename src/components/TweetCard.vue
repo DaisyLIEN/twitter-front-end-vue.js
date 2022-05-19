@@ -28,7 +28,7 @@
             data-toggle="modal"
             data-target="#replyModal"
             icon="fa-regular fa-comment"
-            @click.stop.prevent="openReplyModal(user.id)"
+            @click="openReplyModal(user.id)"
           />
           <p class="reply-number">{{ user.replyNum }}</p>
         </div>
