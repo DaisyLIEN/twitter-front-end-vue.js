@@ -2,7 +2,7 @@
   <div class="tweet">
     <div class="tweet-img">
       <router-link :to="{ name: 'user', params: { id: user.id } }">
-        <img :src="user.avatar" alt="" class="user-photo" />
+        <img :src="user.avatar | emptyAvatar" alt="" class="user-photo" />
       </router-link>
     </div>
     <div class="tweet-right">
@@ -24,18 +24,25 @@
 
       <div class="tweet-actions">
         <div class="tweet-action">
-          <font-awesome-icon icon="fa-regular fa-comment" />
+          <font-awesome-icon
+            data-toggle="modal"
+            data-target="#replyModal"
+            icon="fa-regular fa-comment"
+            @click.stop.prevent="openReplyModal(user.id)"
+          />
           <p class="reply-number">{{ user.replyNum }}</p>
         </div>
         <div class="tweet-action">
-          <font-awesome-icon icon="fa-regular fa-heart"
-          v-if="user.isLike"
-           class="active"
-          @click.stop.prevent="deleteLike(user.id)"
+          <font-awesome-icon
+            icon="fa-regular fa-heart"
+            v-if="user.isLike"
+            class="active"
+            @click.stop.prevent="deleteLike(user.id)"
           />
-          <font-awesome-icon icon="fa-regular fa-heart" 
-          v-else         
-          @click.stop.prevent="addLike(user.id)"
+          <font-awesome-icon
+            icon="fa-regular fa-heart"
+            v-else
+            @click.stop.prevent="addLike(user.id)"
           />
           <p class="like-number">{{ user.likeNum }}</p>
         </div>
@@ -45,7 +52,7 @@
 </template>
 
 <script>
-import usersAPI from './../apis/users'
+import usersAPI from "./../apis/users";
 import moment from "moment";
 
 export default {
@@ -58,7 +65,13 @@ export default {
     },
   },
   props: {
+    // from Main
     initialUser: {
+      type: Object,
+      required: true,
+    },
+    // from User
+    initialUserTweet: {
       type: Object,
       required: true,
     },
@@ -66,70 +79,108 @@ export default {
   data() {
     return {
       user: {
-        id: -1, //
-        description: "",
+        id: -1,
+        name: "",
+        account: "",
+        avatar: "",
         UserId: -1,
-        createdAt: "", //
-        updatedAt: "",
-        User: {
-          id: -1,
-          account: "", //
-          name: "", //
-          email: "",
-          password: "",
-          avatar: "",
-          introduction: "",
-          cover: "",
-          role: "",
-          createdAt: "",
-          updatedAt: "",
-        },
+        description: "",
+        createdAt: "",
+        likeNum: 0,
+        replyNum: 0,
+        isLike: false,
       },
     };
   },
   created() {
-    this.user = {
-      ...this.user,
-    };
+    this.user = this.initialUser;
   },
   methods: {
+    openReplyModal(tweetId) {
+      this.$emit('after-reply-modal-open', tweetId)
+    },
     async addLike(tweetId) {
       try {
-        const response = await usersAPI.addTweetLike(tweetId)
-        console.log('response', response)
+        const response = await usersAPI.addTweetLike(tweetId);
+        console.log("response", response);
 
-        const {data} =response
-        console.log('data', data)
+        const { data } = response;
+        console.log("data", data);
 
         this.user = {
           ...this.user,
           likeNum: data[0].likeNum,
-          isLike: data[0].isLike
-        }
-        console.log('this.user', this.user)
+          isLike: data[0].isLike,
+        };
+        console.log("this.user", this.user);
       } catch (error) {
-        console.log(error)
+        console.log(error);
       }
     },
     async deleteLike(tweetId) {
       try {
-        const response = await usersAPI.deleteTweetLike(tweetId)
-        console.log('response', response)
+        const response = await usersAPI.deleteTweetLike(tweetId);
+        console.log("response", response);
 
-        const {data} =response
-        console.log('data', data)
-        
+        const { data } = response;
+        console.log("data", data);
+
         this.user = {
           ...this.user,
           likeNum: data[tweetId].likeNum,
-          isLike: data[tweetId].isLike
-        }
-        console.log('this.user', this.user)
+          isLike: data[tweetId].isLike,
+        };
+        console.log("this.user", this.user);
       } catch (error) {
-        console.log(error)
+        console.log(error);
       }
-    }
-  }
+    },
+  },
+  watch: {
+    initialUser(newValue) {
+      this.user = {
+        ...this.user,
+        ...newValue,
+      };
+    },
+    // user2: {
+    //     id: -1,
+    //     description: "", //
+    //     UserId: -1,
+    //     createdAt: "", //
+    //     updatedAt: "",
+    //     User: {
+    //       id: -1, //
+    //       account: "", //
+    //       name: "", //
+    //       email: "",
+    //       password: "",
+    //       avatar: "", //
+    //       introduction: "",
+    //       cover: "",
+    //       role: "",
+    //       createdAt: "",
+    //       updatedAt: "",
+    //     },
+    //   },
+    initialUserTweet(newValue) {
+      const { id: tweetId, description, createdAt, User } = newValue;
+      // this.user.id = id;
+      const { id: UserId, account, name, avatar } = User;
+      this.user = {
+        ...this.user,
+        id: tweetId,
+        name,
+        account,
+        avatar,
+        UserId,
+        description,
+        createdAt,
+        // likeNum,
+        // replyNum,
+      };
+    },
+  },
 };
 </script>
 

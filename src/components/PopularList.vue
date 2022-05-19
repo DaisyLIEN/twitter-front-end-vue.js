@@ -8,7 +8,11 @@
         :key="user.id"
         class="popular-item"
       >
-        <img class="popular-avatar" :src="user.avatar" alt="user-img" />
+        <img
+          class="popular-avatar"
+          :src="user.avatar | emptyAvatar"
+          alt="user-img"
+        />
         <div class="popular-info">
           <router-link :to="`users/${user.id}`" class="popular-name">{{
             user.name
@@ -33,7 +37,7 @@
 </template>
 
 <script>
-import tweetsAPI from './../apis/tweets'
+import tweetsAPI from "./../apis/tweets";
 import { Toast } from "./../utils/helpers";
 
 export default {
@@ -48,17 +52,17 @@ export default {
   methods: {
     async fetchPopularList() {
       try {
-        const response = await tweetsAPI.getTopFollowedUser()
+        const response = await tweetsAPI.getTopFollowedUser();
         // console.log('response', response)
-        const {data} = response
-        this.users = data.newData
-        console.log(this.users)
+        const { data } = response;
+        this.users = data.newData;
+        console.log(this.users);
       } catch (error) {
         Toast.fire({
           icon: "error",
-          title: "無法取得跟隨誰資料，請稍後再試"
-        })
-        console.log(error)
+          title: "無法取得跟隨誰資料，請稍後再試",
+        });
+        console.log(error);
       }
     },
     addFollow(userID) {

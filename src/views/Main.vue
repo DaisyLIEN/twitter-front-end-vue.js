@@ -11,15 +11,16 @@
       <!-- post -->
       <div class="post">
         <div class="posting">
+          <!-- <img class="user-photo" :src="user.avatar | emptyAvatar" alt="" /> -->
           <img class="photo" src="https://img.onl/d0RNIH" alt="" />
           <textarea
             v-model="newTweet2"
-            :style="{ 'height': height }"
+            :style="{ height: height }"
             name="new-post"
             class="new-post"
             maxlength="140"
             autofocus
-            placeholder="有什麼新鮮事？"          
+            placeholder="有什麼新鮮事？"
           ></textarea>
         </div>
         <div class="btn">
@@ -32,7 +33,12 @@
 
       <!-- tweets -->
       <div class="tweets">
-        <TweetCard v-for="user in users" :key="user.id" :initial-user="user" />
+        <TweetCard
+          v-for="user in users"
+          :key="user.id"
+          :initial-user="user"
+          @after-reply-modal-open="handleReplyModal"
+        />
       </div>
     </div>
 
@@ -42,22 +48,28 @@
 
     <!-- TweetModal -->
     <TweetModal @after-addTweet="handleAddTweet" />
+
+    <ReplyModal :initial-reply-modal-tweet="replyModalTweet"/>
   </div>
 </template>
 
 <script>
+import { emptyImageFilter } from "../utils/mixins";
 import Navbar from "./../components/Navbar";
 import TweetCard from "./../components/TweetCard";
 import TweetModal from "./../components/TweetModal";
+import ReplyModal from "../components/ReplyModal";
 import PopularList from "./../components/PopularList";
 import tweetsAPI from "./../apis/tweets";
 import { Toast } from "./../utils/helpers";
 
 export default {
+  mixins: [emptyImageFilter],
   components: {
     Navbar,
     TweetCard,
     TweetModal,
+    ReplyModal,
     PopularList,
   },
   data() {
@@ -65,6 +77,8 @@ export default {
       users: [],
       newTweet2: "",
       height: "",
+      replyModalTweetId: "",
+      replyModalTweet: {}
     };
   },
   created() {
@@ -74,7 +88,7 @@ export default {
     newTweet2() {
       // console.log(this.newTweet2.length)
       if (this.newTweet2.length > 70) this.height = "106px";
-      else this.height = "66px";      
+      else this.height = "66px";
     },
   },
   methods: {
@@ -114,12 +128,17 @@ export default {
       }
 
       const data = await tweetsAPI.addTweet({ description: newTweet });
-      console.log(data)
+      console.log(data);
       this.users = data.data;
     },
     handleAddTweet2() {
       this.handleAddTweet(this.newTweet2);
       this.newTweet2 = "";
+    },
+    handleReplyModal(tweetId) {
+      this.replyModalTweetId = tweetId;
+      const replyModalTweet = this.users.find( (user) => user.id === tweetId )
+      this.replyModalTweet = replyModalTweet
     },
   },
 };

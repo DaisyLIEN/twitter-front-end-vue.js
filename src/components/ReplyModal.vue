@@ -1,66 +1,68 @@
 <template>
-  <div
-    class="modal fade"
-    id="replyModal"
-    tabindex="-1"
-    role="dialog"
-    aria-hidden="true"
-  >
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button
-            type="button"
-            class="close"
-            data-dismiss="modal"
-            aria-label="Close"
-          >
-            <span aria-hidden="true">×</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          <div class="posting">
-            <img class="photo" :src="tweet.avatar" alt="" />
-            <div class="tweet-info">
-              <div class="user-info">
-                <span class="user-name">{{ tweet.name }}</span>
-                <span class="user-account">@{{ tweet.account }}</span>
-                <span>．</span>
-                <span class="create-time"
-                  >{{ tweet.createdAt | fromNow }}小時</span
-                >
-              </div>
-              <div class="tweet-text">
-                {{ tweet.description }}
-              </div>
-              <div class="reply-hint">回覆給@{{ tweet.account }}</div>
-            </div>
-            <div class="connect-line"></div>
-          </div>
-          <div class="posting">
-            <img class="photo" src="https://img.onl/d0RNIH" alt="" />
-            <textarea
-              v-model="replyContent"
-              id="note"
-              class="new-reply"
-              placeholder="推你的回覆"
-              autofocus
-              rows="5"
-            >
-            </textarea>
-          </div>
-          <div class="footer">
-            <div v-show="!replyContent.length" class="text-limit-error">
-              內容不可空白
-            </div>
+  <div class="reply-modal">
+    <div
+      class="modal fade"
+      id="replyModal"
+      tabindex="-1"
+      role="dialog"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
             <button
-              @click="handleSubmit"
               type="button"
-              class="btn-submit"
+              class="close"
               data-dismiss="modal"
+              aria-label="Close"
             >
-              回覆
+              <span aria-hidden="true">×</span>
             </button>
+          </div>
+          <div class="modal-body">
+            <div class="posting">
+              <img class="photo" :src="tweet.avatar | emptyAvatar" alt="" />
+              <div class="tweet-info">
+                <div class="user-info">
+                  <span class="user-name">{{ tweet.name }}</span>
+                  <span class="user-account">@{{ tweet.account }}</span>
+                  <span>．</span>
+                  <span class="create-time"
+                    >{{ tweet.createdAt | fromNow }}小時</span
+                  >
+                </div>
+                <div class="tweet-text">
+                  {{ tweet.description }}
+                </div>
+                <div class="reply-hint">回覆給@{{ tweet.account }}</div>
+              </div>
+              <div class="connect-line"></div>
+            </div>
+            <div class="posting">
+              <img class="photo" src="https://img.onl/d0RNIH" alt="" />
+              <textarea
+                v-model="replyContent"
+                id="note"
+                class="new-reply"
+                placeholder="推你的回覆"
+                autofocus
+                rows="5"
+              >
+              </textarea>
+            </div>
+            <div class="footer">
+              <div v-show="!replyContent.length" class="text-limit-error">
+                內容不可空白
+              </div>
+              <button
+                @click="handleSubmit"
+                type="button"
+                class="btn-submit"
+                data-dismiss="modal"
+              >
+                回覆
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -78,6 +80,10 @@ export default {
     },
     tweetId: {
       type: Number,
+      required: true,
+    },
+    initialReplyModalTweet: {
+      type: Object,
       required: true,
     },
   },
@@ -104,6 +110,12 @@ export default {
   watch: {
     initialTweet(newValue) {
       console.log("replyNewValue", newValue);
+      this.tweet = {
+        ...this.tweet,
+        ...newValue,
+      };
+    },
+    initialReplyModalTweet(newValue) {
       this.tweet = {
         ...this.tweet,
         ...newValue,

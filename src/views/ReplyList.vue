@@ -22,7 +22,11 @@
         <div class="tweet-content">
           <div class="user-avatar-name-account">
             <router-link :to="{ name: 'user', params: { id: userId } }">
-              <img :src="tweet.avatar" alt="" class="user-avatar" />
+              <img
+                :src="tweet.avatar | emptyAvatar"
+                alt=""
+                class="user-avatar"
+              />
             </router-link>
             <div class="user-name-account">
               <span class="user-name">{{ tweet.name }}</span>
@@ -76,6 +80,7 @@
 
 <script>
 // import moment from "moment";
+import { emptyImageFilter } from "../utils/mixins";
 import Navbar from "../components/Navbar.vue";
 import ReplyCard from "./../components/ReplyCard";
 import PopularList from "../components/PopularList.vue";
@@ -83,6 +88,7 @@ import ReplyModal from "../components/ReplyModal.vue";
 import tweetsAPI from "./../apis/tweets";
 
 export default {
+  mixins: [emptyImageFilter],
   components: {
     Navbar,
     ReplyCard,

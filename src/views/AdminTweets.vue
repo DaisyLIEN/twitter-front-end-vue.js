@@ -15,7 +15,7 @@
         <div class="tweet" v-for="user in users" :key="user.id">
           <div class="tweet-img">
             <router-link :to="{ name: 'user', params: { id: user.id } }">
-              <img :src="user.avatar" alt="" class="user-photo" />
+              <img :src="user.avatar | emptyAvatar" alt="" class="user-photo" />
             </router-link>
           </div>
           <div class="tweet-right">
@@ -54,12 +54,14 @@
 </template>
 
 <script>
+import { emptyImageFilter } from "../utils/mixins";
 import AdminNavbar from "./../components/AdminNavbar";
 import adminAPI from "./../apis/admin";
 import { Toast } from "./../utils/helpers";
 import moment from "moment";
 
 export default {
+  mixins: [emptyImageFilter],
   filters: {
     fromNow(datetime) {
       if (!datetime) {

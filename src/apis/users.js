@@ -40,7 +40,7 @@ export default {
     })
   },
   updateUserCard({ formData }) {
-    return apiHelper.put(`/users/${userId}`, { formData, userId }, {
+    return apiHelper.put(`/users/${userId}`, { formData }, {
       headers: { Authorization: `Bearer ${getToken()}` }
     })
   },

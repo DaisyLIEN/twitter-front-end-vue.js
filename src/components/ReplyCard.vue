@@ -1,7 +1,7 @@
 <template>
   <div class="reply">
     <div class="reply-img">
-      <img :src="profile.avatar" alt="" class="user-photo" />
+      <img :src="profile.avatar | emptyAvatar" alt="" class="user-photo" />
     </div>
     <div class="reply-right">
       <div class="user">
@@ -23,7 +23,12 @@
         class="reply-actions"
       >
         <div class="reply-action">
-          <font-awesome-icon icon="fa-regular fa-comment" />
+          <font-awesome-icon
+            data-toggle="modal"
+            data-target="#replyModal"
+            icon="fa-regular fa-comment"
+            @click.stop.prevent="handleReplyModel"
+          />
           <p class="reply-number">{{ reply.replyNum }}</p>
         </div>
         <div class="reply-action">
@@ -32,18 +37,13 @@
         </div>
       </div>
     </div>
-    <ReplyModal />
   </div>
 </template>
 
 <script>
 import moment from "moment";
-import ReplyModal from "../components/ReplyModal.vue";
 
 export default {
-  components: {
-    ReplyModal,
-  },
   filters: {
     fromNow(datetime) {
       if (!datetime) {
@@ -53,6 +53,7 @@ export default {
     },
   },
   props: {
+    // from User
     initialCurrentUserId: {
       type: Number,
       required: true,
@@ -65,6 +66,7 @@ export default {
       type: Object,
       required: true,
     },
+    // from ReplyList
     initialReply: {
       type: Object,
       required: true,
@@ -80,6 +82,11 @@ export default {
   created() {
     const { id } = this.$route.params;
     this.currentParams = Number(id);
+  },
+  methods: {
+    handleReplyModel() {
+      
+    },
   },
   watch: {
     initialUserReply(newValue) {

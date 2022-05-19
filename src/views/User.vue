@@ -35,10 +35,11 @@
 
       <div class="tweet-cards">
         <TweetCard
-          v-for="user in usersTweets"
-          :key="user.id"
-          :initial-user="user"
+          v-for="userTweet in usersTweets"
+          :key="userTweet.id"
+          :initial-user-tweet="userTweet"
           v-show="currentPill === 'tweets'"
+          @after-reply-modal-open="handleReplyModal"
         />
       </div>
 
@@ -67,21 +68,26 @@
       @after-submit="handleAfterSubmit"
     />
     <!-- ref="editModalRef" -->
+
+    <ReplyModal :initial-reply-modal-tweet="replyModalTweet" />
   </div>
 </template>
 
 <script>
+import { emptyImageFilter } from "../utils/mixins";
 import Navbar from "../components/Navbar.vue";
 import UserCard from "../components/UserCard.vue";
 import TweetCard from "../components/TweetCard.vue";
 import ReplyCard from "../components/ReplyCard.vue";
 import PopularList from "../components/PopularList.vue";
 import EditModal from "../components/EditModal.vue";
+import ReplyModal from "../components/ReplyModal.vue";
 import usersAPI from "./../apis/users";
 import tweetsAPI from "./../apis/tweets";
 import { Toast } from "./../utils/helpers";
 
 export default {
+  mixins: [emptyImageFilter],
   components: {
     Navbar,
     UserCard,
@@ -89,6 +95,7 @@ export default {
     ReplyCard,
     PopularList,
     EditModal,
+    ReplyModal,
   },
   data() {
     return {
@@ -108,6 +115,8 @@ export default {
         tweetCount: 0,
       },
       currentPill: "tweets",
+      replyModalTweetId: "",
+      replyModalTweet: {},
     };
   },
   created() {
@@ -200,24 +209,31 @@ export default {
       }
     },
     // EditModal：PUT /api/users/:id
-    async handleAfterSubmit({ formData }) { 
+    async handleAfterSubmit({ formData }) {
       try {
         console.log("收到子元件formData");
 
         const { data } = await usersAPI.updateUserCard({ formData });
 
-        if (data.status !== "success") {
+        console.log("data", data);
+
+        if (data.status !== "更新成功") {
           throw new Error(data.message);
         }
 
         console.log("個人資料送後端成功");
-        this.fetchUserCard();
+        // this.fetchUserCard(this.currentUserId);
       } catch (error) {
         Toast.fire({
           icon: "error",
           title: "無法更新個人資料，請稍後再試",
         });
       }
+    },
+    handleReplyModal(tweetId) {
+      this.replyModalTweetId = tweetId;
+      const replyModalTweet = this.users.find((user) => user.id === tweetId);
+      this.replyModalTweet = replyModalTweet;
     },
   },
   beforeRouteUpdate(to, from, next) {

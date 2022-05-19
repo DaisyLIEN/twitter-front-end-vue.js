@@ -157,7 +157,7 @@ export default {
     };
   },
   created() {
-    this.fetchUserCard()
+    this.fetchUserCard();
     this.fetchFollowingsTweets();
   },
   methods: {
