@@ -71,11 +71,6 @@ export default {
       type: Object,
       required: true,
     },
-    // from User
-    initialUserTweet: {
-      type: Object,
-      required: true,
-    },
   },
   data() {
     return {
