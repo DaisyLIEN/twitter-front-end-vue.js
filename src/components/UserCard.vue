@@ -13,8 +13,8 @@
       </div>
     </header>
     <div class="profile">
-      <img class="cover-image" :src="profile.cover? profile.cover:coverNone" alt="" />
-      <img class="avatar" :src="profile.avatar? profile.cover:avatarNone" alt="" />
+      <img class="cover-image" :src="profile.cover | emptyCover" alt="" />
+      <img class="avatar" :src="profile.avatar | emptyAvatar" alt="" />
       <div class="btn-user" v-if="initialCurrentUserId === initialParamsId">
         <button class="btn-edit" data-toggle="modal" data-target="#editModal">
           編輯個人資料

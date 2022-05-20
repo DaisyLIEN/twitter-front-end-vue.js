@@ -1,8 +1,8 @@
 <template>
   <div class="tweet">
     <div class="tweet-img">
-      <router-link :to="{ name: 'user', params: { id: tweet.UserId } }">
-        <img :src="tweet.avatar" alt="" class="user-photo" />
+      <router-link :to="{ name: 'user', params: { id: user.UserId } }">
+        <img :src="user.avatar | emptyAvatar" alt="" class="user-photo" />
       </router-link>
     </div>
     <div class="tweet-right">
@@ -54,6 +54,7 @@
 
 <script>
 import usersAPI from "./../apis/users";
+import { Toast } from "./../utils/helpers";
 import moment from "moment";
 
 export default {
@@ -70,6 +71,11 @@ export default {
       type: Object,
       required: true,
     },
+    // from User
+    initialUserTweet: {
+      type: Object,
+      required: true,
+    },
   },
   data() {
     return {
@@ -83,6 +89,9 @@ export default {
   },
   created() {},
   methods: {
+    openReplyModal(tweetId) {
+      this.$emit("after-reply-modal-open", tweetId);
+    },
     async addLike(tweetId) {
       try {
         const response = await usersAPI.addTweetLike(tweetId);
@@ -93,6 +102,10 @@ export default {
         this.totalLikeCount += 1;
       } catch (error) {
         console.log(error);
+        Toast.fire({
+          icon: "error",
+          title: "無法成功按讚，請稍後再試",
+        });
       }
     },
     async deleteLike(tweetId) {
@@ -105,6 +118,10 @@ export default {
         this.totalLikeCount -= 1;
       } catch (error) {
         console.log(error);
+        Toast.fire({
+          icon: "error",
+          title: "無法收回按讚，請稍後再試",
+        });
       }
     },
   },

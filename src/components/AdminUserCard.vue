@@ -1,7 +1,7 @@
 <template>
   <div class="wrapper-admin-user-card">
-    <img class="cover-image" :src="user.cover" alt="" />
-    <img class="avatar" :src="user.avatar" alt="" />
+    <img class="cover-image" :src="user.cover | emptyCover" alt="" />
+    <img class="avatar" :src="user.avatar | emptyAvatar" alt="" />
     <div class="info">
       <div class="names">
         <p class="user-name">{{ user.name }}</p>
@@ -9,9 +9,9 @@
       </div>
       <div class="counts">
         <img class="tweet-count" src="https://i.imgur.com/41M4NLK.png" alt="" />
-        <span>{{user.totalTweetNum}}</span>
+        <span>{{ user.totalTweetNum }}</span>
         <img class="like-count" src="https://i.imgur.com/dQXJ6Mp.png" alt="" />
-        <span>{{user.totalLikeNum}}</span>
+        <span>{{ user.totalLikeNum }}</span>
       </div>
       <div class="follow-ship">
         <span>{{ user.followersNum }}個</span><span>追隨中</span>
@@ -22,7 +22,10 @@
 </template>
 
 <script>
+import { emptyImageFilter } from "../utils/mixins";
+
 export default {
+  mixins: [emptyImageFilter],
   props: {
     initialUser: {
       type: Object,
@@ -44,7 +47,7 @@ export default {
   height: 314px;
   border-radius: 10px;
   margin: 0 0 16px 16px;
-  background-color: #F6F7F8;
+  background-color: #f6f7f8;
 }
 .cover-image {
   display: block;

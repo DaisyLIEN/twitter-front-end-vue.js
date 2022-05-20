@@ -13,8 +13,18 @@ export default {
       headers: { Authorization: `Bearer ${getToken()}` }
     })
   },
-  deleteLike(userId) {
-    return apiHelper.delete(`/like/${userId}`, {
+  getTopFollowedUser() {
+    return apiHelper.get(`/users/topFollowedUser`, {
+      headers: { Authorization: `Bearer ${getToken()}` }
+    })
+  },
+  addFollow(TopFollowedUser) {
+    return apiHelper.post('/followships', TopFollowedUser, {
+      headers: { Authorization: `Bearer ${getToken()}` }
+    })
+  },
+  removeFollow(userId) {
+    return apiHelper.delete(`/followships/${userId}`, {
       headers: { Authorization: `Bearer ${getToken()}` }
     })
   },
@@ -40,7 +50,7 @@ export default {
     })
   },
   updateUserCard({ formData }) {
-    return apiHelper.put(`/users/${userId}`, { formData, userId }, {
+    return apiHelper.put(`/users/${userId}`, { formData }, {
       headers: { Authorization: `Bearer ${getToken()}` }
     })
   },

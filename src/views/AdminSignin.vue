@@ -89,6 +89,7 @@ export default {
         }
 
         localStorage.setItem('token', data.data.token)
+        localStorage.setItem('userId', data.data.user.id)
         console.log(data)
 
         // 將資料傳到Vuex中

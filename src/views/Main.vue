@@ -11,6 +11,7 @@
       <!-- post -->
       <div class="post">
         <div class="posting">
+          <!-- <img class="user-photo" :src="user.avatar | emptyAvatar" alt="" /> -->
           <img class="photo" src="https://img.onl/d0RNIH" alt="" />
           <textarea
             v-model="newTweet2"
@@ -36,6 +37,7 @@
           v-for="tweet in tweets"
           :key="tweet.id"
           :initial-tweet="tweet"
+          @after-reply-modal-open="handleReplyModal"
         />
       </div>
     </div>
@@ -46,22 +48,28 @@
 
     <!-- TweetModal -->
     <TweetModal @after-addTweet="handleAddTweet" />
+
+    <ReplyModal :initial-reply-modal-tweet="replyModalTweet" />
   </div>
 </template>
 
 <script>
+import { emptyImageFilter } from "../utils/mixins";
 import Navbar from "./../components/Navbar";
 import TweetCard from "./../components/TweetCard";
 import TweetModal from "./../components/TweetModal";
+import ReplyModal from "../components/ReplyModal";
 import PopularList from "./../components/PopularList";
 import tweetsAPI from "./../apis/tweets";
 import { Toast } from "./../utils/helpers";
 
 export default {
+  mixins: [emptyImageFilter],
   components: {
     Navbar,
     TweetCard,
     TweetModal,
+    ReplyModal,
     PopularList,
   },
   data() {
@@ -69,6 +77,7 @@ export default {
       tweets: [],
       newTweet2: "",
       height: "",
+      replyModalTweet: {},
     };
   },
   created() {
@@ -125,6 +134,12 @@ export default {
       this.handleAddTweet(this.newTweet2);
       this.newTweet2 = "";
       this.fetchTweets();
+    },
+    handleReplyModal(tweetId) {
+      const replyModalTweet = this.users.find(
+        (user) => user.TweetId === tweetId
+      );
+      this.replyModalTweet = replyModalTweet;
     },
   },
 };
@@ -230,8 +245,4 @@ h4 {
   margin: 10px 0 16px 0;
   background-color: #e6ecf0;
 }
-
-/* .tweets {
-  border: 1px solid green;
-} */
 </style>

@@ -1,8 +1,10 @@
 <template>
   <div class="setting-container">
-    <Navbar />
+    <div class="left-content">
+      <Navbar />
+    </div>
     <div class="right-content">
-      <h1>帳戶設定</h1>
+      <h4>帳戶設定</h4>
       <form class="w-100" @submit.prevent.stop="handleSubmit">
         <div class="form-label-group">
           <label for="name">帳號</label>
@@ -84,6 +86,7 @@
 import Navbar from "../components/Navbar.vue";
 import usersAPI from "../apis/users";
 import { mapState } from "vuex";
+import { Toast } from "./../utils/helpers";
 
 export default {
   data() {
@@ -106,7 +109,7 @@ export default {
     async fetchAccount() {
       try {
         const response = await usersAPI.getUserInfo();
-        console.log(response.data)
+        console.log(response.data);
         const { account, name, email } = response.data;
         this.account = account;
         this.name = name;
@@ -125,10 +128,36 @@ export default {
           password: this.password,
           checkPassword: this.checkPassword,
         });
-        console.log('你有按了')
-        console.log(response);
+
+        console.log("你有按了");
+        console.log("update", response);
+
+        Toast.fire({
+          icon: "success",
+          title: "修改成功",
+        });
       } catch (error) {
-        console.log(error);
+        console.log("catch-error", error);
+        console.log("error.response", error.response);
+
+        if (error.response.data.message === "此帳戶已經有人使用") {
+          Toast.fire({
+            icon: "error",
+            title: "您的帳號與其他人重複，請更換其他帳號",
+          });
+        } else if (
+          error.response.data.message === "此信箱已經有人使用，請更換其他信箱"
+        ) {
+          Toast.fire({
+            icon: "error",
+            title: "您的Email與其他人重複，請更換其他Email",
+          });
+        } else {
+          Toast.fire({
+            icon: "error",
+            title: "密碼與確認密碼不一致，請重新輸入",
+          });
+        }
       }
     },
   },
@@ -140,34 +169,36 @@ export default {
 
 <style scoped>
 .setting-container {
-  display: flex;
-}
-.right-content {
   display: grid;
-  grid-template-columns: minmax(auto, 642px) 1fr;
+  grid-template-columns: 178px 639px 273px;
+  grid-column-gap: 24px;
+  width: 1140px;
+  height: 100%;
+  margin: 0 auto;
+}
+
+.right-content {
+  grid-column: 2 / 3;
+  width: 639px;
+  padding: 0;
+  border: 1px solid #e6ecf0;
+  border-top: 1px solid white;
+  border-bottom: 1px solid white;
 }
 
 form {
-  grid-column: 1/2;
-}
-
-.container {
-  width: 540px;
-  margin-top: 65px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  padding: 24px 23px 0;
+  border-top: 1px solid #e6ecf0;
 }
 
 .logo-img {
   width: 40px;
 }
 
-h1 {
+h4 {
   font-size: 23px;
   font-weight: 700;
-  margin-top: 25px;
-  margin-bottom: 40px;
+  margin: 24px 0 24px 24px;
 }
 
 .form-label-group {

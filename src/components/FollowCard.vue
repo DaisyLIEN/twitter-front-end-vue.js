@@ -2,7 +2,7 @@
   <div class="tweet">
     <div class="tweet-img">
       <router-link :to="{ name: 'user', params: { id: user.id } }">
-      <img :src="user.image" alt="" class="user-photo" />
+        <img :src="user.image | emptyAvatar" alt="" class="user-photo" />
       </router-link>
     </div>
     <div class="tweet-right">
@@ -38,16 +38,19 @@
 </template>
 
 <script>
+import { emptyImageFilter } from "../utils/mixins";
+
 export default {
+  mixins: [emptyImageFilter],
   props: {
-    initialUser: {
+    initialFollow: {
       type: Object,
       required: true,
     },
   },
   data() {
     return {
-      user: this.initialUser,
+      user: this.initialFollow,
     };
   },
   methods: {

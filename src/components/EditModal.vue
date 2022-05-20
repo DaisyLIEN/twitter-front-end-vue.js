@@ -1,161 +1,165 @@
 <template>
-  <div class="wrapper-edit-modal" id="edit-modal">
-    <div
-      class="modal fade"
-      id="editModal"
-      tabindex="-1"
-      role="dialog"
-      aria-hidden="true"
-    >
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button
-              type="button"
-              class="close"
-              data-dismiss="modal"
-              aria-label="Close"
-            >
-              <span class="vector-cancel" aria-hidden="true">×</span>
-            </button>
-            <h5>編輯個人資料</h5>
+  <div
+    class="modal fade"
+    id="editModal"
+    tabindex="-1"
+    role="dialog"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button
+            type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Close"
+          >
+            <span class="vector-cancel" aria-hidden="true">×</span>
+          </button>
+          <h5>編輯個人資料</h5>
+        </div>
+
+        <form
+          id="userProfileForm"
+          action=""
+          method=""
+          @submit.stop.prevent="handleSubmit"
+        >
+          <div class="form-group form-group-image">
+            <img
+              class="image-cover"
+              :src="profile.cover | emptyCover"
+              width="634"
+              height="200"
+            />
+            <label class="label-cover" for="cover">
+              <img
+                class="upload-icon upload-icon-cover"
+                src="https://i.imgur.com/Y4hTUuO.png"
+                alt=""
+              />
+              <input
+                id="cover"
+                type="file"
+                name="cover"
+                accept="image/*"
+                class="form-control-file-cover"
+                @change="handleCoverChange"
+              />
+            </label>
+
+            <label class="label-cancel" for="cancel">
+              <img
+                class="upload-icon upload-icon-cancel"
+                src="https://i.imgur.com/KG3NVHl.png"
+                alt=""
+              />
+              <input
+                id="cancel"
+                type="button"
+                class="form-control-file-cancel"
+                @click="handleCoverCancel"
+              />
+            </label>
           </div>
 
-          <form id="userProfileForm" action="" method="">
-            <div class="form-group form-group-image">
+          <div class="form-group form-group-image form-group-avatar">
+            <img
+              class="image-avatar"
+              :src="profile.avatar | emptyAvatar"
+              width="140"
+              height="140"
+            />
+            <label class="label-avatar" for="avatar">
               <img
-                class="image-cover"
-                :src="profile.cover"
-                width="634"
-                height="200"
+                class="upload-icon upload-icon-avatar"
+                src="https://i.imgur.com/Y4hTUuO.png"
+                alt=""
               />
-              <label class="label-cover" for="cover">
-                <img
-                  class="upload-icon upload-icon-cover"
-                  src="https://i.imgur.com/Y4hTUuO.png"
-                  alt=""
-                />
-                <input
-                  id="cover"
-                  type="file"
-                  name="cover"
-                  accept="image/*"
-                  class="form-control-file-cover"
-                  @change="handleCoverChange"
-                />
-              </label>
-
-              <label class="label-cancel" for="cancel">
-                <img
-                  class="upload-icon upload-icon-cancel"
-                  src="https://i.imgur.com/KG3NVHl.png"
-                  alt=""
-                />
-                <input
-                  id="cancel"
-                  type="button"
-                  class="form-control-file-cancel"
-                  @click="handleCoverCancel"
-                />
-              </label>
-            </div>
-
-            <div class="form-group form-group-image form-group-avatar">
-              <img
-                class="image-avatar"
-                :src="profile.avatar"
-                width="140"
-                height="140"
-              />
-              <label class="label-avatar" for="avatar">
-                <img
-                  class="upload-icon upload-icon-avatar"
-                  src="https://i.imgur.com/Y4hTUuO.png"
-                  alt=""
-                />
-                <input
-                  id="avatar"
-                  type="file"
-                  name="avatar"
-                  accept="image/*"
-                  class="form-control-file-avatar"
-                  @change="handleAvatarChange"
-                />
-              </label>
-            </div>
-
-            <div class="form-group form-group-text form-group-name">
-              <label class="text-name" for="name">名稱</label>
               <input
-                id="name"
-                v-model="profile.name"
-                type="text"
-                class="form-control-text form-control-name"
-                name="name"
-                maxlength="51"
-                required
+                id="avatar"
+                type="file"
+                name="avatar"
+                accept="image/*"
+                class="form-control-file-avatar"
+                @change="handleAvatarChange"
               />
-              <div
-                class="text-hint text-hint-name"
-                :class="{ error: textNameLength === 51 }"
-              >
-                <div v-show="textNameLength === 51" class="text-limit-error">
-                  字數超出上限！
-                </div>
-                <div class="text-count text-count-name">
-                  <span>{{ textNameLength }}</span
-                  ><span>/50</span>
-                </div>
-              </div>
-            </div>
+            </label>
+          </div>
 
-            <div class="form-group form-group-text form-group-introduction">
-              <label class="text-introduction" for="introduction"
-                >自我介紹</label
-              >
-              <textarea
-                id="introduction"
-                v-model="profile.introduction"
-                class="form-control-text form-control-introduction"
-                rows="4"
-                name="introduction"
-                maxlength="161"
-                required
-              />
-              <div
-                class="text-hint text-hint-introduction"
-                :class="{ error: textIntroductionLength === 161 }"
-              >
-                <div
-                  v-show="textIntroductionLength === 161"
-                  class="text-limit-error"
-                >
-                  字數超出上限！
-                </div>
-                <div class="text-count text-count-introduction">
-                  <span>{{ textIntroductionLength }}</span
-                  ><span>/160</span>
-                </div>
+          <div class="form-group form-group-text form-group-name">
+            <label class="text-name" for="name">名稱</label>
+            <input
+              id="name"
+              v-model="profile.name"
+              type="text"
+              class="form-control-text form-control-name"
+              name="name"
+              maxlength="51"
+              required
+            />
+            <div
+              class="text-hint text-hint-name"
+              :class="{ error: textNameLength === 51 }"
+            >
+              <div v-show="textNameLength === 51" class="text-limit-error">
+                字數超出上限！
+              </div>
+              <div class="text-count text-count-name">
+                <span>{{ textNameLength }}</span
+                ><span>/50</span>
               </div>
             </div>
-            <button
-              type="submit"
-              class="btn btn-submit"
-              @click.stop.prevent="handleSubmit"
+          </div>
+
+          <div class="form-group form-group-text form-group-introduction">
+            <label class="text-introduction" for="introduction">自我介紹</label>
+            <textarea
+              id="introduction"
+              v-model="profile.introduction"
+              class="form-control-text form-control-introduction"
+              rows="4"
+              name="introduction"
+              maxlength="161"
+              required
+            />
+            <div
+              class="text-hint text-hint-introduction"
+              :class="{ error: textIntroductionLength === 161 }"
             >
-              儲存
-            </button>
-            <!-- <button type="submit" class="btn btn-submit" data-dismiss="modal">
+              <div
+                v-show="textIntroductionLength === 161"
+                class="text-limit-error"
+              >
+                字數超出上限！
+              </div>
+              <div class="text-count text-count-introduction">
+                <span>{{ textIntroductionLength }}</span
+                ><span>/160</span>
+              </div>
+            </div>
+          </div>
+          <button
+            type="submit"
+            class="btn btn-submit"
+            id="btnSave"
+            @click="HandleModelHide"
+          >
+            儲存
+          </button>
+          <!-- <button type="submit" class="btn btn-submit" data-dismiss="modal">
               儲存
             </button> -->
-          </form>
-        </div>
+        </form>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import bootstrap from "bootstrap";
+
 export default {
   props: {
     initialUserProfile: {
@@ -165,6 +169,7 @@ export default {
   },
   data() {
     return {
+      editModal: "",
       profile: {
         id: -1,
         account: "",
@@ -198,11 +203,30 @@ export default {
       const form = e.target;
       const formData = new FormData(form);
 
-      console.log("formData", formData);
-
       this.$emit("after-submit", formData);
       console.log("formData已傳至User");
+
+      const container = e.target.parentElement.parentElement.parentElement;
+      console.log("container", container);
+      // const modal = new bootstrap.Modal(container);
+      // console.log("modal", modal);
+      // $('#editModal').modal('hide')
+
+      this.editModal = new bootstrap.Modal(container);
+      console.log("this.editModal", this.editModal);
+      this.editModal.hide();
+      console.log("this.editModal2", this.editModal);
+      // this.HandleModelHide(modal);
     },
+    // HandleModelHide() {
+    //   console.log("click");
+    //   this.editModal = new bootstrap.Modal(
+    //     document.getElementById("editModal")
+    //   );
+    //   console.log("this.editModal", this.editModal);
+    //   this.editModal.hide();
+    //   console.log("this.editModal2", this.editModal);
+    // },
   },
   computed: {
     textNameLength() {

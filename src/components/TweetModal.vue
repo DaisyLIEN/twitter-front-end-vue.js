@@ -21,10 +21,11 @@
           </div>
           <div class="modal-body">
             <div class="posting">
+              <!-- <img class="photo" :src="user.avatar | emptyAvatar" alt="" /> -->
               <img class="photo" src="https://img.onl/d0RNIH" alt="" />
               <textarea
                 v-model="newTweet"
-                :style="{ 'height': height }"
+                :style="{ height: height }"
                 name="new-post"
                 class="new-post"
                 maxlength="140"
@@ -59,8 +60,8 @@ export default {
   watch: {
     newTweet() {
       // console.log(this.newTweet.length);
-      if (this.newTweet.length > 70) this.height = "126px"
-      else this.height = "66px"
+      if (this.newTweet.length > 70) this.height = "126px";
+      else this.height = "66px";
     },
   },
   methods: {
