@@ -21,7 +21,7 @@
       <div class="tweet-section">
         <div class="tweet-content">
           <div class="user-avatar-name-account">
-            <router-link :to="{ name: 'user', params: { id: userId } }">
+            <router-link :to="{ name: 'user', params: { id: tweet.UserId } }">
               <img
                 :src="tweet.avatar | emptyAvatar"
                 alt=""
@@ -36,11 +36,15 @@
           <div class="tweet-description">
             {{ tweet.description }}
           </div>
-          <div class="tweet-time">{{ tweet.createdAt | fromNow }}小時</div>
+          <div class="tweet-time">{{ tweet.tweetCreatedAt | fromNow }}小時</div>
         </div>
         <div class="tweet-counts">
-          <p class="reply-count">{{ tweet.replyCount }}<span> 回覆</span></p>
-          <p class="like-count">{{ tweet.likeCount }}<span> 喜歡次數</span></p>
+          <p class="reply-count">
+            {{ tweet.totalReplyCount }}<span> 回覆</span>
+          </p>
+          <p class="like-count">
+            {{ tweet.totalLikeCount }}<span> 喜歡次數</span>
+          </p>
         </div>
         <div class="tweet-actions">
           <font-awesome-icon
@@ -49,14 +53,14 @@
             icon="fa-regular fa-comment"
           />
           <font-awesome-icon
-            v-if="tweet.isLiked"
-            @click.prevent.stop="deleteLike(tweet.id)"
+            v-if="tweet.isLike"
+            @click.prevent.stop="deleteLike(tweet.TweetId)"
             icon="fa-regular fa-heart"
             class="fa-heart-active"
           />
           <font-awesome-icon
             v-else
-            @click.prevent.stop="addLike(tweet.id)"
+            @click.prevent.stop="addLike(tweet.TweetId)"
             icon="fa-regular fa-heart"
           />
         </div>
@@ -64,30 +68,36 @@
       </div>
 
       <ReplyCard
-        v-for="reply in replylist"
+        v-for="reply in replyList"
         :key="reply.id"
         :initial-reply="reply"
-        @after-reply-modal-open="handleReplyModal"
+        :initial-current-user-id="currentUserId"
       />
+      <!-- @after-reply-modal-open="handleReplyModal" -->
     </div>
 
     <div class="right-content">
       <PopularList />
     </div>
 
-    <ReplyModal :initial-tweet="tweet"
-    :initial-reply-modal-reply="replyModalReply" @after-reply="handleAfterReply" />
+    <ReplyModal
+      :initial-tweet="tweet"
+      :initial-reply-modal-reply="replyModalReply"
+      @after-create-reply="renderCreateReply"
+    />
   </div>
 </template>
 
 <script>
-// import moment from "moment";
+import moment from "moment";
 import { emptyImageFilter } from "../utils/mixins";
 import Navbar from "../components/Navbar.vue";
-import ReplyCard from "./../components/ReplyCard";
+import ReplyCard from "./../components/ReplyCard.vue";
 import PopularList from "../components/PopularList.vue";
 import ReplyModal from "../components/ReplyModal.vue";
 import tweetsAPI from "./../apis/tweets";
+import usersAPI from "./../apis/users";
+import { Toast } from "./../utils/helpers";
 
 export default {
   mixins: [emptyImageFilter],
@@ -99,130 +109,176 @@ export default {
   },
   data() {
     return {
-      user: {
-        Id: -1,
-      },
+      currentUserId: -1,
+      // 推文區域
       tweet: {
-        id: -1,
+        UserId: -1,
+        TweetId: -1,
         name: "",
         account: "",
         avatar: "",
         description: "",
-        createdAt: "",
-        likeCount: 0,
-        replyCount: 0,
-        isLiked: false,
+        tweetCreatedAt: "",
+        totalLikeCount: 0,
+        totalReplyCount: 0,
+        isLike: false,
       },
-      users: [],
-      replylist: [],
-      replyModalReplyId: "",
-      replyModalReply: {}
+      tweetId: -1, // from route.params
+      replyList: [],
+      replyModalReply: {},
+      // 使用者資料
+      profile: {
+        account: "",
+        name: "",
+        avatar: "",
+      },
     };
   },
   created() {
-    this.fetchTweet();
-    this.fetchTweetReplies();
+    const { tweet_id } = this.$route.params;
+    this.tweetId = Number(tweet_id);
+    this.getCurrentUserId();
+    this.fetchTweet(this.tweetId);
+    this.fetchTweetReplies(this.tweetId);
+    this.fetchUserCard();
   },
   methods: {
-    // GET /tweets/:tweet_id
-    async fetchTweet() {
+    getCurrentUserId() {
+      const userId = localStorage.getItem("userId");
+      this.currentUserId = Number(userId);
+    },
+    // UserCard：GET /api/users/:id
+    async fetchUserCard() {
       try {
-        const { data } = await tweetsAPI.getTweet(1);
+        const { data } = await usersAPI.getUserCard(this.currentUserId);
+        const { account, name, avatar } = data;
+
+        this.profile = {
+          ...this.profile,
+          account,
+          name,
+          avatar,
+        };
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    // GET /tweets/:tweet_id
+    async fetchTweet(tweetId) {
+      try {
+        const { data } = await tweetsAPI.getTweet(tweetId);
         console.log("fetchTweet", data);
 
         const {
-          id,
+          UserId,
+          TweetId,
           name,
           account,
           avatar,
           description,
-          createdAt,
-          likeCount,
-          replyCount,
+          tweetCreatedAt,
+          totalLikeCount,
+          totalReplyCount,
+          isLike,
         } = data;
 
         this.tweet = {
           ...this.tweet,
-          id,
+          UserId,
+          TweetId,
           name,
           account,
           avatar,
           description,
-          createdAt,
-          likeCount,
-          replyCount,
+          tweetCreatedAt,
+          totalLikeCount,
+          totalReplyCount,
+          isLike,
         };
       } catch (error) {
         console.log(error);
       }
     },
     // GET /api/tweets/:tweet_id/replies
-    async fetchTweetReplies() {
+    async fetchTweetReplies(tweetId) {
       try {
-        const { data } = await tweetsAPI.getTweetReplies(1);
-        console.log("getTweetReplies", data);
-        this.replylist = data;
+        const { data } = await tweetsAPI.getTweetReplies(tweetId);
+        // console.log("getTweetReplies", data);
+        this.replyList = data;
       } catch (error) {
         console.log("getTweetReplies", error);
       }
     },
-    // POST /tweets/:tweet_id/replies
-    async handleAfterReply(payload) {
+    // POST /tweets/:id/like
+    async addLike(tweetId) {
       try {
-        console.log("handleAfterReply", payload);
-        const { tweetId, userId, comment } = payload;
-        const { data } = await tweetsAPI.createTweetReply({
-          tweetId,
-          userId,
-          comment,
-        });
-
-        if (data.status !== "success") {
-          throw new Error(data.message);
-        }
+        const response = await usersAPI.addTweetLike(tweetId);
+        // console.log('response', response)
+        const { data } = response;
+        this.tweet = {
+          ...this.tweet,
+          isLike: data.isLike,
+          totalLikeCount: data.totalLikeCount,
+        };
       } catch (error) {
-        console.log("createTweetReply", error);
+        Toast.fire({
+          icon: "error",
+          title: "無法成功按讚，請稍後再試",
+        });
       }
     },
-    handleReplyModal(replyId) {
-      this.replyModalReplyId = replyId;
-      const replyModalReply = this.replylist.find( (reply) => reply.id === replyId )
-      this.replyModalReply = replyModalReply
-    },
-    // POST /tweets/:id/like
-    addLike() {
-      this.tweet = {
-        ...this.tweet,
-        isLiked: true,
-      };
-    },
-    deleteLike() {
-      this.tweet = {
-        ...this.tweet,
-        isLiked: false,
-      };
-    },
-
-    // async addLike(userId) {
-    //   try {
-    //     const { data } = await usersAPI.addLike({ restaurantId });
-
-    //     if (data.status !== "success") {
-    //       throw new Error(data.message);
-    //     }
-
-    //     this.restaurant = {
-    //     ...this.restaurant,
-    //     isLiked: true,
-    //   };
-    //   } catch (error) {
-    //     Toast.fire({
-    //       icon: "error",
-    //       title: "無法增加Like ，請稍後再試",
-    //     });
-    //   }
-    // },
     // POST /tweets/:id/unlike
+    async deleteLike(tweetId) {
+      try {
+        const response = await usersAPI.deleteTweetLike(tweetId);
+        // console.log('response', response)
+        const { data } = response;
+        this.tweet = {
+          ...this.tweet,
+          totalLikeCount: data.totalLikeCount,
+          isLike: data.isLike,
+        };
+      } catch (error) {
+        Toast.fire({
+          icon: "error",
+          title: "無法收回按讚，請稍後再試",
+        });
+      }
+    },
+    renderCreateReply(payload) {
+      const {
+        replyAccount,
+        comment,
+        // isLike,
+      } = payload;
+
+      this.replyList.unshift({
+        avatar: this.profile.avatar,
+        userName: this.profile.name,
+        userAccount: this.profile.account,
+        replyCreatedAt: new Date(),
+        replyAccount,
+        comment,
+        totalLikeCount: 0,
+        totalReplyCount: 0,
+        // isLike,
+      });
+    },
+    // 關於ReplyModal的
+    // handleReplyModal(replyId) {
+    //   const replyModalReply = this.replyList.find(
+    //     (reply) => reply.replyId === replyId
+    //   );
+    //   this.replyModalReply = replyModalReply;
+    // },
+  },
+  filters: {
+    fromNow(datetime) {
+      if (!datetime) {
+        return "-";
+      }
+      return moment(datetime).fromNow();
+    },
   },
 };
 </script>

@@ -49,7 +49,7 @@
     <!-- TweetModal -->
     <TweetModal @after-addTweet="handleAddTweet" />
 
-    <ReplyModal :initial-reply-modal-tweet="replyModalTweet"/>
+    <ReplyModal :initial-reply-modal-tweet="replyModalTweet" />
   </div>
 </template>
 
@@ -77,8 +77,7 @@ export default {
       users: [],
       newTweet2: "",
       height: "",
-      replyModalTweetId: "",
-      replyModalTweet: {}
+      replyModalTweet: {},
     };
   },
   created() {
@@ -136,9 +135,10 @@ export default {
       this.newTweet2 = "";
     },
     handleReplyModal(tweetId) {
-      this.replyModalTweetId = tweetId;
-      const replyModalTweet = this.users.find( (user) => user.id === tweetId )
-      this.replyModalTweet = replyModalTweet
+      const replyModalTweet = this.users.find(
+        (user) => user.TweetId === tweetId
+      );
+      this.replyModalTweet = replyModalTweet;
     },
   },
 };

@@ -1,13 +1,15 @@
 <template>
   <div class="reply">
     <div class="reply-img">
-      <img :src="profile.avatar | emptyAvatar" alt="" class="user-photo" />
+      <router-link :to="{ name: 'user', params: { id: reply.UserId } }">
+        <img :src="reply.avatar | emptyAvatar" alt="" class="user-photo" />
+      </router-link>
     </div>
     <div class="reply-right">
       <div class="user">
-        <span class="user-name">{{ profile.name }}</span>
+        <span class="user-name">{{ reply.userName }}</span>
         <span class="user-account"
-          >{{ reply.account }} ·{{ reply.createdAt | fromNow }}小時</span
+          >@{{ reply.userAccount }} ·{{ reply.replyCreatedAt | fromNow }}</span
         >
       </div>
       <div class="tweet">
@@ -19,21 +21,27 @@
         {{ reply.comment }}
       </div>
       <div
-        v-show="initialCurrentUserId !== currentParams"
+        v-show="initialCurrentUserId !== initialParamsId"
         class="reply-actions"
       >
         <div class="reply-action">
-          <font-awesome-icon
-            data-toggle="modal"
+          <font-awesome-icon icon="fa-regular fa-comment" />
+          <!-- data-toggle="modal"
             data-target="#replyModal"
-            icon="fa-regular fa-comment"
-            @click="openReplyModal(reply.id)"
-          />
-          <p class="reply-number">{{ reply.replyNum }}</p>
+            @click="openReplyModal(reply.replyId)" -->
+          <p class="reply-number">{{ reply.totalReplyCount }}</p>
         </div>
         <div class="reply-action">
+          <!-- <font-awesome-icon
+            v-if="reply.isLike"
+            @click.prevent.stop="deleteLike(reply.replyId)"
+            icon="fa-regular fa-heart"
+            class="fa-heart-active"
+          /> -->
           <font-awesome-icon icon="fa-regular fa-heart" />
-          <p class="like-number">{{ reply.likeNum }}</p>
+          <!-- v-else
+            @click.prevent.stop="addLike(reply.replyId)" -->
+          <p class="like-number">{{ reply.totalLikeCount }}</p>
         </div>
       </div>
     </div>
@@ -42,6 +50,8 @@
 
 <script>
 import moment from "moment";
+// import usersAPI from "./../apis/users";
+// import { Toast } from "./../utils/helpers";
 
 export default {
   filters: {
@@ -53,17 +63,18 @@ export default {
     },
   },
   props: {
-    // from User
+    // from User、ReplyList
     initialCurrentUserId: {
       type: Number,
       required: true,
     },
-    initialUserReply: {
+    // from User
+    initialReplyTweet: {
       type: Object,
       required: true,
     },
-    initialProfile: {
-      type: Object,
+    initialParamsId: {
+      type: Number,
       required: true,
     },
     // from ReplyList
@@ -74,45 +85,76 @@ export default {
   },
   data() {
     return {
-      reply: this.initialUserReply,
-      profile: this.initialProfile,
-      currentParams: -1,
+      reply: {
+        avatar: "",
+        userName: "",
+        userAccount: "",
+        replyCreatedAt: "",
+        replyAccount: "",
+        comment: "",
+        totalLikeCount: "",
+        totalReplyCount: "",
+        UserId: "",
+        replyId: "",
+        isLike: "",
+      },
     };
   },
   created() {
-    const { id } = this.$route.params;
-    this.currentParams = Number(id);
+    this.reply = this.initialReplyTweet || this.initialReply;
   },
   methods: {
-    handleReplyModal(replyId) {
-      this.$emit("after-reply-modal-open", replyId);
-    },
+    // async addLike(replyId) {
+    //   try {
+    //     const response = await usersAPI.addTweetLike(replyId);
+    //     // console.log('response', response)
+    //     const { data } = response;
+    //     this.reply = {
+    //       ...this.reply,
+    //       isLike: data.isLike,
+    //       totalLikeCount: data.totalLikeCount,
+    //     };
+    //   } catch (error) {
+    //     Toast.fire({
+    //       icon: "error",
+    //       title: "無法成功按讚，請稍後再試",
+    //     });
+    //   }
+    // },
+    // async deleteLike(replyId) {
+    //   try {
+    //     const response = await usersAPI.deleteTweetLike(replyId);
+    //     // console.log('response', response)
+    //     const { data } = response;
+    //     this.reply = {
+    //       ...this.reply,
+    //       totalLikeCount: data.totalLikeCount,
+    //       isLike: data.isLike,
+    //     };
+    //   } catch (error) {
+    //     Toast.fire({
+    //       icon: "error",
+    //       title: "無法收回按讚，請稍後再試",
+    //     });
+    //   }
+    // },
+    // 關於ReplyModal的
+    // openReplyModal(replyId) {
+    //   this.$emit("after-reply-modal-open", replyId);
+    // },
   },
   watch: {
-    initialUserReply(newValue) {
-      this.reply = {
-        ...this.reply,
-        ...newValue,
-      };
-
-      // comment: "faker.lorem.text()"
-      // createAt: "2022-05-15T12:31:42.000Z"
-      // id: 4
-      // replyAccount: "user1"
-    },
     initialReply(newValue) {
       this.reply = {
         ...this.reply,
         ...newValue,
       };
-      // account: "user2"
-      // avatar: "https://loremflickr.com/800/350/paradise/?random=75.80269215053413"
-      // comment: "faker.lorem.text()"
-      // id: 1
-      // likeCount: 0
-      // name: "user2"
-      // tweetId: 1
-      // userId: 3
+    },
+    initialReplyTweet(newValue) {
+      this.reply = {
+        ...this.reply,
+        ...newValue,
+      };
     },
   },
 };
@@ -130,6 +172,7 @@ img {
   width: 50px;
   height: 50px;
   margin: 0 8px 0 24px;
+  border-radius: 50%;
 }
 
 .reply-right {

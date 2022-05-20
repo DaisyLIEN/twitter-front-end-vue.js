@@ -1,23 +1,27 @@
 <template>
   <div class="tweet">
     <div class="tweet-img">
-      <router-link :to="{ name: 'user', params: { id: user.id } }">
+      <router-link :to="{ name: 'user', params: { id: user.UserId } }">
         <img :src="user.avatar | emptyAvatar" alt="" class="user-photo" />
       </router-link>
     </div>
     <div class="tweet-right">
       <div class="user">
-        <router-link :to="{ name: 'user', params: { id: user.id } }">
+        <router-link :to="{ name: 'user', params: { id: user.UserId } }">
           <span class="user-name">{{ user.name }}</span>
           <span class="user-account">@{{ user.account }} ‧ </span>
         </router-link>
-        <router-link :to="{ name: 'replylist', params: { tweet_id: user.id } }">
-          <span class="tweet-time">{{ user.createdAt | fromNow }}</span>
+        <router-link
+          :to="{ name: 'replylist', params: { tweet_id: user.TweetId } }"
+        >
+          <span class="tweet-time">{{ user.tweetCreatedAt | fromNow }}</span>
         </router-link>
       </div>
 
       <div class="tweet-content">
-        <router-link :to="{ name: 'replylist', params: { tweet_id: user.id } }">
+        <router-link
+          :to="{ name: 'replylist', params: { tweet_id: user.TweetId } }"
+        >
           <span class="tweet-content">{{ user.description }}</span>
         </router-link>
       </div>
@@ -28,22 +32,22 @@
             data-toggle="modal"
             data-target="#replyModal"
             icon="fa-regular fa-comment"
-            @click="openReplyModal(user.id)"
+            @click="openReplyModal(user.TweetId)"
           />
-          <p class="reply-number">{{ user.replyNum }}</p>
+          <p class="reply-number">{{ user.totalReplyCount }}</p>
         </div>
         <div class="tweet-action" :class="{ active: user.isLike }">
           <font-awesome-icon
             icon="fa-regular fa-heart"
             v-if="user.isLike"
-            @click.stop.prevent="deleteLike(user.id)"
+            @click.stop.prevent="deleteLike(user.TweetId)"
           />
           <font-awesome-icon
             icon="fa-regular fa-heart"
             v-else
-            @click.stop.prevent="addLike(user.id)"
+            @click.stop.prevent="addLike(user.TweetId)"
           />
-          <p class="like-number">{{ user.likeNum }}</p>
+          <p class="like-number">{{ user.totalLikeCount }}</p>
         </div>
       </div>
     </div>
@@ -79,15 +83,15 @@ export default {
   data() {
     return {
       user: {
-        id: -1,
+        avatar: "",
         name: "",
         account: "",
-        avatar: "",
-        UserId: -1,
+        tweetCreatedAt: "",
         description: "",
-        createdAt: "",
-        likeNum: 0,
-        replyNum: 0,
+        totalLikeCount: 0,
+        totalReplyCount: 0,
+        UserId: -1,
+        TweetId: -1,
         isLike: false,
       },
     };
@@ -107,7 +111,7 @@ export default {
         this.user = {
           ...this.user,
           isLike: data.isLike,
-          likeNum: data.likeNum,
+          totalLikeCount: data.totalLikeCount,
         };
       } catch (error) {
         Toast.fire({
@@ -123,7 +127,7 @@ export default {
         const { data } = response;
         this.user = {
           ...this.user,
-          likeNum: data.likeNum,
+          totalLikeCount: data.totalLikeCount,
           isLike: data.isLike,
         };
       } catch (error) {
@@ -141,41 +145,10 @@ export default {
         ...newValue,
       };
     },
-    // user2: {
-    //     id: -1,
-    //     description: "", //
-    //     UserId: -1,
-    //     createdAt: "", //
-    //     updatedAt: "",
-    //     User: {
-    //       id: -1, //
-    //       account: "", //
-    //       name: "", //
-    //       email: "",
-    //       password: "",
-    //       avatar: "", //
-    //       introduction: "",
-    //       cover: "",
-    //       role: "",
-    //       createdAt: "",
-    //       updatedAt: "",
-    //     },
-    //   },
     initialUserTweet(newValue) {
-      const { id: tweetId, description, createdAt, User } = newValue;
-      // this.user.id = id;
-      const { id: UserId, account, name, avatar } = User;
       this.user = {
         ...this.user,
-        id: tweetId,
-        name,
-        account,
-        avatar,
-        UserId,
-        description,
-        createdAt,
-        // likeNum,
-        // replyNum,
+        ...newValue,
       };
     },
   },

@@ -1,8 +1,10 @@
 <template>
   <div class="setting-container">
-    <Navbar />
+    <div class="left-content">
+      <Navbar />
+    </div>
     <div class="right-content">
-      <h1>帳戶設定</h1>
+      <h4>帳戶設定</h4>
       <form class="w-100" @submit.prevent.stop="handleSubmit">
         <div class="form-label-group">
           <label for="name">帳號</label>
@@ -167,34 +169,36 @@ export default {
 
 <style scoped>
 .setting-container {
-  display: flex;
-}
-.right-content {
   display: grid;
-  grid-template-columns: minmax(auto, 642px) 1fr;
+  grid-template-columns: 178px 639px 273px;
+  grid-column-gap: 24px;
+  width: 1140px;
+  height: 100%;
+  margin: 0 auto;
+}
+
+.right-content {
+  grid-column: 2 / 3;
+  width: 639px;
+  padding: 0;
+  border: 1px solid #e6ecf0;
+  border-top: 1px solid white;
+  border-bottom: 1px solid white;
 }
 
 form {
-  grid-column: 1/2;
-}
-
-.container {
-  width: 540px;
-  margin-top: 65px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  padding: 24px 23px 0;
+  border-top: 1px solid #e6ecf0;
 }
 
 .logo-img {
   width: 40px;
 }
 
-h1 {
+h4 {
   font-size: 23px;
   font-weight: 700;
-  margin-top: 25px;
-  margin-bottom: 40px;
+  margin: 24px 0 24px 24px;
 }
 
 .form-label-group {

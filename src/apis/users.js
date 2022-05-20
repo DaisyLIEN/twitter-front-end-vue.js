@@ -4,18 +4,12 @@ const userId = localStorage.getItem("userId");
 
 export default {
   addTweetLike(tweetId) {
-    console.log(tweetId)
     return apiHelper.post(`/tweets/${tweetId}/like`, null, {
       headers: { Authorization: `Bearer ${getToken()}` }
     })
   },
   deleteTweetLike(tweetId) {
     return apiHelper.post(`/tweets/${tweetId}/unlike`, null, {
-      headers: { Authorization: `Bearer ${getToken()}` }
-    })
-  },
-  deleteLike(userId) {
-    return apiHelper.delete(`/like/${userId}`, {
       headers: { Authorization: `Bearer ${getToken()}` }
     })
   },

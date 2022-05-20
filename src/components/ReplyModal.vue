@@ -28,7 +28,7 @@
                   <span class="user-account">@{{ tweet.account }}</span>
                   <span>．</span>
                   <span class="create-time"
-                    >{{ tweet.createdAt | fromNow }}小時</span
+                    >{{ tweet.tweetCreatedAt | fromNow }}小時</span
                   >
                 </div>
                 <div class="tweet-text">
@@ -71,21 +71,22 @@
 </template>
 
 <script>
+import tweetsAPI from "./../apis/tweets";
+
 export default {
   name: "Replication",
   props: {
+    // from ReplyList 的推文區域
     initialTweet: {
       type: Object,
       required: true,
     },
-    tweetId: {
-      type: Number,
-      required: true,
-    },
+    // Click TweetCard，data from Main or User
     initialReplyModalTweet: {
       type: Object,
       required: true,
     },
+    // Click ReplyCard，data from ReplyList
     initialReplyModalReply: {
       type: Object,
       required: true,
@@ -93,50 +94,96 @@ export default {
   },
   data() {
     return {
-      tweet: this.initialTweet,
+      tweet: {
+        UserId: -1,
+        TweetId: -1,
+        name: "",
+        account: "",
+        avatar: "",
+        description: "",
+        tweetCreatedAt: "",
+        totalLikeCount: 0,
+        totalReplyCount: 0,
+        isLike: false,
+      },
       replyContent: "",
-      userId: -1,
     };
   },
   methods: {
-    handleSubmit() {
-      if (this.replyContent.length === 0) return;
+    // POST /tweets/:tweet_id/replies
+    async handleSubmit() {
+      try {
+        if (this.replyContent.length === 0) return;
 
-      this.$emit("after-reply", {
-        tweetId: this.tweetId,
-        userId: this.userId,
-        comment: this.replyContent,
-      });
+        await tweetsAPI.createTweetReply({
+          tweetId: this.tweet.TweetId,
+          comment: this.replyContent,
+        });
 
-      this.replyContent = "";
+        // if (data.status !== "success") {
+        //   throw new Error(data.message);
+        // }
+
+        this.$emit("after-create-reply", {
+          replyAccount: this.tweet.account,
+          comment: this.replyContent,          
+          // isLike: this.tweet.isLike,
+        });
+
+        this.replyContent = "";
+      } catch (error) {
+        console.log("createReply", error);
+        console.log(Error.response);
+      }
     },
   },
   watch: {
     initialTweet(newValue) {
-      console.log("replyNewValue", newValue);
       this.tweet = {
         ...this.tweet,
         ...newValue,
+      };
+    },
+    initialReplyModalReply(newValue) {
+      const {
+        avatar,
+        userName,
+        userAccount,
+        replyCreatedAt,
+        comment,
+        replyId,
+        UserId,
+      } = newValue;
+      this.tweet = {
+        ...this.tweet,
+        avatar,
+        name: userName,
+        account: userAccount,
+        tweetCreatedAt: replyCreatedAt,
+        description: comment,
+        replyId,
+        UserId,
       };
     },
     initialReplyModalTweet(newValue) {
+      const {
+        avatar,
+        name,
+        account,
+        tweetCreatedAt,
+        description,
+        UserId,
+        TweetId,
+      } = newValue;
       this.tweet = {
         ...this.tweet,
-        ...newValue,
-      };
-    },
-    //  "id": 4,
-    //     "comment": "faker.lorem.text()",
-    //     "tweetId": 2,
-    //     "userId": 2,
-    //     "name": "user123",
-    //     "avatar": "https://loremflickr.com/800/350/paradise/?random=65.49809548972685",
-    //     "account": "user123",
-    //     "likeCount": 0
-    initialReplyModalReply(newValue) {
-      this.tweet = {
-        ...this.tweet,
-        ...newValue,
+        avatar,
+        name,
+        account,
+        tweetCreatedAt,
+        description,
+        UserId,
+        TweetId,
       };
     },
   },
@@ -182,6 +229,7 @@ export default {
 .photo {
   width: 50px;
   height: 50px;
+  border-radius: 50%;
 }
 
 .new-reply,

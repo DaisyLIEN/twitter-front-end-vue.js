@@ -44,19 +44,21 @@
       </div>
 
       <ReplyCard
-        v-for="userReply in replyTweets"
-        :key="userReply.id"
-        :initial-user-reply="userReply"
-        :initial-profile="profile"
+        v-for="replyTweet in replyTweets"
+        :key="replyTweet.TweetId"
+        :initial-reply-tweet="replyTweet"
         :initial-current-user-id="currentUserId"
+        :initial-params-id="paramsId"
         v-show="currentPill === 'repliedTweets'"
       />
+      <!-- @after-reply-modal-open="handleReplyModal" -->
 
       <TweetCard
-        v-for="user in usersTweets"
-        :key="user.id"
-        :initial-user="user"
+        v-for="userTweet in usersTweets"
+        :key="userTweet.id"
+        :initial-user-tweet="userTweet"
         v-show="currentPill === 'likes'"
+        @after-reply-modal-open="handleReplyModal"
       />
     </div>
     <div class="right-content">
@@ -115,8 +117,8 @@ export default {
         tweetCount: 0,
       },
       currentPill: "tweets",
-      replyModalTweetId: "",
       replyModalTweet: {},
+      replyModalReply: {},
     };
   },
   created() {
@@ -189,6 +191,7 @@ export default {
       try {
         const { data } = await tweetsAPI.getReplyTweets(paramsId);
         this.replyTweets = data;
+        console.log("getReplyTweets", data);
       } catch (error) {
         console.log("getReplyTweets", error);
       }
@@ -230,9 +233,10 @@ export default {
         });
       }
     },
-    handleReplyModal(tweetId) {
-      this.replyModalTweetId = tweetId;
-      const replyModalTweet = this.users.find((user) => user.id === tweetId);
+    handleReplyModal(TweetId) {
+      const replyModalTweet = this.usersTweets.find(
+        (userTweet) => userTweet.TweetId === TweetId
+      );
       this.replyModalTweet = replyModalTweet;
     },
   },
