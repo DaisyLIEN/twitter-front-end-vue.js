@@ -45,7 +45,7 @@
 
       <ReplyCard
         v-for="replyTweet in replyTweets"
-        :key="replyTweet.TweetId"
+        :key="replyTweet.replyId"
         :initial-reply-tweet="replyTweet"
         :initial-current-user-id="currentUserId"
         :initial-params-id="paramsId"

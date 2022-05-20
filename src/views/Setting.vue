@@ -143,14 +143,14 @@ export default {
         if (error.response.data.message === "此帳戶已經有人使用") {
           Toast.fire({
             icon: "error",
-            title: "您的帳號與其他人重複，請更換其他帳號",
+            title: "account 已重複註冊！",
           });
         } else if (
           error.response.data.message === "此信箱已經有人使用，請更換其他信箱"
         ) {
           Toast.fire({
             icon: "error",
-            title: "您的Email與其他人重複，請更換其他Email",
+            title: "email 已重複註冊！",
           });
         } else {
           Toast.fire({

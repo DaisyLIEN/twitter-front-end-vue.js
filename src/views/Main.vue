@@ -18,16 +18,29 @@
             :style="{ height: height }"
             name="new-post"
             class="new-post"
-            maxlength="140"
+            maxlength="141"
             autofocus
             placeholder="有什麼新鮮事？"
           ></textarea>
         </div>
-        <div class="btn">
-          <button class="btn-submit" type="submit" @click="handleAddTweet2">
+        <div class="footer">
+          <div v-show="newTweet2.length === 141" class="text-limit-error">
+            字數不可超過 140 字
+          </div>
+          <button
+            :disabled="!newTweet2.length || newTweet2.length === 141"
+            type="submit"
+            class="btn-submit"
+            @click="handleAddTweet2"
+          >
             推文
           </button>
         </div>
+        <!-- <div class="btn">
+          <button class="btn-submit" type="submit" @click="handleAddTweet2">
+            推文
+          </button>
+        </div> -->
         <hr class="hr2" />
       </div>
 
@@ -111,24 +124,27 @@ export default {
       }
     },
     async handleAddTweet(newTweet) {
-      // console.log(newTweet);
-      if (!newTweet) {
-        Toast.fire({
-          icon: "error",
-          title: "推文內容不可以為空白",
-        });
-        return;
-      } else if (newTweet.length >= 140) {
-        Toast.fire({
-          icon: "error",
-          title: "推文字數不可超過140字",
-        });
-        return;
+      try {
+        const data = await tweetsAPI.addTweet({ description: newTweet });
+        console.log(data);
+        this.tweets = data.data;
+      } catch (error) {
+        console.log("error", error);
       }
-
-      const data = await tweetsAPI.addTweet({ description: newTweet });
-      console.log(data);
-      this.tweets = data.data;
+      // console.log(newTweet);
+      // if (!newTweet) {
+      //   Toast.fire({
+      //     icon: "error",
+      //     title: "推文內容不可以為空白",
+      //   });
+      //   return;
+      // } else if (newTweet.length >= 140) {
+      //   Toast.fire({
+      //     icon: "error",
+      //     title: "推文字數不可超過140字",
+      //   });
+      //   return;
+      // }
     },
     handleAddTweet2() {
       this.handleAddTweet(this.newTweet2);
@@ -218,10 +234,27 @@ h4 {
   min-height: 66px;
 }
 
-.btn {
+/* .btn {
   display: flex;
   justify-content: flex-end;
   margin: 14px 25.19px 6px 0;
+} */
+
+.footer {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-top: 20px;
+  padding: 0;
+  margin-right: 30px;
+}
+
+.text-limit-error {
+  font-weight: 500;
+  font-size: 15px;
+  line-height: 15px;
+  color: #fc5a5a;
+  margin-right: 20px;
 }
 
 .btn-submit {

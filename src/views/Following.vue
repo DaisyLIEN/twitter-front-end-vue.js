@@ -93,6 +93,7 @@ export default {
     async fetchFollowingsTweets(userId) {
       try {
         const response = await tweetsAPI.getFollowingsTweets(userId);
+        console.log("getFollowersTweets", data);
         console.log("response", response);
         const { data } = response;
         console.log("data", data);

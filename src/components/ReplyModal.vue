@@ -55,6 +55,7 @@
                 內容不可空白
               </div>
               <button
+                :disabled="!newTweet.length"
                 @click="handleSubmit"
                 type="button"
                 class="btn-submit"
@@ -126,7 +127,7 @@ export default {
 
         this.$emit("after-create-reply", {
           replyAccount: this.tweet.account,
-          comment: this.replyContent,          
+          comment: this.replyContent,
           // isLike: this.tweet.isLike,
         });
 

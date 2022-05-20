@@ -96,13 +96,13 @@ export default {
         totalReplyCount: "",
         UserId: "",
         replyId: "",
-        isLike: "",
+        // isLike: "",
       },
     };
   },
-  created() {
-    this.reply = this.initialReplyTweet || this.initialReply;
-  },
+  // created() {
+  //   this.reply = this.initialReply;
+  // },
   methods: {
     // async addLike(replyId) {
     //   try {
@@ -151,9 +151,31 @@ export default {
       };
     },
     initialReplyTweet(newValue) {
+      const {
+        UserId,
+        avatar,
+        comment,
+        replyAccount,
+        replyCreateAt,
+        replyId,
+        totalLikeCount,
+        totalReplyCount,
+        userAccount,
+        userName,
+      } = newValue;
       this.reply = {
         ...this.reply,
-        ...newValue,
+        avatar,
+        userName,
+        userAccount,
+        replyCreatedAt: replyCreateAt, // 後端要改
+        replyAccount,
+        comment,
+        totalLikeCount,
+        totalReplyCount,
+        UserId,
+        replyId,
+        // isLike,
       };
     },
   },
