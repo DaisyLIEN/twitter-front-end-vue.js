@@ -13,8 +13,8 @@
       </div>
     </header>
     <div class="profile">
-      <img class="cover-image" :src="profile.cover" alt="" />
-      <img class="avatar" :src="profile.avatar" alt="" />
+      <img class="cover-image" :src="profile.cover? profile.cover:coverNone" alt="" />
+      <img class="avatar" :src="profile.avatar? profile.cover:avatarNone" alt="" />
       <div class="btn-user" v-if="initialCurrentUserId === initialParamsId">
         <button class="btn-edit" data-toggle="modal" data-target="#editModal">
           編輯個人資料
@@ -47,6 +47,10 @@
 </template>
 
 <script>
+//導入沒avatar及cover時的替換照片
+import avatarNone from '../assets/Avatar-none.png'
+import coverNone from '../assets/Cover-none.jpg'
+
 export default {
   props: {
     initialUserProfile: {
@@ -65,6 +69,8 @@ export default {
   data() {
     return {
       profile: this.initialUserProfile,
+      avatarNone,
+      coverNone
     };
   },
   watch: {

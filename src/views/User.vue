@@ -35,9 +35,9 @@
 
       <div class="tweet-cards">
         <TweetCard
-          v-for="user in usersTweets"
-          :key="user.id"
-          :initial-user="user"
+          v-for="tweet in usersTweets"
+          :key="tweet.id"
+          :initial-tweet="tweet"
           v-show="currentPill === 'tweets'"
         />
       </div>
@@ -52,9 +52,9 @@
       />
 
       <TweetCard
-        v-for="user in usersTweets"
-        :key="user.id"
-        :initial-user="user"
+        v-for="tweet in usersTweets"
+        :key="tweet.id"
+        :initial-tweet="tweet"
         v-show="currentPill === 'likes'"
       />
     </div>
@@ -180,6 +180,7 @@ export default {
       try {
         const { data } = await tweetsAPI.getReplyTweets(paramsId);
         this.replyTweets = data;
+        console.log("getReplyTweets", data);
       } catch (error) {
         console.log("getReplyTweets", error);
       }
@@ -187,9 +188,9 @@ export default {
     // 喜歡的內容：GET /api/users/:id/likes
     async fetchLikes(paramsId) {
       try {
+        //先清空Tweets
+        this.usersTweets = [];
         const { data } = await tweetsAPI.getLikeTweets(paramsId);
-        console.log("getLikeTweets", data);
-
         if (data.length === 0) {
           this.usersTweets = [];
         } else {
@@ -200,7 +201,7 @@ export default {
       }
     },
     // EditModal：PUT /api/users/:id
-    async handleAfterSubmit({ formData }) { 
+    async handleAfterSubmit({ formData }) {
       try {
         console.log("收到子元件formData");
 

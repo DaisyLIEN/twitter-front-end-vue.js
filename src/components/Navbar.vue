@@ -16,7 +16,7 @@
         <span class="nav-item-title">首頁</span>
       </router-link>
       <router-link
-        to="/users/:id"
+        :to="{ name: 'user', params: { id: currentUserId } }"
         :class="['nav-item', { 'current-page': currentPage === 'user' }]"
       >
         <span class="nav-item-font icon-self-img"></span>
@@ -51,14 +51,17 @@
 </template>
 
 <script>
+
 export default {
   data() {
     return {
       currentPage: "",
+      currentUserId: -1,
     };
   },
   created() {
     this.currentPage = this.$route.name;
+    this.currentUserId = localStorage.getItem('userId')
   },
   methods: {
     logout() {

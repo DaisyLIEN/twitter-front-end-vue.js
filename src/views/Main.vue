@@ -14,12 +14,12 @@
           <img class="photo" src="https://img.onl/d0RNIH" alt="" />
           <textarea
             v-model="newTweet2"
-            :style="{ 'height': height }"
+            :style="{ height: height }"
             name="new-post"
             class="new-post"
             maxlength="140"
             autofocus
-            placeholder="有什麼新鮮事？"          
+            placeholder="有什麼新鮮事？"
           ></textarea>
         </div>
         <div class="btn">
@@ -32,7 +32,11 @@
 
       <!-- tweets -->
       <div class="tweets">
-        <TweetCard v-for="user in users" :key="user.id" :initial-user="user" />
+        <TweetCard
+          v-for="tweet in tweets"
+          :key="tweet.id"
+          :initial-tweet="tweet"
+        />
       </div>
     </div>
 
@@ -62,32 +66,32 @@ export default {
   },
   data() {
     return {
-      users: [],
+      tweets: [],
       newTweet2: "",
       height: "",
     };
   },
   created() {
-    this.fetchUsers();
+    this.fetchTweets();
   },
   watch: {
     newTweet2() {
       // console.log(this.newTweet2.length)
       if (this.newTweet2.length > 70) this.height = "106px";
-      else this.height = "66px";      
+      else this.height = "66px";
     },
   },
   methods: {
-    async fetchUsers() {
+    async fetchTweets() {
       try {
         const data = await tweetsAPI.getTweets();
-        console.log("data", data);
+        console.log("tweets", data.data);
 
         if (data.statusText !== "OK") {
           throw new Error(data.statusText);
         }
 
-        this.users = data.data;
+        this.tweets = data.data;
       } catch (error) {
         console.log(error);
 
@@ -114,12 +118,13 @@ export default {
       }
 
       const data = await tweetsAPI.addTweet({ description: newTweet });
-      console.log(data)
-      this.users = data.data;
+      console.log(data);
+      this.tweets = data.data;
     },
     handleAddTweet2() {
       this.handleAddTweet(this.newTweet2);
       this.newTweet2 = "";
+      this.fetchTweets();
     },
   },
 };

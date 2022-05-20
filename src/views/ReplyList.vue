@@ -117,8 +117,8 @@ export default {
     // GET /tweets/:tweet_id
     async fetchTweet() {
       try {
-        const { data } = await tweetsAPI.getTweet(1);
-        console.log("fetchTweet", data);
+        const tweetId = this.$route.params.tweet_id
+        const { data } = await tweetsAPI.getTweet(tweetId);
 
         const {
           id,
@@ -149,7 +149,8 @@ export default {
     // GET /api/tweets/:tweet_id/replies
     async fetchTweetReplies() {
       try {
-        const { data } = await tweetsAPI.getTweetReplies(1);
+        const tweetId = this.$route.params.tweet_id
+        const { data } = await tweetsAPI.getTweetReplies(tweetId);
         console.log("getTweetReplies", data);
         this.replylist = data;
       } catch (error) {

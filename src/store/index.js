@@ -11,7 +11,8 @@ export default new Vuex.Store({
       name: '',
       email: '',
     },
-    isAuthenticated: false
+    isAuthenticated: false,
+    currentTweetId: -1
   },
   getters: {
   },
@@ -23,7 +24,10 @@ export default new Vuex.Store({
         ...currentUser
       }
       state.isAuthenticated = true
-    }
+    },
+    setCurrentTweetId(state, currentTweetId) {
+      state.currentTweetId = currentTweetId
+    },
   },
   actions: {
   },
