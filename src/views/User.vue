@@ -44,14 +44,14 @@
       </div>
 
       <ReplyCard
-        v-for="replyTweet in replyTweets"
-        :key="replyTweet.replyId"
-        :initial-reply-tweet="replyTweet"
+        v-for="userReply in replyTweets"
+        :key="userReply.id"
+        :initial-user-reply="userReply"
         :initial-current-user-id="currentUserId"
-        :initial-params-id="paramsId"
         v-show="currentPill === 'repliedTweets'"
       />
-      <!-- @after-reply-modal-open="handleReplyModal" -->
+      <!-- @after-reply-modal-open="handleReplyModal"
+      :initial-profile="profile" -->
 
       <TweetCard
         v-for="tweet in usersTweets"
@@ -187,7 +187,7 @@ export default {
     async fetchReplyTweets(paramsId) {
       try {
         const { data } = await tweetsAPI.getReplyTweets(paramsId);
-        this.replyTweets = data;
+        this.replyTweets = data;        
       } catch (error) {
         console.log("getReplyTweets", error);
       }
@@ -222,7 +222,10 @@ export default {
           cover: window.URL.createObjectURL(formData.get("cover")),
           avatar: window.URL.createObjectURL(formData.get("avatar")),
         });
-        console.log("handleAfterSubmit", window.URL.createObjectURL(formData.get("avatar")));
+        console.log(
+          "handleAfterSubmit",
+          window.URL.createObjectURL(formData.get("avatar"))
+        );
 
         const { data } = response;
         console.log(data);

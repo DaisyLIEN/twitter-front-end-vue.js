@@ -22,9 +22,8 @@
         <router-link
           :to="{ name: 'replylist', params: { tweet_id: tweet.TweetId } }"
         >
-          <span @click="getTweetId(tweet.TweetId)" class="tweet-content">{{
-            tweet.description
-          }}</span>
+          <span class="tweet-content">{{ tweet.description }}</span>
+          <!-- @click="getTweetId(tweet.TweetId)" -->
         </router-link>
       </div>
 
@@ -58,10 +57,12 @@
 </template>
 
 <script>
+import { emptyImageFilter } from "../utils/mixins";
 import usersAPI from "./../apis/users";
 import moment from "moment";
 
 export default {
+  mixins: [emptyImageFilter],
   filters: {
     fromNow(datetime) {
       if (!datetime) {

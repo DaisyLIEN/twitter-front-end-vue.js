@@ -72,20 +72,23 @@
 </template>
 
 <script>
+import moment from "moment";
+import { emptyImageFilter } from "../utils/mixins";
 import tweetsAPI from "./../apis/tweets";
 
 export default {
+  mixins: [emptyImageFilter],
   name: "Replication",
   props: {
     // from ReplyList 的推文區域
     initialTweet: {
       type: Object,
-      required: true,
+      // required: true,
     },
     // Click TweetCard，data from Main or User
     initialReplyModalTweet: {
       type: Object,
-      required: true,
+      // required: true,
     },
     // Click ReplyCard，data from ReplyList
     // initialReplyModalReply: {
@@ -109,6 +112,9 @@ export default {
       },
       replyContent: "",
     };
+  },
+  create() {
+    this.tweet = this.initialTweet || this.initialReplyModalTweet;
   },
   methods: {
     // POST /tweets/:tweet_id/replies
@@ -190,6 +196,14 @@ export default {
         UserId,
         TweetId,
       };
+    },
+  },
+  filters: {
+    fromNow(datetime) {
+      if (!datetime) {
+        return "-";
+      }
+      return moment(datetime).fromNow();
     },
   },
 };

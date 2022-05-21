@@ -167,7 +167,7 @@ export default {
     async fetchTweet(tweetId) {
       try {
         const { data } = await tweetsAPI.getTweet(tweetId);
-        console.log("fetchTweet", data);
+        // console.log("fetchTweet", data);
 
         const {
           UserId,
@@ -204,6 +204,7 @@ export default {
       try {
         const { data } = await tweetsAPI.getTweetReplies(tweetId);
         this.replyList = data;
+        // console.log('replylist', data)
       } catch (error) {
         console.log("getTweetReplies", error);
       }
@@ -279,7 +280,6 @@ export default {
       return moment(datetime).fromNow();
     },
   },
- 
 };
 </script>
 

@@ -7,9 +7,9 @@
     </div>
     <div class="reply-right">
       <div class="user">
-        <span class="user-name">{{ profile.name }}</span>
+        <span class="user-name">{{ reply.userName }}</span>
         <span class="user-account"
-          >{{ reply.account }} ·{{ reply.replyCreateAt | fromNow }}</span
+          >{{ reply.userAccount }} ·{{ reply.replyCreateAt | fromNow }}</span
         >
       </div>
       <div class="tweet">
@@ -39,10 +39,12 @@
 </template>
 
 <script>
+import { emptyImageFilter } from "../utils/mixins";
 import moment from "moment";
 import ReplyModal from "../components/ReplyModal.vue";
 
 export default {
+  mixins: [emptyImageFilter],
   components: {
     ReplyModal,
   },
@@ -57,27 +59,30 @@ export default {
   props: {
     initialCurrentUserId: {
       type: Number,
-      required: true,
+      // required: true,
     },
     initialUserReply: {
       type: Object,
-      required: true,
+      // required: true,
     },
-    initialProfile: {
+    // initialProfile: {
+    //   type: Object,
+    // required: true,
+    // },
+    initialReply: {
       type: Object,
-      required: true,
     },
   },
   data() {
     return {
-      reply: this.initialUserReply,
-      profile: this.initialProfile,
+      reply: this.initialUserReply || this.initialReply,
+      // profile: this.initialProfile,
       currentParams: -1,
     };
   },
   created() {
-    const { id } = this.$route.params;
-    this.currentParams = Number(id);
+    const { tweet_id } = this.$route.params;
+    this.currentParams = Number(tweet_id) || this.reply.UserId;
   },
   watch: {
     initialUserReply(newValue) {
@@ -86,24 +91,55 @@ export default {
         ...newValue,
       };
 
-      // comment: "faker.lorem.text()"
-      // createAt: "2022-05-15T12:31:42.000Z"
-      // id: 4
-      // replyAccount: "user1"
+      // UserId: (...)
+      // avatar: (...)
+      // comment: (...)
+      // replyAccount: (...)
+      // replyCreateAt: (...)
+      // replyId: (...)
+      // totalLikeCount: (...)
+      // totalReplyCount: (...)
+      // userAccount: (...)
+      // userName: (...)
     },
     initialReply(newValue) {
+      console.log("replynewvalue", newValue);
+      const {
+        UserId,
+        avatar,
+        comment,
+        replyAccount,
+        replyCreatedAt,
+        replyId,
+        totalLikeCount,
+        totalReplyCount,
+        userAccount,
+        userName,
+      } = newValue;
       this.reply = {
         ...this.reply,
-        ...newValue,
+        UserId,
+        avatar,
+        comment,
+        replyAccount,
+        replyCreateAt: replyCreatedAt, //待改
+        replyId,
+        totalLikeCount,
+        totalReplyCount,
+        userAccount,
+        userName,
       };
-      // account: "user2"
-      // avatar: "https://loremflickr.com/800/350/paradise/?random=75.80269215053413"
-      // comment: "faker.lorem.text()"
-      // id: 1
-      // likeCount: 0
-      // name: "user2"
-      // tweetId: 1
-      // userId: 3
+      //       UserId: (...)
+      // avatar: (...)
+      // comment: (...)
+      // replyAccount: (...)
+      // replyCreatedAt: (...)
+      // replyId: (...)
+      // totalLikeCount: (...)
+      // totalReplyCount: (...)
+      // tweetId: (...)
+      // userAccount: (...)
+      // userName: (...)
     },
   },
 };
