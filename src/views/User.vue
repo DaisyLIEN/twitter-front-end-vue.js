@@ -210,12 +210,23 @@ export default {
     // EditModal：PUT /api/users/:id
     async handleAfterSubmit(formData) {
       try {
-        console.log("收到子元件formData");
-        console.log(formData);
+        // console.log({
+        //   name: formData.get("name"),
+        //   introduction: formData.get("introduction"),
+        //   cover: window.URL.createObjectURL(formData.get("cover")),
+        //   avatar: window.URL.createObjectURL(formData.get("avatar")),
+        // });
+        const response = await usersAPI.updateUserCard({
+          name: formData.get("name"),
+          introduction: formData.get("introduction"),
+          cover: window.URL.createObjectURL(formData.get("cover")),
+          avatar: window.URL.createObjectURL(formData.get("avatar")),
+        });
+        console.log("handleAfterSubmit", window.URL.createObjectURL(formData.get("avatar")));
 
-        const { data } = await usersAPI.updateUserCard({ formData });
-
+        const { data } = response;
         console.log(data);
+
         if (data.status !== "更新成功") {
           throw new Error(data.message);
         }

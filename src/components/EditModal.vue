@@ -200,28 +200,12 @@ export default {
         console.log("input type error.");
       } else {
         const form = this.$refs.userForm;
-        console.log(form);
+        // console.log(form);
         const formData = new FormData(form);
+        // console.log("name", formData.get("name"));
+        // console.log("introduction", formData.get("introduction"));
         this.$emit("after-submit", formData);
-        console.log("formData", formData);
-        console.log("formData已傳至User");
-        // const container =this.$refs.userForm.parentElement.parentElement.parentElement;
-        // console.log("container", container);
-        // const modal = new bootstrap.Modal(container);
-        // console.log("modal", modal);
-        // $('#editModal').modal('hide')
-        // this.editModal = new bootstrap.Modal(container);
-        // console.log("this.editModal", this.editModal);
-        // this.editModal.hide();
-        // console.log("this.editModal2", this.editModal);
       }
-      // console.log("click");
-      // this.editModal = new bootstrap.Modal(
-      //   document.getElementById("editModal")
-      // );
-      // console.log("this.editModal", this.editModal);
-      // this.editModal.hide();
-      // console.log("this.editModal2", this.editModal);
     },
   },
   computed: {

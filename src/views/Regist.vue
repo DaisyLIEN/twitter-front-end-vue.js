@@ -139,6 +139,13 @@ export default {
         });
         return;
       }
+      if (this.name.length > 50 || this.account.length > 15) {
+        Toast.fire({
+          icon: "warning",
+          title: "帳號或名稱超過字數上限，請重新輸入",
+        });
+        return;
+      }
       try {
         const response = await authorizationAPI.regist({
           account: this.account,

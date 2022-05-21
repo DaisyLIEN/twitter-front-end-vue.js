@@ -39,8 +39,8 @@ export default {
       headers: { Authorization: `Bearer ${getToken()}` }
     })
   },
-  updateUserCard({ formData }) {
-    return apiHelper.put(`/users/${userId}`, { formData, userId }, {
+  updateUserCard({ name, introduction, cover, avatar }) {
+    return apiHelper.put(`/users/${userId}`, { name, introduction, cover, avatar }, {
       headers: { Authorization: `Bearer ${getToken()}` }
     })
   },
