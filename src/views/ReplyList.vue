@@ -21,7 +21,7 @@
       <div class="tweet-section">
         <div class="tweet-content">
           <div class="user-avatar-name-account">
-            <router-link :to="{ name: 'user', params: { id: userId } }">
+            <router-link :to="{ name: 'user', params: { id: tweet.UserId } }">
               <img :src="tweet.avatar" alt="" class="user-avatar" />
             </router-link>
             <div class="user-name-account">
@@ -32,11 +32,15 @@
           <div class="tweet-description">
             {{ tweet.description }}
           </div>
-          <div class="tweet-time">{{ tweet.createdAt | fromNow }}小時</div>
+          <div class="tweet-time">{{ tweet.tweetCreatedAt | fromNow }}</div>
         </div>
         <div class="tweet-counts">
-          <p class="reply-count">{{ tweet.replyCount }}<span> 回覆</span></p>
-          <p class="like-count">{{ tweet.likeCount }}<span> 喜歡次數</span></p>
+          <p class="reply-count">
+            {{ tweet.totalReplyCount }}<span> 回覆</span>
+          </p>
+          <p class="like-count">
+            {{ tweet.totalLikeCount }}<span> 喜歡次數</span>
+          </p>
         </div>
         <div class="tweet-actions">
           <font-awesome-icon
@@ -46,13 +50,13 @@
           />
           <font-awesome-icon
             v-if="tweet.isLiked"
-            @click.prevent.stop="deleteLike(tweet.id)"
+            @click.prevent.stop="deleteLike(tweet.TweetId)"
             icon="fa-regular fa-heart"
             class="fa-heart-active"
           />
           <font-awesome-icon
             v-else
-            @click.prevent.stop="addLike(tweet.id)"
+            @click.prevent.stop="addLike(tweet.TweetId)"
             icon="fa-regular fa-heart"
           />
         </div>
@@ -61,8 +65,8 @@
 
       <ReplyCard
         v-for="reply in replylist"
-        :key="reply.id"
-        :initial-reply="reply"
+        :key="reply.replyId"
+        :initial-reply-from-reply-list="reply"
       />
     </div>
 
@@ -75,7 +79,7 @@
 </template>
 
 <script>
-// import moment from "moment";
+import moment from "moment";
 import Navbar from "../components/Navbar.vue";
 import ReplyCard from "./../components/ReplyCard";
 import PopularList from "../components/PopularList.vue";
@@ -89,22 +93,20 @@ export default {
     PopularList,
     ReplyModal,
   },
+  filters: {
+    fromNow(datetime) {
+      if (!datetime) {
+        return "-";
+      }
+      return moment(datetime).fromNow();
+    },
+  },
   data() {
     return {
       user: {
         Id: -1,
       },
-      tweet: {
-        id: -1,
-        name: "",
-        account: "",
-        avatar: "",
-        description: "",
-        createdAt: "",
-        likeCount: 0,
-        replyCount: 0,
-        isLiked: false,
-      },
+      tweet: {},
       users: [],
       replylist: [],
     };
@@ -117,31 +119,10 @@ export default {
     // GET /tweets/:tweet_id
     async fetchTweet() {
       try {
-        const tweetId = this.$route.params.tweet_id
+        const tweetId = this.$route.params.tweet_id;
         const { data } = await tweetsAPI.getTweet(tweetId);
 
-        const {
-          id,
-          name,
-          account,
-          avatar,
-          description,
-          createdAt,
-          likeCount,
-          replyCount,
-        } = data;
-
-        this.tweet = {
-          ...this.tweet,
-          id,
-          name,
-          account,
-          avatar,
-          description,
-          createdAt,
-          likeCount,
-          replyCount,
-        };
+        this.tweet = data;
       } catch (error) {
         console.log(error);
       }
@@ -149,7 +130,7 @@ export default {
     // GET /api/tweets/:tweet_id/replies
     async fetchTweetReplies() {
       try {
-        const tweetId = this.$route.params.tweet_id
+        const tweetId = this.$route.params.tweet_id;
         const { data } = await tweetsAPI.getTweetReplies(tweetId);
         console.log("getTweetReplies", data);
         this.replylist = data;

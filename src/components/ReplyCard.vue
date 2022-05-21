@@ -1,13 +1,17 @@
 <template>
   <div class="reply">
     <div class="reply-img">
-      <img :src="profile.avatar" alt="" class="user-photo" />
+      <img :src="reply.avatar" alt="" class="user-photo" />
     </div>
     <div class="reply-right">
       <div class="user">
-        <span class="user-name">{{ profile.name }}</span>
+        <span class="user-name">{{ reply.userName }}</span>
         <span class="user-account"
-          >{{ reply.account }} ·{{ reply.replyCreateAt | fromNow }}</span
+          >{{ reply.account }} ·{{
+            reply.replyCreatedAt
+              ? reply.replyCreatedAt
+              : reply.replyCreateAt | fromNow
+          }}</span
         >
       </div>
       <div class="tweet">
@@ -55,15 +59,19 @@ export default {
   props: {
     initialCurrentUserId: {
       type: Number,
-      required: true,
+      required: false,
     },
     initialUserReply: {
       type: Object,
-      required: true,
+      required: false,
     },
     initialProfile: {
       type: Object,
-      required: true,
+      required: false,
+    },
+    initialReplyFromReplyList: {
+      type: Object,
+      required: false,
     },
   },
   data() {
@@ -76,6 +84,9 @@ export default {
   created() {
     const { id } = this.$route.params;
     this.currentParams = Number(id);
+    if (!this.initialUserReply) {
+      this.reply = this.initialReplyFromReplyList;
+    }
   },
   watch: {
     initialUserReply(newValue) {
