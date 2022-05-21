@@ -95,6 +95,7 @@ export default {
   },
   created() {
     this.fetchTweets();
+    console.log("created", this.tweets)
   },
   watch: {
     newTweet2() {
@@ -139,8 +140,9 @@ export default {
         }
         const data = await tweetsAPI.addTweet({ description: newTweet });
         this.tweets = data.data;
+        console.log("handleAddTweet", this.tweets)
         //送出後重整頁面
-        window.location.reload();
+        // window.location.reload();
       } catch (error) {
         console.log(error);
       }
@@ -148,6 +150,7 @@ export default {
     handleAddTweet2() {
       this.handleAddTweet(this.newTweet2);
       this.newTweet2 = "";
+      console.log("handleAddTweet2", this.tweets)
     },
     handleReplyModal(tweetId) {
       const replyModalTweet = this.tweets.find(

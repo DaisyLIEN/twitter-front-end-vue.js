@@ -1,15 +1,27 @@
 <template>
   <div class="reply">
     <div class="reply-img">
+<<<<<<< HEAD
       <router-link :to="{ name: 'user', params: { id: reply.UserId } }">
         <img :src="reply.avatar | emptyAvatar" alt="" class="user-photo" />
       </router-link>
+=======
+      <img :src="reply.avatar" alt="" class="user-photo" />
+>>>>>>> 4e1caf1fe5a347d269cf838ebfb14268c1e4db37
     </div>
     <div class="reply-right">
       <div class="user">
         <span class="user-name">{{ reply.userName }}</span>
         <span class="user-account"
+<<<<<<< HEAD
           >{{ reply.userAccount }} ·{{ reply.replyCreateAt | fromNow }}</span
+=======
+          >{{ reply.account }} ·{{
+            reply.replyCreatedAt
+              ? reply.replyCreatedAt
+              : reply.replyCreateAt | fromNow
+          }}</span
+>>>>>>> 4e1caf1fe5a347d269cf838ebfb14268c1e4db37
         >
       </div>
       <div class="tweet">
@@ -59,11 +71,11 @@ export default {
   props: {
     initialCurrentUserId: {
       type: Number,
-      // required: true,
+      required: false,
     },
     initialUserReply: {
       type: Object,
-      // required: true,
+      required: false,
     },
     // initialProfile: {
     //   type: Object,
@@ -71,6 +83,11 @@ export default {
     // },
     initialReply: {
       type: Object,
+      required: false,
+    },
+    initialReplyFromReplyList: {
+      type: Object,
+      required: false,
     },
   },
   data() {
@@ -81,8 +98,11 @@ export default {
     };
   },
   created() {
-    const { tweet_id } = this.$route.params;
-    this.currentParams = Number(tweet_id) || this.reply.UserId;
+    const { id } = this.$route.params;
+    this.currentParams = Number(id);
+    if (!this.initialUserReply) {
+      this.reply = this.initialReplyFromReplyList;
+    }
   },
   watch: {
     initialUserReply(newValue) {

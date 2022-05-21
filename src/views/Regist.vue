@@ -155,6 +155,13 @@ export default {
           checkPassword: this.checkPassword,
         });
         console.log(response);
+        if (response.statusText === "OK") {
+          Toast.fire({
+            icon: "success",
+            title: "註冊成功！",
+          });
+          this.$router.push("/");
+        }
       } catch (error) {
         console.log(error);
         Toast.fire({

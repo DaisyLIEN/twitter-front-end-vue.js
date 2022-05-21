@@ -15,7 +15,7 @@
         <img class="tweet-count" src="https://i.imgur.com/41M4NLK.png" alt="" />
         <span>{{ user.totalTweetNum }}</span>
         <img class="like-count" src="https://i.imgur.com/dQXJ6Mp.png" alt="" />
-        <span>{{ user.totalLikeNum }}</span>
+        <span>{{ user.totalLikeCount }}</span>
       </div>
       <div class="follow-ship">
         <span>{{ user.followersNum }}個</span><span>追隨中</span>

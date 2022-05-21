@@ -36,7 +36,7 @@
           <div class="tweet-description">
             {{ tweet.description }}
           </div>
-          <div class="tweet-time">{{ tweet.tweetCreatedAt | fromNow }}小時</div>
+          <div class="tweet-time">{{ tweet.tweetCreatedAt | fromNow }}</div>
         </div>
         <div class="tweet-counts">
           <p class="reply-count">
@@ -68,10 +68,9 @@
       </div>
 
       <ReplyCard
-        v-for="reply in replyList"
-        :key="reply.id"
-        :initial-reply="reply"
-        :initial-current-user-id="currentUserId"
+        v-for="reply in replylist"
+        :key="reply.replyId"
+        :initial-reply-from-reply-list="reply"
       />
       <!-- @after-reply-modal-open="handleReplyModal" -->
     </div>
@@ -107,6 +106,14 @@ export default {
     PopularList,
     ReplyModal,
   },
+  filters: {
+    fromNow(datetime) {
+      if (!datetime) {
+        return "-";
+      }
+      return moment(datetime).fromNow();
+    },
+  },
   data() {
     return {
       currentUserId: -1,
@@ -124,7 +131,7 @@ export default {
         isLike: false,
       },
       tweetId: -1, // from route.params
-      replyList: [],
+      // replyList: [],
       replyModalReply: {},
       // 使用者資料
       profile: {
@@ -132,6 +139,12 @@ export default {
         name: "",
         avatar: "",
       },
+      user: {
+        Id: -1,
+      },
+      // tweet: {},
+      users: [],
+      replylist: [],
     };
   },
   created() {
@@ -169,32 +182,7 @@ export default {
         const { data } = await tweetsAPI.getTweet(tweetId);
         // console.log("fetchTweet", data);
 
-        const {
-          UserId,
-          TweetId,
-          name,
-          account,
-          avatar,
-          description,
-          tweetCreatedAt,
-          totalLikeCount,
-          totalReplyCount,
-          isLike,
-        } = data;
-
-        this.tweet = {
-          ...this.tweet,
-          UserId,
-          TweetId,
-          name,
-          account,
-          avatar,
-          description,
-          tweetCreatedAt,
-          totalLikeCount,
-          totalReplyCount,
-          isLike,
-        };
+        this.tweet = data;
       } catch (error) {
         console.log(error);
       }

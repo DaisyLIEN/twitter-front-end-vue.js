@@ -58,7 +58,6 @@ export default {
         // console.log('response', response)
         const { data } = response;
         this.users = data;
-        console.log(this.users)
       } catch (error) {
         Toast.fire({
           icon: "error",
