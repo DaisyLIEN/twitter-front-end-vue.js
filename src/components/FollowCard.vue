@@ -2,7 +2,11 @@
   <div class="tweet">
     <div class="tweet-img">
       <router-link :to="{ name: 'user', params: { id: user.id } }">
-      <img :src="user.image" alt="" class="user-photo" />
+        <img
+          :src="user.avatar ? user.avatar : avatarNone"
+          alt=""
+          class="user-photo"
+        />
       </router-link>
     </div>
     <div class="tweet-right">
@@ -12,10 +16,10 @@
         </div>
         <div class="btn">
           <button
-            v-if="user.isFollow"
+            v-if="!user.isFollowed"
             type="button"
             class="btn-follow"
-            @click.stop.prevent="deleteFollow"
+            @click.stop.prevent="addFollow(user)"
           >
             跟隨
           </button>
@@ -23,14 +27,14 @@
             v-else
             type="button"
             class="btn-following"
-            @click.stop.prevent="addFollow"
+            @click.stop.prevent="deleteFollow(user.id)"
           >
             正在跟隨
           </button>
         </div>
       </div>
       <div class="tweet-content">
-        {{ user.content }}
+        {{ user.introduction }}
       </div>
     </div>
     <hr class="hr1" />
@@ -38,6 +42,9 @@
 </template>
 
 <script>
+import avatarNone from "../assets/Avatar-none.png";
+import usersAPI from "./../apis/users";
+
 export default {
   props: {
     initialUser: {
@@ -48,20 +55,28 @@ export default {
   data() {
     return {
       user: this.initialUser,
+      avatarNone,
     };
   },
+  created() {},
   methods: {
-    addFollow() {
-      this.user = {
-        ...this.user,
-        isFollow: true,
-      };
+    async addFollow(user) {
+      try {
+        const response = await usersAPI.addFollow(user);
+        console.log(response);
+      } catch (error) {
+        console.log(error);
+      }
+      this.user.isFollowed = true;
     },
-    deleteFollow() {
-      this.user = {
-        ...this.user,
-        isFollow: false,
-      };
+    async deleteFollow(userId) {
+      try {
+        const response = await usersAPI.removeFollow(userId);
+        console.log("response", response);
+      } catch (error) {
+        console.log(error);
+      }
+      this.user.isFollowed = false;
     },
     // 追隨：POST /followships?id=2
     // 取消追隨：DETELE /followships/:followingId

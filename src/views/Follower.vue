@@ -13,9 +13,9 @@
           alt=""
         />
         <div class="title">
-          <h5>Jone Doe</h5>
+          <h5>{{ name }}</h5>
           <!-- <h5>{{ user.name }}</h5> -->
-          <p>0 推文</p>
+          <p>{{ tweetCount }} 推文</p>
           <!-- <p>{{ user.totalTweetCount }} 推文</p> -->
         </div>
       </header>
@@ -44,102 +44,7 @@ import Navbar from "../components/Navbar.vue";
 import FollowCard from "./../components/FollowCard";
 import PopularList from "../components/PopularList.vue";
 import tweetsAPI from "./../apis/tweets";
-
-// const dummyData = {
-//   users: [
-//     {
-//       id: 1,
-//       name: "Apple",
-//       account: "apple",
-//       image: "https://img.onl/Dwojms",
-//       createdAt: "2022-05-11T02:16:16.000Z",
-//       updatedAt: "2022-05-11T02:16:16.000Z",
-//       content:
-//         "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec sed lacinia justo. Cras mi ipsum, venenatis vitae pretium quis, interdum non orci. ",
-//       replyNum: 13,
-//       likeNum: 76,
-//       isFollow: false,
-//     },
-//     {
-//       id: 1,
-//       name: "Apple",
-//       account: "apple",
-//       image: "https://img.onl/Dwojms",
-//       createdAt: "2022-05-11T02:16:16.000Z",
-//       updatedAt: "2022-05-11T02:16:16.000Z",
-//       content:
-//         "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec sed lacinia justo. Cras mi ipsum, venenatis vitae pretium quis, interdum non orci. ",
-//       replyNum: 13,
-//       likeNum: 76,
-//       isFollow: false,
-//     },
-//     {
-//       id: 1,
-//       name: "Apple",
-//       account: "apple",
-//       image: "https://img.onl/Dwojms",
-//       createdAt: "2022-05-11T02:16:16.000Z",
-//       updatedAt: "2022-05-11T02:16:16.000Z",
-//       content:
-//         "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec sed lacinia justo. Cras mi ipsum, venenatis vitae pretium quis, interdum non orci. ",
-//       replyNum: 13,
-//       likeNum: 76,
-//       isFollow: false,
-//     },
-//     {
-//       id: 1,
-//       name: "Apple",
-//       account: "apple",
-//       image: "https://img.onl/Dwojms",
-//       createdAt: "2022-05-11T02:16:16.000Z",
-//       updatedAt: "2022-05-11T02:16:16.000Z",
-//       content:
-//         "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec sed lacinia justo. Cras mi ipsum, venenatis vitae pretium quis, interdum non orci. ",
-//       replyNum: 13,
-//       likeNum: 76,
-//       isFollow: false,
-//     },
-//     {
-//       id: 1,
-//       name: "Apple",
-//       account: "apple",
-//       image: "https://img.onl/Dwojms",
-//       createdAt: "2022-05-11T02:16:16.000Z",
-//       updatedAt: "2022-05-11T02:16:16.000Z",
-//       content:
-//         "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec sed lacinia justo. Cras mi ipsum, venenatis vitae pretium quis, interdum non orci. ",
-//       replyNum: 13,
-//       likeNum: 76,
-//       isFollow: false,
-//     },
-//     {
-//       id: 1,
-//       name: "Apple",
-//       account: "apple",
-//       image: "https://img.onl/Dwojms",
-//       createdAt: "2022-05-11T02:16:16.000Z",
-//       updatedAt: "2022-05-11T02:16:16.000Z",
-//       content:
-//         "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec sed lacinia justo. Cras mi ipsum, venenatis vitae pretium quis, interdum non orci. ",
-//       replyNum: 13,
-//       likeNum: 76,
-//       isFollow: false,
-//     },
-//     {
-//       id: 1,
-//       name: "Apple",
-//       account: "apple",
-//       image: "https://img.onl/Dwojms",
-//       createdAt: "2022-05-11T02:16:16.000Z",
-//       updatedAt: "2022-05-11T02:16:16.000Z",
-//       content:
-//         "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec sed lacinia justo. Cras mi ipsum, venenatis vitae pretium quis, interdum non orci. ",
-//       replyNum: 13,
-//       likeNum: 76,
-//       isFollow: false,
-//     },
-//   ],
-// };
+import usersAPI from "./../apis/users";
 
 export default {
   components: {
@@ -150,20 +55,32 @@ export default {
   data() {
     return {
       users: [],
+      name: "",
+      tweetCount: 0,
     };
   },
   created() {
-    this.fetchFollowersTweets();
+    const userId = this.$route.params.id;
+    this.fetchFollowersTweets(userId);
+    this.getUserInfo(userId);
   },
-  methods: {    
+  methods: {
     // GET /api/users/:id/followers
-    async fetchFollowersTweets() {
+    async fetchFollowersTweets(userId) {
       try {
-        const { data } = await tweetsAPI.getFollowersTweets(2);
-        console.log("getFollowersTweets", data);
+        const { data } = await tweetsAPI.getFollowersTweets(userId);
         this.users = data;
       } catch (error) {
-        console.log("getFollowersTweets", error);
+        console.log(error);
+      }
+    },
+    async getUserInfo(paramsId) {
+      try {
+        const { data } = await usersAPI.getUserCard(paramsId);
+        this.name = data.name;
+        this.tweetCount = data.tweetCount;
+      } catch (error) {
+        console.log(error);
       }
     },
   },
@@ -234,7 +151,7 @@ li {
 li:hover,
 .active {
   color: #ff6600;
-  border-bottom: 2px solid #ff6600;  
+  border-bottom: 2px solid #ff6600;
 }
 .to-following {
   text-decoration: none;

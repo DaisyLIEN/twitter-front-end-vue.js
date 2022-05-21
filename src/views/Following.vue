@@ -13,8 +13,8 @@
           alt=""
         />
         <div class="title">
-          <h5>{{ user.name }}</h5>
-          <p>{{ user.totalTweetCount }} 推文</p>
+          <h5>{{ name }}</h5>
+          <p>{{ tweetCount }} 推文</p>
         </div>
       </header>
 
@@ -44,102 +44,6 @@ import PopularList from "../components/PopularList.vue";
 import usersAPI from "./../apis/users";
 import tweetsAPI from "./../apis/tweets";
 
-// const dummyData = {
-//   users: [
-//     {
-//       id: 1,
-//       name: "Apple",
-//       account: "apple",
-//       image: "https://img.onl/Dwojms",
-//       createdAt: "2022-05-11T02:16:16.000Z",
-//       updatedAt: "2022-05-11T02:16:16.000Z",
-//       content:
-//         "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec sed lacinia justo. Cras mi ipsum, venenatis vitae pretium quis, interdum non orci. ",
-//       replyNum: 13,
-//       likeNum: 76,
-//       isFollow: false,
-//     },
-//     {
-//       id: 1,
-//       name: "Apple",
-//       account: "apple",
-//       image: "https://img.onl/Dwojms",
-//       createdAt: "2022-05-11T02:16:16.000Z",
-//       updatedAt: "2022-05-11T02:16:16.000Z",
-//       content:
-//         "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec sed lacinia justo. Cras mi ipsum, venenatis vitae pretium quis, interdum non orci. ",
-//       replyNum: 13,
-//       likeNum: 76,
-//       isFollow: false,
-//     },
-//     {
-//       id: 1,
-//       name: "Apple",
-//       account: "apple",
-//       image: "https://img.onl/Dwojms",
-//       createdAt: "2022-05-11T02:16:16.000Z",
-//       updatedAt: "2022-05-11T02:16:16.000Z",
-//       content:
-//         "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec sed lacinia justo. Cras mi ipsum, venenatis vitae pretium quis, interdum non orci. ",
-//       replyNum: 13,
-//       likeNum: 76,
-//       isFollow: false,
-//     },
-//     {
-//       id: 1,
-//       name: "Apple",
-//       account: "apple",
-//       image: "https://img.onl/Dwojms",
-//       createdAt: "2022-05-11T02:16:16.000Z",
-//       updatedAt: "2022-05-11T02:16:16.000Z",
-//       content:
-//         "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec sed lacinia justo. Cras mi ipsum, venenatis vitae pretium quis, interdum non orci. ",
-//       replyNum: 13,
-//       likeNum: 76,
-//       isFollow: false,
-//     },
-//     {
-//       id: 1,
-//       name: "Apple",
-//       account: "apple",
-//       image: "https://img.onl/Dwojms",
-//       createdAt: "2022-05-11T02:16:16.000Z",
-//       updatedAt: "2022-05-11T02:16:16.000Z",
-//       content:
-//         "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec sed lacinia justo. Cras mi ipsum, venenatis vitae pretium quis, interdum non orci. ",
-//       replyNum: 13,
-//       likeNum: 76,
-//       isFollow: false,
-//     },
-//     {
-//       id: 1,
-//       name: "Apple",
-//       account: "apple",
-//       image: "https://img.onl/Dwojms",
-//       createdAt: "2022-05-11T02:16:16.000Z",
-//       updatedAt: "2022-05-11T02:16:16.000Z",
-//       content:
-//         "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec sed lacinia justo. Cras mi ipsum, venenatis vitae pretium quis, interdum non orci. ",
-//       replyNum: 13,
-//       likeNum: 76,
-//       isFollow: false,
-//     },
-//     {
-//       id: 1,
-//       name: "Apple",
-//       account: "apple",
-//       image: "https://img.onl/Dwojms",
-//       createdAt: "2022-05-11T02:16:16.000Z",
-//       updatedAt: "2022-05-11T02:16:16.000Z",
-//       content:
-//         "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec sed lacinia justo. Cras mi ipsum, venenatis vitae pretium quis, interdum non orci. ",
-//       replyNum: 13,
-//       likeNum: 76,
-//       isFollow: false,
-//     },
-//   ],
-// };
-
 export default {
   components: {
     Navbar,
@@ -154,40 +58,32 @@ export default {
         totalTweetCount: 0,
       },
       users: [],
+      name: "",
+      tweetCount: 0,
     };
   },
   created() {
-    this.fetchUserCard()
-    this.fetchFollowingsTweets();
+    const userId = this.$route.params.id;
+    this.fetchFollowingsTweets(userId);
+    this.getUserInfo(userId);
   },
   methods: {
-    // GET /api/users/:id，取id、名稱、總推文數
-    async fetchUserCard() {
-      try {
-        const { data } = await usersAPI.getUserCard(2);
-
-        console.log("getUserCard", data);
-
-        const { id, name, totalTweetCount } = data;
-
-        this.user = {
-          ...this.user,
-          id,
-          name,
-          totalTweetCount,
-        };
-      } catch (error) {
-        console.log("fetchUserCard", error);
-      }
-    },
     // GET /api/users/:id/followings
-    async fetchFollowingsTweets() {
+    async fetchFollowingsTweets(userId) {
       try {
-        const { data } = await tweetsAPI.getFollowingsTweets(2);
-        console.log("getFollowingsTweets", data);
+        const { data } = await tweetsAPI.getFollowingsTweets(userId);
         this.users = data;
       } catch (error) {
-        console.log("getFollowingsTweets", error);
+        console.log(error);
+      }
+    },
+    async getUserInfo(paramsId) {
+      try {
+        const { data } = await usersAPI.getUserCard(paramsId);
+        this.name = data.name;
+        this.tweetCount = data.tweetCount;
+      } catch (error) {
+        console.log(error);
       }
     },
   },

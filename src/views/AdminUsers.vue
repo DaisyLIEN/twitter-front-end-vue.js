@@ -52,6 +52,7 @@ export default {
         }
 
         this.users = data;
+        console.log('this.users', this.users);
       } catch (error) {
         console.log(error);
 

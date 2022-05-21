@@ -69,21 +69,28 @@
 </template>
 
 <script>
+import moment from "moment";
+
+
 export default {
   name: "Replication",
+  filters: {
+    fromNow(datetime) {
+      if (!datetime) {
+        return "-";
+      }
+      return moment(datetime).fromNow();
+    },
+  },
   props: {
-    initialTweet: {
-      type: Object,
-      required: true,
-    },
-    tweetId: {
-      type: Number,
-      required: true,
-    },
+    // initialTweet: {
+    //   type: Object,
+    //   required: true,
+    // },
   },
   data() {
     return {
-      tweet: this.initialTweet,
+      tweet: {},
       replyContent: "",
       userId: -1,
     };

@@ -169,7 +169,6 @@ export default {
     async fetchUsersTweets(paramsId) {
       try {
         const { data } = await tweetsAPI.getUserTweets(paramsId);
-        console.log("getUserTweets", data);
         this.usersTweets = data;
       } catch (error) {
         console.log("fetchUsersTweets", error);
@@ -180,7 +179,6 @@ export default {
       try {
         const { data } = await tweetsAPI.getReplyTweets(paramsId);
         this.replyTweets = data;
-        console.log("getReplyTweets", data);
       } catch (error) {
         console.log("getReplyTweets", error);
       }
@@ -201,18 +199,21 @@ export default {
       }
     },
     // EditModal：PUT /api/users/:id
-    async handleAfterSubmit({ formData }) {
+    async handleAfterSubmit(formData) {
       try {
         console.log("收到子元件formData");
+        console.log(formData)
 
         const { data } = await usersAPI.updateUserCard({ formData });
 
-        if (data.status !== "success") {
+        console.log(data);
+        if (data.status !== "更新成功") {
           throw new Error(data.message);
         }
 
         console.log("個人資料送後端成功");
-        this.fetchUserCard();
+        const { id } = this.$route.params;
+        this.fetchUserCard(id);
       } catch (error) {
         Toast.fire({
           icon: "error",
@@ -221,10 +222,15 @@ export default {
       }
     },
   },
+  //路由改變時重新渲染資料
   beforeRouteUpdate(to, from, next) {
     const { id } = to.params;
     this.paramsId = Number(id);
+
     this.fetchUserCard(id);
+
+    this.usersTweets = [];
+    this.currentPill = "tweets";
     this.fetchUsersTweets(id);
     next();
   },

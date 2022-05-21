@@ -64,48 +64,48 @@ export default {
     };
   },
   methods: {
-    async handleSubmit () {
+    async handleSubmit() {
       try {
-
         if (!this.adminAccount || !this.adminPassword) {
           Toast.fire({
-            icon: 'warning',
-            title: '請填入帳號和密碼'
-          })
-          return
+            icon: "warning",
+            title: "請填入帳號和密碼",
+          });
+          return;
         }
 
-        this.isProcessing = true
+        this.isProcessing = true;
 
         const response = await authorization.AdminSignin({
           account: this.adminAccount,
-          password: this.adminPassword
-        })
-        console.log('response', response)
-        const { data, statusText } = response
+          password: this.adminPassword,
+        });
+        console.log("response", response);
+        const { data, statusText } = response;
 
-        if (statusText !== 'OK' || data.status !== 'success') {
-          throw new Error(statusText)
+        if (statusText !== "OK" || data.status !== "success") {
+          throw new Error(statusText);
         }
 
-        localStorage.setItem('token', data.data.token)
-        console.log(data)
+        localStorage.setItem("token", data.data.token);
+        localStorage.setItem("userId", data.data.user.id);
+        console.log(data);
 
         // 將資料傳到Vuex中
         // this.$store.commit('setCurrentUser', data.user)
 
-        this.$router.push('/admin/tweets')
+        this.$router.push("/admin/tweets");
       } catch (error) {
-        this.adminPassword = ''
-        console.log(error)
-        this.isProcessing = false
+        this.adminPassword = "";
+        console.log(error);
+        this.isProcessing = false;
 
         Toast.fire({
-          icon: 'warning',
-          title: '請確認您輸入了正確的帳號密碼'
-        })
+          icon: "warning",
+          title: "請確認您輸入了正確的帳號密碼",
+        });
       }
-    }
+    },
 
     //   // TODO: 向後端驗證使用者登入資訊是否合法
     //   console.log("data", data);

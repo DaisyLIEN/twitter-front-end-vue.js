@@ -14,34 +14,41 @@
       <div class="tweets">
         <div class="tweet" v-for="user in users" :key="user.id">
           <div class="tweet-img">
-            <router-link :to="{ name: 'user', params: { id: user.id } }">
-              <img :src="user.avatar" alt="" class="user-photo" />
+            <router-link :to="{ name: 'user', params: { id: user.TweetId } }">
+              <img :src="user.avatar | emptyAvatar" alt="" class="user-photo" />
             </router-link>
           </div>
           <div class="tweet-right">
             <div class="tweet-right-top">
               <div class="user">
-                <router-link :to="{ name: 'user', params: { id: user.id } }">
+                <router-link
+                  :to="{ name: 'user', params: { id: user.UserId } }"
+                >
                   <span class="user-name">{{ user.name }}</span>
                   <span class="user-account">@{{ user.account }} ‧ </span>
                 </router-link>
                 <router-link
-                  :to="{ name: 'replylist', params: { tweet_id: user.id } }"
+                  :to="{
+                    name: 'replylist',
+                    params: { tweet_id: user.TweetId },
+                  }"
                 >
-                  <span class="tweet-time">{{ user.createdAt | fromNow }}</span>
+                  <span class="tweet-time">{{
+                    user.tweetCreatedAt | fromNow
+                  }}</span>
                 </router-link>
               </div>
 
               <div class="delete-tweet">
                 <font-awesome-icon
                   icon="fa-solid fa-xmark"
-                  @click="deleteTweet(user.id)"
+                  @click="deleteTweet(user.TweetId)"
                 />
               </div>
             </div>
             <div class="tweet-content">
               <router-link
-                :to="{ name: 'replylist', params: { tweet_id: user.id } }"
+                :to="{ name: 'replylist', params: { tweet_id: user.TweetId } }"
               >
                 <span class="tweet-content">{{ user.description }}</span>
               </router-link>
@@ -54,12 +61,14 @@
 </template>
 
 <script>
+import { emptyImageFilter } from "../utils/mixins";
 import AdminNavbar from "./../components/AdminNavbar";
 import adminAPI from "./../apis/admin";
 import { Toast } from "./../utils/helpers";
 import moment from "moment";
 
 export default {
+  mixins: [emptyImageFilter],
   filters: {
     fromNow(datetime) {
       if (!datetime) {
@@ -83,18 +92,16 @@ export default {
     async fetchUsers() {
       try {
         const response = await adminAPI.getAdminTweets();
-        // console.log('response', response)
-
         const { data } = response;
+        console.log("data", data);
 
-        if (data.status !== "success") {
+        if (response.status !== 200) {
           throw new Error(data.statusText);
         }
 
-        this.users = data.data;
+        this.users = data;
       } catch (error) {
         console.log(error);
-
         Toast.fire({
           icon: "error",
           title: "無法取得後台推文資料，請稍後再試",
@@ -103,10 +110,9 @@ export default {
     },
     async deleteTweet(tweetId) {
       try {
-        const response = await adminAPI.deleteTweet({ tweetId });
-        // console.log('response', response)
-        const { data } = response;
-        this.users = data;
+        const deleteResponse = await adminAPI.deleteTweet({ tweetId });
+        console.log("deleteResponse", deleteResponse);
+        this.fetchUsers();
       } catch (error) {
         console.log(error);
 

@@ -13,8 +13,16 @@
       </div>
     </header>
     <div class="profile">
-      <img class="cover-image" :src="profile.cover? profile.cover:coverNone" alt="" />
-      <img class="avatar" :src="profile.avatar? profile.cover:avatarNone" alt="" />
+      <img
+        class="cover-image"
+        :src="profile.cover ? profile.cover : coverNone"
+        alt=""
+      />
+      <img
+        class="avatar"
+        :src="profile.avatar ? profile.cover : avatarNone"
+        alt=""
+      />
       <div class="btn-user" v-if="initialCurrentUserId === initialParamsId">
         <button class="btn-edit" data-toggle="modal" data-target="#editModal">
           編輯個人資料
@@ -34,10 +42,14 @@
           {{ profile.introduction }}
         </p>
         <div class="follow-ship">
-          <router-link class="following" :to="{ name: 'following' }"
+          <router-link
+            class="following"
+            :to="{ name: 'following', params: { id: initialParamsId } }"
             >{{ profile.followingsCount }}個<span>追隨中</span></router-link
           >
-          <router-link class="follower" :to="{ name: 'follower' }"
+          <router-link
+            class="follower"
+            :to="{ name: 'follower', params: { id: initialParamsId } }"
             >{{ profile.followersCount }}位<span>追隨者</span></router-link
           >
         </div>
@@ -48,8 +60,8 @@
 
 <script>
 //導入沒avatar及cover時的替換照片
-import avatarNone from '../assets/Avatar-none.png'
-import coverNone from '../assets/Cover-none.jpg'
+import avatarNone from "../assets/Avatar-none.png";
+import coverNone from "../assets/Cover-none.jpg";
 
 export default {
   props: {
@@ -70,7 +82,7 @@ export default {
     return {
       profile: this.initialUserProfile,
       avatarNone,
-      coverNone
+      coverNone,
     };
   },
   watch: {

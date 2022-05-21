@@ -7,7 +7,7 @@
       <div class="user">
         <span class="user-name">{{ profile.name }}</span>
         <span class="user-account"
-          >{{ reply.account }} ·{{ reply.createdAt | fromNow }}小時</span
+          >{{ reply.account }} ·{{ reply.replyCreateAt | fromNow }}</span
         >
       </div>
       <div class="tweet">
@@ -24,11 +24,11 @@
       >
         <div class="reply-action">
           <font-awesome-icon icon="fa-regular fa-comment" />
-          <p class="reply-number">{{ reply.replyNum }}</p>
+          <p class="reply-number">{{ reply.totalReplyCount }}</p>
         </div>
         <div class="reply-action">
           <font-awesome-icon icon="fa-regular fa-heart" />
-          <p class="like-number">{{ reply.likeNum }}</p>
+          <p class="like-number">{{ reply.totalLikeCount }}</p>
         </div>
       </div>
     </div>
@@ -62,10 +62,6 @@ export default {
       required: true,
     },
     initialProfile: {
-      type: Object,
-      required: true,
-    },
-    initialReply: {
       type: Object,
       required: true,
     },
