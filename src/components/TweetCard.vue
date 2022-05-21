@@ -2,7 +2,7 @@
   <div class="tweet">
     <div class="tweet-img">
       <router-link :to="{ name: 'user', params: { id: tweet.UserId } }">
-        <img :src="tweet.avatar" alt="" class="user-photo" />
+        <img :src="tweet.avatar | emptyAvatar" alt="" class="user-photo" />
       </router-link>
     </div>
     <div class="tweet-right">
@@ -30,7 +30,12 @@
 
       <div class="tweet-actions">
         <div class="tweet-action">
-          <font-awesome-icon icon="fa-regular fa-comment" />
+          <font-awesome-icon
+            data-toggle="modal"
+            data-target="#replyModal"
+            @click="openReplyModal(tweet.TweetId)"
+            icon="fa-regular fa-comment"
+          />
           <p class="reply-number">{{ totalReplyCount }}</p>
         </div>
         <div class="tweet-action">
@@ -106,6 +111,9 @@ export default {
       } catch (error) {
         console.log(error);
       }
+    },
+    openReplyModal(tweetId) {
+      this.$emit("after-reply-modal-open", tweetId);
     },
   },
 };

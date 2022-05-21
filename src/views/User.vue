@@ -39,23 +39,26 @@
           :key="tweet.id"
           :initial-tweet="tweet"
           v-show="currentPill === 'tweets'"
+          @after-reply-modal-open="handleReplyModal"
         />
       </div>
 
       <ReplyCard
-        v-for="userReply in replyTweets"
-        :key="userReply.id"
-        :initial-user-reply="userReply"
-        :initial-profile="profile"
+        v-for="replyTweet in replyTweets"
+        :key="replyTweet.replyId"
+        :initial-reply-tweet="replyTweet"
         :initial-current-user-id="currentUserId"
+        :initial-params-id="paramsId"
         v-show="currentPill === 'repliedTweets'"
       />
+      <!-- @after-reply-modal-open="handleReplyModal" -->
 
       <TweetCard
         v-for="tweet in usersTweets"
         :key="tweet.id"
         :initial-tweet="tweet"
         v-show="currentPill === 'likes'"
+        @after-reply-modal-open="handleReplyModal"
       />
     </div>
     <div class="right-content">
@@ -67,6 +70,8 @@
       @after-submit="handleAfterSubmit"
     />
     <!-- ref="editModalRef" -->
+
+    <ReplyModal :initial-reply-modal-tweet="replyModalTweet" />
   </div>
 </template>
 
@@ -77,6 +82,7 @@ import TweetCard from "../components/TweetCard.vue";
 import ReplyCard from "../components/ReplyCard.vue";
 import PopularList from "../components/PopularList.vue";
 import EditModal from "../components/EditModal.vue";
+import ReplyModal from "../components/ReplyModal.vue";
 import usersAPI from "./../apis/users";
 import tweetsAPI from "./../apis/tweets";
 import { Toast } from "./../utils/helpers";
@@ -89,6 +95,7 @@ export default {
     ReplyCard,
     PopularList,
     EditModal,
+    ReplyModal,
   },
   data() {
     return {
@@ -108,6 +115,8 @@ export default {
         tweetCount: 0,
       },
       currentPill: "tweets",
+      replyModalTweet: {},
+      // replyModalReply: {},
     };
   },
   created() {
@@ -202,7 +211,7 @@ export default {
     async handleAfterSubmit(formData) {
       try {
         console.log("收到子元件formData");
-        console.log(formData)
+        console.log(formData);
 
         const { data } = await usersAPI.updateUserCard({ formData });
 
@@ -220,6 +229,12 @@ export default {
           title: "無法更新個人資料，請稍後再試",
         });
       }
+    },
+    handleReplyModal(TweetId) {
+      const replyModalTweet = this.usersTweets.find(
+        (userTweet) => userTweet.TweetId === TweetId
+      );
+      this.replyModalTweet = replyModalTweet;
     },
   },
   //路由改變時重新渲染資料

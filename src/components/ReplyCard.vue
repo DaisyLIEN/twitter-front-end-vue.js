@@ -1,7 +1,9 @@
 <template>
   <div class="reply">
     <div class="reply-img">
-      <img :src="profile.avatar" alt="" class="user-photo" />
+      <router-link :to="{ name: 'user', params: { id: reply.UserId } }">
+        <img :src="reply.avatar | emptyAvatar" alt="" class="user-photo" />
+      </router-link>
     </div>
     <div class="reply-right">
       <div class="user">

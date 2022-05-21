@@ -10,7 +10,9 @@
     </div>
     <h1>建立你的帳號</h1>
     <form class="w-100" @submit.prevent.stop="handleSubmit">
-      <div :class="['form-label-group', { 'wrong-form': isWronging.account }]">
+      <div
+        :class="['form-label-group', { 'wrong-form': account.length === 16 }]"
+      >
         <label for="name">帳號</label>
         <input
           id="account"
@@ -18,12 +20,17 @@
           name="account"
           type="text"
           class="form-control"
+          maxlength="16"
           required
           autofocus
         />
+        <span v-show="account.length === 16" class="words-limit-alert"
+          >字數超出上限！</span
+        >
         <span class="words-length">{{ account.length }}/15</span>
       </div>
-      <div :class="['form-label-group', { 'wrong-form': isWronging.name }]">
+
+      <div :class="['form-label-group', { 'wrong-form': name.length === 51 }]">
         <label for="name">名稱</label>
         <input
           id="name"
@@ -31,10 +38,15 @@
           name="name"
           type="text"
           class="form-control"
+          maxlength="51"
           autocomplete="username"
           required
           autofocus
         />
+        <span v-show="name.length === 51" class="words-limit-alert"
+          >字數超出上限！</span
+        >
+        <span class="words-length">{{ name.length }}/50</span>
       </div>
 
       <div :class="['form-label-group', { 'wrong-form': isWronging.email }]">
@@ -217,6 +229,15 @@ label {
   font-size: 12px;
   font-weight: 500px;
   color: #696974;
+}
+
+.words-limit-alert {
+  position: absolute;
+  left: 0;
+  top: 58px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #fc5a5a;
 }
 
 /* 錯誤訊息提示 */
