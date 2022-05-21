@@ -85,12 +85,10 @@ export default {
     async fetchTweets() {
       try {
         const data = await tweetsAPI.getTweets();
-        console.log("tweets", data.data);
 
         if (data.statusText !== "OK") {
           throw new Error(data.statusText);
         }
-
         this.tweets = data.data;
       } catch (error) {
         console.log(error);
@@ -103,28 +101,31 @@ export default {
     },
     async handleAddTweet(newTweet) {
       // console.log(newTweet);
-      if (!newTweet) {
-        Toast.fire({
-          icon: "error",
-          title: "推文內容不可以為空白",
-        });
-        return;
-      } else if (newTweet.length >= 140) {
-        Toast.fire({
-          icon: "error",
-          title: "推文字數不可超過140字",
-        });
-        return;
+      try {
+        if (!newTweet) {
+          Toast.fire({
+            icon: "error",
+            title: "推文內容不可以為空白",
+          });
+          return;
+        } else if (newTweet.length >= 140) {
+          Toast.fire({
+            icon: "error",
+            title: "推文字數不可超過140字",
+          });
+          return;
+        }
+        const data = await tweetsAPI.addTweet({ description: newTweet });
+        this.tweets = data.data;
+        //送出後重整頁面
+        window.location.reload();
+      } catch (error) {
+        console.log(error);
       }
-
-      const data = await tweetsAPI.addTweet({ description: newTweet });
-      console.log(data);
-      this.tweets = data.data;
     },
     handleAddTweet2() {
       this.handleAddTweet(this.newTweet2);
       this.newTweet2 = "";
-      this.fetchTweets();
     },
   },
 };
