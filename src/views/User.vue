@@ -187,7 +187,7 @@ export default {
     async fetchReplyTweets(paramsId) {
       try {
         const { data } = await tweetsAPI.getReplyTweets(paramsId);
-        this.replyTweets = data;        
+        this.replyTweets = data;
       } catch (error) {
         console.log("getReplyTweets", error);
       }
@@ -216,19 +216,23 @@ export default {
         //   cover: window.URL.createObjectURL(formData.get("cover")),
         //   avatar: window.URL.createObjectURL(formData.get("avatar")),
         // });
+        // const response = await usersAPI.updateUserCard({
+        //   name: formData.get("name"),
+        //   introduction: formData.get("introduction"),
+        //   cover: window.URL.createObjectURL(formData.get("cover")),
+        //   avatar: window.URL.createObjectURL(formData.get("avatar")),
+        // });
+        // console.log(
+        //   "handleAfterSubmit",
+        //   window.URL.createObjectURL(formData.get("avatar"))
+        // );
+
         const response = await usersAPI.updateUserCard({
-          name: formData.get("name"),
-          introduction: formData.get("introduction"),
-          cover: window.URL.createObjectURL(formData.get("cover")),
-          avatar: window.URL.createObjectURL(formData.get("avatar")),
+          formData,
         });
-        console.log(
-          "handleAfterSubmit",
-          window.URL.createObjectURL(formData.get("avatar"))
-        );
 
         const { data } = response;
-        console.log(data);
+        console.log("後端回傳", data);
 
         if (data.status !== "更新成功") {
           throw new Error(data.message);

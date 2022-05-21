@@ -199,9 +199,8 @@ export default {
       ) {
         console.log("input type error.");
       } else {
-        const form = this.$refs.userForm;
-        // console.log(form);
-        const formData = new FormData(form);
+        const form = this.$refs.userForm;        
+        const formData = new FormData(form);        
         // console.log("name", formData.get("name"));
         // console.log("introduction", formData.get("introduction"));
         this.$emit("after-submit", formData);
