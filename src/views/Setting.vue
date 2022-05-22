@@ -73,7 +73,11 @@
           />
         </div>
         <div class="button-container">
-          <button class="btn btn-lg btn-primary btn-block mb-3" type="submit">
+          <button
+            class="btn btn-lg btn-primary btn-block mb-3"
+            type="submit"
+            :disabled="isProcessing"
+          >
             儲存
           </button>
         </div>
@@ -96,6 +100,7 @@ export default {
       email: "",
       password: "",
       checkPassword: "",
+      isProcessing: false,
     };
   },
   components: {
@@ -121,6 +126,7 @@ export default {
     //將user設定的資料傳到後台
     async handleSubmit() {
       try {
+        this.isProcessing = true;
         const response = await usersAPI.accountSetting({
           account: this.account,
           name: this.name,
@@ -136,7 +142,9 @@ export default {
           icon: "success",
           title: "修改成功",
         });
+        this.isProcessing = false;
       } catch (error) {
+        this.isProcessing = false;
         console.log("catch-error", error);
         console.log("error.response", error.response);
 

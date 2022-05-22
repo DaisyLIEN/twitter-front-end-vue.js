@@ -33,16 +33,18 @@
           <font-awesome-icon icon="fa-regular fa-comment" />
           <p class="reply-number">{{ totalReplyCount }}</p>
         </div>
-        <div class="tweet-action">
+        <div class="tweet-action" :class="{ active: isLike }">
           <font-awesome-icon
             icon="fa-regular fa-heart"
             v-if="isLike"
             class="active"
+            :disabled="isProcessing"
             @click.stop.prevent="deleteLike(tweet.TweetId)"
           />
           <font-awesome-icon
             icon="fa-regular fa-heart"
             v-else
+            :disabled="isProcessing"
             @click.stop.prevent="addLike(tweet.TweetId)"
           />
           <p class="like-number">{{ totalLikeCount }}</p>
@@ -79,31 +81,50 @@ export default {
       isLike: this.initialTweet.isLike,
       totalReplyCount: this.initialTweet.totalReplyCount,
       totalLikeCount: this.initialTweet.totalLikeCount,
+
+      isProcessing: false,
     };
   },
-  created() {},
+  watch: {
+    initialTweet(newValue) {
+      this.tweet = {
+        ...this.tweet,
+        ...newValue,
+      };
+    },
+  },
   methods: {
     async addLike(tweetId) {
       try {
+        this.isProcessing = true;
         const response = await usersAPI.addTweetLike(tweetId);
         if (response.statusText !== "OK") {
           throw new Error(response.statusText);
         }
-        this.isLike = true;
-        this.totalLikeCount += 1;
+        console.log("addLikeResponse", response);
+        const { data } = response;
+        this.isLike = data.isLike;
+        this.totalLikeCount = data.totalLikeCount;
+        this.isProcessing = false;
       } catch (error) {
+        this.isProcessing = false;
         console.log(error);
       }
     },
     async deleteLike(tweetId) {
       try {
+        this.isProcessing = true;
         const response = await usersAPI.deleteTweetLike(tweetId);
         if (response.statusText !== "OK") {
           throw new Error(response.statusText);
         }
-        this.isLike = false;
-        this.totalLikeCount -= 1;
+        console.log("deleteLikeResponse", response);
+        const { data } = response;
+        this.isLike = data.isLike;
+        this.totalLikeCount = data.totalLikeCount;
+        this.isProcessing = false;
       } catch (error) {
+        this.isProcessing = false;
         console.log(error);
       }
     },
@@ -162,6 +183,7 @@ img {
   line-height: 26px;
   text-align: left;
   color: #171725;
+  word-break: break-all;
 }
 
 .tweet-actions {

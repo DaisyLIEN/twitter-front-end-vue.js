@@ -93,7 +93,11 @@
         />
       </div>
 
-      <button class="btn btn-lg btn-primary btn-block mb-3" type="submit">
+      <button
+        class="btn btn-lg btn-primary btn-block mb-3"
+        type="submit"
+        :disabled="isProcessing"
+      >
         註冊
       </button>
 
@@ -126,6 +130,7 @@ export default {
         password: false,
         checkPassword: false,
       },
+      isProcessing: false,
     };
   },
   methods: {
@@ -147,6 +152,7 @@ export default {
         return;
       }
       try {
+        this.isProcessing = true;
         const response = await authorizationAPI.regist({
           account: this.account,
           name: this.name,
@@ -163,6 +169,7 @@ export default {
           this.$router.push("/");
         }
       } catch (error) {
+        this.isProcessing = false;
         console.log(error);
         Toast.fire({
           icon: "error",

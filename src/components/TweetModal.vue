@@ -53,7 +53,7 @@ export default {
   data() {
     return {
       newTweet: "",
-      height: "",
+      height: ""
     };
   },
   watch: {

@@ -4,7 +4,6 @@
     <div class="left-content">
       <Navbar />
     </div>
-
     <div class="middle-content">
       <h4 class="title">首頁</h4>
       <hr class="hr1" />
@@ -29,17 +28,18 @@
         </div>
         <hr class="hr2" />
       </div>
-
-      <!-- tweets -->
-      <div class="tweets">
-        <TweetCard
-          v-for="tweet in tweets"
-          :key="tweet.id"
-          :initial-tweet="tweet"
-        />
+      <Spinner v-if="isLoading" />
+      <div v-else>
+        <!-- tweets -->
+        <div class="tweets">
+          <TweetCard
+            v-for="tweet in tweets"
+            :key="tweet.id"
+            :initial-tweet="tweet"
+          />
+        </div>
       </div>
     </div>
-
     <div class="right-content">
       <PopularList />
     </div>
@@ -56,6 +56,7 @@ import TweetModal from "./../components/TweetModal";
 import PopularList from "./../components/PopularList";
 import tweetsAPI from "./../apis/tweets";
 import { Toast } from "./../utils/helpers";
+import Spinner from "./../components/Spinner";
 
 export default {
   components: {
@@ -63,17 +64,18 @@ export default {
     TweetCard,
     TweetModal,
     PopularList,
+    Spinner,
   },
   data() {
     return {
       tweets: [],
       newTweet2: "",
       height: "",
+      isLoading: true,
     };
   },
   created() {
     this.fetchTweets();
-    console.log("created", this.tweets)
   },
   watch: {
     newTweet2() {
@@ -85,15 +87,16 @@ export default {
   methods: {
     async fetchTweets() {
       try {
+        this.isLoading = true;
         const data = await tweetsAPI.getTweets();
 
         if (data.statusText !== "OK") {
           throw new Error(data.statusText);
         }
         this.tweets = data.data;
+        this.isLoading = false;
       } catch (error) {
-        console.log(error);
-
+        this.isLoading = false;
         Toast.fire({
           icon: "error",
           title: "無法取得推文資料，請稍後再試",
@@ -118,17 +121,15 @@ export default {
         }
         const data = await tweetsAPI.addTweet({ description: newTweet });
         this.tweets = data.data;
-        console.log("handleAddTweet", this.tweets)
-        //送出後重整頁面
-        // window.location.reload();
+        console.log("handleAddTweet", this.tweets);
       } catch (error) {
         console.log(error);
       }
     },
-    handleAddTweet2() {
+    async handleAddTweet2() {
       this.handleAddTweet(this.newTweet2);
       this.newTweet2 = "";
-      console.log("handleAddTweet2", this.tweets)
+      console.log("handleAddTweet2", this.tweets);
     },
   },
 };

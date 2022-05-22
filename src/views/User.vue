@@ -32,31 +32,33 @@
           </li>
         </ul>
       </div>
+      <Spinner v-if="isLoading" />
+      <div v-else>
+        <div class="tweet-cards">
+          <TweetCard
+            v-for="tweet in usersTweets"
+            :key="tweet.id"
+            :initial-tweet="tweet"
+            v-show="currentPill === 'tweets'"
+          />
+        </div>
 
-      <div class="tweet-cards">
+        <ReplyCard
+          v-for="userReply in replyTweets"
+          :key="userReply.id"
+          :initial-user-reply="userReply"
+          :initial-profile="profile"
+          :initial-current-user-id="currentUserId"
+          v-show="currentPill === 'repliedTweets'"
+        />
+
         <TweetCard
           v-for="tweet in usersTweets"
           :key="tweet.id"
           :initial-tweet="tweet"
-          v-show="currentPill === 'tweets'"
+          v-show="currentPill === 'likes'"
         />
       </div>
-
-      <ReplyCard
-        v-for="userReply in replyTweets"
-        :key="userReply.id"
-        :initial-user-reply="userReply"
-        :initial-profile="profile"
-        :initial-current-user-id="currentUserId"
-        v-show="currentPill === 'repliedTweets'"
-      />
-
-      <TweetCard
-        v-for="tweet in usersTweets"
-        :key="tweet.id"
-        :initial-tweet="tweet"
-        v-show="currentPill === 'likes'"
-      />
     </div>
     <div class="right-content">
       <PopularList />
@@ -80,6 +82,7 @@ import EditModal from "../components/EditModal.vue";
 import usersAPI from "./../apis/users";
 import tweetsAPI from "./../apis/tweets";
 import { Toast } from "./../utils/helpers";
+import Spinner from "./../components/Spinner";
 
 export default {
   components: {
@@ -89,6 +92,7 @@ export default {
     ReplyCard,
     PopularList,
     EditModal,
+    Spinner,
   },
   data() {
     return {
@@ -108,6 +112,7 @@ export default {
         tweetCount: 0,
       },
       currentPill: "tweets",
+      isLoading: true,
     };
   },
   created() {
@@ -168,24 +173,31 @@ export default {
     // 推文：GET /api/users/:id/tweets
     async fetchUsersTweets(paramsId) {
       try {
+        this.isLoading = true;
         const { data } = await tweetsAPI.getUserTweets(paramsId);
         this.usersTweets = data;
+        this.isLoading = false;
       } catch (error) {
+        this.isLoading = false;
         console.log("fetchUsersTweets", error);
       }
     },
     // 回覆：GET /api/users/:id/replied_tweets
     async fetchReplyTweets(paramsId) {
       try {
+        this.isLoading = true;
         const { data } = await tweetsAPI.getReplyTweets(paramsId);
         this.replyTweets = data;
+        this.isLoading = false;
       } catch (error) {
+        this.isLoading = false;
         console.log("getReplyTweets", error);
       }
     },
     // 喜歡的內容：GET /api/users/:id/likes
     async fetchLikes(paramsId) {
       try {
+        this.isLoading = true;
         //先清空Tweets
         this.usersTweets = [];
         const { data } = await tweetsAPI.getLikeTweets(paramsId);
@@ -194,7 +206,9 @@ export default {
         } else {
           this.usersTweets = data;
         }
+        this.isLoading = false;
       } catch (error) {
+        this.isLoading = false;
         console.log("getLikeTweets", error);
       }
     },
@@ -213,7 +227,10 @@ export default {
           cover: window.URL.createObjectURL(formData.get("cover")),
           avatar: window.URL.createObjectURL(formData.get("avatar")),
         });
-        console.log("handleAfterSubmit", window.URL.createObjectURL(formData.get("avatar")));
+        console.log(
+          "handleAfterSubmit",
+          window.URL.createObjectURL(formData.get("avatar"))
+        );
 
         const { data } = response;
         console.log(data);
