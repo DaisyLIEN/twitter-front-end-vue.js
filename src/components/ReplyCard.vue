@@ -43,8 +43,7 @@ import moment from "moment";
 
 export default {
   mixins: [emptyImageFilter],
-  components: {
-  },
+  components: {},
   filters: {
     fromNow(datetime) {
       if (!datetime) {
@@ -167,6 +166,9 @@ img {
   color: #171725;
 }
 
+.user-photo {
+  border-radius: 25px;
+}
 .user-account,
 .tweet {
   font-weight: 400;

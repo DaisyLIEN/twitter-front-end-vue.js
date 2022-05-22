@@ -200,7 +200,9 @@ h4 {
   display: flex;
   justify-content: space-between;
 }
-
+.user-photo {
+  border-radius: 25px;
+}
 .user-name {
   margin-right: 8px;
   font-weight: 700;

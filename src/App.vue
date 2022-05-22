@@ -188,22 +188,5 @@ table {
   border-spacing: 0;
 }
 
-::-webkit-scrollbar {
-  /* make scrollbar transparent */
-  width: 0px;
-  background: transparent;
-}
 
-.scrollbar {
-  padding-left: 6px;
-}
-
-.scrollbar::-webkit-scrollbar {
-  width: 6px;
-}
-
-.scrollbar::-webkit-scrollbar-thumb {
-  border-radius: 3px;
-  background-color: rgba(0, 0, 0, 0.1);
-}
 </style>
