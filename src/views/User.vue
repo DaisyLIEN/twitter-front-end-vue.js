@@ -67,6 +67,7 @@
 
     <EditModal
       :initial-user-profile="profile"
+      :initial-user-cover="profile.cover"
       @after-submit="handleAfterSubmit"
     />
     <!-- ref="editModalRef" -->

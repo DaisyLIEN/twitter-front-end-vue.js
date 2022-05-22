@@ -163,6 +163,10 @@ export default {
       type: Object,
       required: true,
     },
+    initialUserCover: {
+      type: String,
+      required: true,
+    },
   },
   data() {
     return {
@@ -175,10 +179,14 @@ export default {
         avatar: "",
         cover: "",
       },
+      primaryCover: "",
       avatarNone,
       coverNone,
       // isProcessing: false,
     };
+  },
+  created() {
+    this.primaryCover = this.initialUserCover;
   },
   methods: {
     handleCoverChange(e) {
@@ -191,7 +199,9 @@ export default {
       const imageURL = window.URL.createObjectURL(files[0]);
       this.profile.avatar = imageURL;
     },
-    handleCoverCancel() {},
+    handleCoverCancel() {
+      this.profile.cover = this.primaryCover;
+    },
     HandleModelHide() {
       if (
         this.profile.name.length > 50 ||
@@ -199,8 +209,8 @@ export default {
       ) {
         console.log("input type error.");
       } else {
-        const form = this.$refs.userForm;        
-        const formData = new FormData(form);        
+        const form = this.$refs.userForm;
+        const formData = new FormData(form);
         // console.log("name", formData.get("name"));
         // console.log("introduction", formData.get("introduction"));
         this.$emit("after-submit", formData);
@@ -221,6 +231,9 @@ export default {
         ...this.profile,
         ...newValue,
       };
+    },
+    initialUserCover(newValue) {
+      this.primaryCover = newValue;
     },
   },
 };
@@ -308,7 +321,6 @@ form {
 .label-cancel,
 .label-avatar {
   position: absolute;
-  cursor: pointer;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -321,6 +333,7 @@ form {
 }
 .label-cover {
   right: 317px;
+  cursor: pointer;
 }
 .label-cancel {
   right: 267px;
@@ -330,6 +343,7 @@ form {
   width: 140px;
   height: 140px;
   border-radius: 50%;
+  cursor: pointer;
 }
 .form-control-file-cover,
 .form-control-file-cancel,
