@@ -126,7 +126,7 @@ export default {
   position: fixed;
   top: 0;
   z-index: 100;
-  width: 273px;  
+  width: 273px;
   border-radius: 14px;
   background-color: #f5f8fa;
   border-top: 1px solid white;

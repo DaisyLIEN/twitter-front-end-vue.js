@@ -213,6 +213,7 @@ h4 {
 .photo {
   width: 50px;
   height: 50px;
+  border-radius: 25px;
   margin-left: 25.19px;
 }
 

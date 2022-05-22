@@ -186,6 +186,9 @@ img {
   color: #171725;
 }
 
+.user-photo{
+  border-radius: 25px;
+}
 .user-account,
 .tweet-time {
   font-weight: 400;

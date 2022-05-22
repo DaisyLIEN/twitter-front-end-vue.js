@@ -187,28 +187,4 @@ table {
   border-collapse: collapse;
   border-spacing: 0;
 }
-
-::-webkit-scrollbar {
-  /* make scrollbar transparent */
-  width: 0px;
-  background: transparent;
-}
-
-.scrollbar::-webkit-scrollbar {
-  width: 8px;
-}
-
-.scrollbar::-webkit-scrollbar-track-piece {
-  background: #fafafa;
-}
-
-.scrollbar::-webkit-scrollbar-thumb {
-  border-radius: 4px;
-  background-color: #c1c1c1;
-}
-
-.middle-content {
-  max-height: 99%;
-  overflow-y: scroll;
-}
 </style>

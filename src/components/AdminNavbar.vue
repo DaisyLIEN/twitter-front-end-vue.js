@@ -53,6 +53,8 @@ export default {
     logout() {
       // 待串接API後取消token
       localStorage.removeItem("token");
+      localStorage.removeItem("userId");
+      localStorage.removeItem("userAvatar");
       this.$router.push("/signin");
     },
   },
@@ -61,9 +63,11 @@ export default {
 
 <style scoped>
 .nav-container {
-  position: relative;
-  height: 100vh;
-  width: 235px;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  z-index: 100;
+  width: 178px;
 }
 .logo-img {
   width: 30px;
