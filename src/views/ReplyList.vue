@@ -53,7 +53,7 @@
             icon="fa-regular fa-comment"
           />
           <font-awesome-icon
-            v-if="tweet.isLiked"
+            v-if="tweet.isLike"
             @click.prevent.stop="deleteLike(tweet.TweetId)"
             icon="fa-regular fa-heart"
             class="fa-heart-active"
@@ -72,6 +72,7 @@
         :key="reply.replyId"
         :initial-reply-from-reply-list="reply"
       />
+      <!-- @after-reply-modal-open="handleReplyModal" -->
     </div>
 
     <div class="right-content">
@@ -84,14 +85,18 @@
 
 <script>
 import moment from "moment";
+import { emptyImageFilter } from "../utils/mixins";
 import Navbar from "../components/Navbar.vue";
-import ReplyCard from "./../components/ReplyCard";
+import ReplyCard from "./../components/ReplyCard.vue";
 import PopularList from "../components/PopularList.vue";
 import ReplyModal from "../components/ReplyModal.vue";
 import tweetsAPI from "./../apis/tweets";
 import avatarNone from "../assets/Avatar-none.png";
+import usersAPI from "./../apis/users";
+import { Toast } from "./../utils/helpers";
 
 export default {
+  mixins: [emptyImageFilter],
   components: {
     Navbar,
     ReplyCard,
@@ -100,18 +105,75 @@ export default {
   },
   filters: {
     fromNow(datetime) {
-      if (!datetime) {
-        return "-";
-      }
-      return moment(datetime).fromNow();
+      moment.locale("zh-tw", {
+        meridiemParse: /凌晨|早上|上午|中午|下午|晚上/,
+        meridiemHour: function (h, meridiem) {
+          let hour = h;
+          if (hour === 12) {
+            hour = 0;
+          }
+          if (
+            meridiem === "凌晨" ||
+            meridiem === "早上" ||
+            meridiem === "上午"
+          ) {
+            return hour;
+          } else if (meridiem === "下午" || meridiem === "晚上") {
+            return hour + 12;
+          } else {
+            // '中午'
+            return hour >= 11 ? hour : hour + 12;
+          }
+        },
+        meridiem: function (hour, minute) {
+          const hm = hour * 100 + minute;
+          if (hm < 600) {
+            return "凌晨";
+          } else if (hm < 900) {
+            return "早上";
+          } else if (hm < 1130) {
+            return "上午";
+          } else if (hm < 1230) {
+            return "中午";
+          } else if (hm < 1800) {
+            return "下午";
+          } else {
+            return "晚上";
+          }
+        },
+      });
+      return moment(datetime).format("a HH:mm．YYYY年MM月DD日");
     },
   },
   data() {
     return {
+      currentUserId: -1,
+      // 推文區域
+      tweet: {
+        UserId: -1,
+        TweetId: -1,
+        name: "",
+        account: "",
+        avatar: "",
+        description: "",
+        tweetCreatedAt: "",
+        totalLikeCount: 0,
+        totalReplyCount: 0,
+        isLike: false,
+      },
+      tweetId: -1, // from route.params
+      // replyList: [],
+      replyModalReply: {},
+      // 使用者資料
+      profile: {
+        account: "",
+        name: "",
+        avatar: "",
+      },
       user: {
         Id: -1,
       },
-      tweet: {},
+      // tweet: {},
       users: [],
       replylist: [],
 
@@ -119,15 +181,39 @@ export default {
     };
   },
   created() {
-    this.fetchTweet();
-    this.fetchTweetReplies();
+    const { tweet_id } = this.$route.params;
+    this.tweetId = Number(tweet_id);
+    this.getCurrentUserId();
+    this.fetchTweet(this.tweetId);
+    this.fetchTweetReplies(this.tweetId);
+    this.fetchUserCard();
   },
   methods: {
-    // GET /tweets/:tweet_id
-    async fetchTweet() {
+    getCurrentUserId() {
+      const userId = localStorage.getItem("userId");
+      this.currentUserId = Number(userId);
+    },
+    // UserCard：GET /api/users/:id
+    async fetchUserCard() {
       try {
-        const tweetId = this.$route.params.tweet_id;
+        const { data } = await usersAPI.getUserCard(this.currentUserId);
+        const { account, name, avatar } = data;
+
+        this.profile = {
+          ...this.profile,
+          account,
+          name,
+          avatar,
+        };
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    // GET /tweets/:tweet_id
+    async fetchTweet(tweetId) {
+      try {
         const { data } = await tweetsAPI.getTweet(tweetId);
+        // console.log("fetchTweet", data);
 
         this.tweet = data;
         console.log("fetchTweet", this.tweet);
@@ -136,50 +222,76 @@ export default {
       }
     },
     // GET /api/tweets/:tweet_id/replies
-    async fetchTweetReplies() {
+    async fetchTweetReplies(tweetId) {
       try {
-        const tweetId = this.$route.params.tweet_id;
         const { data } = await tweetsAPI.getTweetReplies(tweetId);
         this.replylist = data;
       } catch (error) {
         console.log("getTweetReplies", error);
       }
     },
-
     // POST /tweets/:id/like
-    addLike() {
-      this.tweet = {
-        ...this.tweet,
-        isLiked: true,
-      };
+    async addLike(tweetId) {
+      try {
+        const response = await usersAPI.addTweetLike(tweetId);
+        // console.log('response', response)
+        const { data } = response;
+        this.tweet = {
+          ...this.tweet,
+          isLike: data.isLike,
+          totalLikeCount: data.totalLikeCount,
+        };
+      } catch (error) {
+        Toast.fire({
+          icon: "error",
+          title: "無法成功按讚，請稍後再試",
+        });
+      }
     },
-    deleteLike() {
-      this.tweet = {
-        ...this.tweet,
-        isLiked: false,
-      };
-    },
-
-    // async addLike(userId) {
-    //   try {
-    //     const { data } = await usersAPI.addLike({ restaurantId });
-
-    //     if (data.status !== "success") {
-    //       throw new Error(data.message);
-    //     }
-
-    //     this.restaurant = {
-    //     ...this.restaurant,
-    //     isLiked: true,
-    //   };
-    //   } catch (error) {
-    //     Toast.fire({
-    //       icon: "error",
-    //       title: "無法增加Like ，請稍後再試",
-    //     });
-    //   }
-    // },
     // POST /tweets/:id/unlike
+    async deleteLike(tweetId) {
+      try {
+        const response = await usersAPI.deleteTweetLike(tweetId);
+        // console.log('response', response)
+        const { data } = response;
+        this.tweet = {
+          ...this.tweet,
+          totalLikeCount: data.totalLikeCount,
+          isLike: data.isLike,
+        };
+      } catch (error) {
+        Toast.fire({
+          icon: "error",
+          title: "無法收回按讚，請稍後再試",
+        });
+      }
+    },
+    renderCreateReply(payload) {
+      const {
+        replyAccount,
+        comment,
+        // isLike,
+      } = payload;
+
+      this.replyList.unshift({
+        avatar: this.profile.avatar,
+        userName: this.profile.name,
+        userAccount: this.profile.account,
+        replyCreatedAt: new Date(),
+        replyAccount,
+        comment,
+        totalLikeCount: 0,
+        totalReplyCount: 0,
+        // isLike,
+      });
+    },
+    // 關於ReplyModal的
+    // handleReplyModal(replyId) {
+    //   const replyModalReply = this.replyList.find(
+    //     (reply) => reply.replyId === replyId
+    //   );
+    //   this.replyModalReply = replyModalReply;
+    // },
   },
 };
 </script>

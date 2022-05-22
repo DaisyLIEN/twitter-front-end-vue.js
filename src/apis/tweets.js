@@ -13,10 +13,8 @@ export default {
       headers: { Authorization: `Bearer ${getToken()}` }
     })
   },
-  createTweetReply({ tweetId, userId, comment }) {
+  createTweetReply({ comment, tweetId }) {
     return apiHelper.post(`/tweets/${tweetId}/replies`, {
-      tweetId,
-      userId,
       comment
     }, {
       headers: { Authorization: `Bearer ${getToken()}` }
@@ -56,7 +54,7 @@ export default {
     return apiHelper.get(`/users/${userId}/followings`, {
       headers: { Authorization: `Bearer ${getToken()}` }
     })
-  },  
+  },
   getTopFollowedUser() {
     return apiHelper.get(`/users/topFollowedUser`, {
       headers: { Authorization: `Bearer ${getToken()}` }

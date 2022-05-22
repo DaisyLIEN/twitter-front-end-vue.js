@@ -9,12 +9,15 @@
         <h4>使用者列表</h4>
       </header>
 
-      <div class="admin-user-cards">
-        <AdminUserCard
-          v-for="user in users"
-          :key="user.id"
-          :initial-user="user"
-        />
+      <Spinner v-if="isLoading" />
+      <div v-else>
+        <div class="admin-user-cards">
+          <AdminUserCard
+            v-for="user in users"
+            :key="user.id"
+            :initial-user="user"
+          />
+        </div>
       </div>
     </div>
   </div>
@@ -23,17 +26,20 @@
 <script>
 import AdminNavbar from "./../components/AdminNavbar";
 import AdminUserCard from "./../components/AdminUserCard";
-import adminAPI from './../apis/admin'
-import {Toast} from './../utils/helpers'
+import adminAPI from "./../apis/admin";
+import { Toast } from "./../utils/helpers";
+import Spinner from "./../components/Spinner";
 
 export default {
   components: {
     AdminNavbar,
     AdminUserCard,
+    Spinner,
   },
   data() {
     return {
       users: [],
+      isLoading: true,
     };
   },
   created() {
@@ -42,24 +48,27 @@ export default {
   methods: {
     async fetchUsers() {
       try {
+        this.isLoading = true;
         const response = await adminAPI.getAdminUsers();
-        console.log('response', response);
+        console.log("response", response);
 
-        const {data, statusText} = response
+        const { data, statusText } = response;
 
-        if(statusText !== 'OK') {
-          throw new Error(statusText)
+        if (statusText !== "OK") {
+          throw new Error(statusText);
         }
 
         this.users = data;
-        console.log('this.users', this.users);
+        console.log("this.users", this.users);
+        this.isLoading = false;
       } catch (error) {
+        this.isLoading = false;
         console.log(error);
 
         Toast.fire({
-          icon: 'error',
-          title: '無法取得後台使用者資料，請稍後再試'
-        })
+          icon: "error",
+          title: "無法取得後台使用者資料，請稍後再試",
+        });
       }
     },
   },

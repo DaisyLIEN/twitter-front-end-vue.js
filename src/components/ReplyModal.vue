@@ -58,13 +58,59 @@
               內容不可空白
             </div>
             <button
-              @click="handleSubmit"
               type="button"
-              class="btn-submit"
+              class="close"
               data-dismiss="modal"
+              aria-label="Close"
             >
-              回覆
+              <span aria-hidden="true">×</span>
             </button>
+          </div>
+          <div class="modal-body">
+            <div class="posting">
+              <img class="photo" :src="tweet.avatar | emptyAvatar" alt="" />
+              <div class="tweet-info">
+                <div class="user-info">
+                  <span class="user-name">{{ tweet.name }}</span>
+                  <span class="user-account">@{{ tweet.account }}</span>
+                  <span>．</span>
+                  <span class="create-time"
+                    >{{ tweet.tweetCreatedAt | fromNow }}小時</span
+                  >
+                </div>
+                <div class="tweet-text">
+                  {{ tweet.description }}
+                </div>
+                <div class="reply-hint">回覆給@{{ tweet.account }}</div>
+              </div>
+              <div class="connect-line"></div>
+            </div>
+            <div class="posting">
+              <img class="photo" src="https://img.onl/d0RNIH" alt="" />
+              <textarea
+                v-model="replyContent"
+                id="note"
+                class="new-reply"
+                placeholder="推你的回覆"
+                autofocus
+                rows="5"
+              >
+              </textarea>
+            </div>
+            <div class="footer">
+              <div v-show="!replyContent.length" class="text-limit-error">
+                內容不可空白
+              </div>
+              <button
+                :disabled="!replyContent.length"
+                @click="handleSubmit"
+                type="button"
+                class="btn-submit"
+                data-dismiss="modal"
+              >
+                回覆
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -79,15 +125,8 @@ import tweetsAPI from "./../apis/tweets";
 import avatarNone from "../assets/Avatar-none.png";
 
 export default {
+  mixins: [emptyImageFilter],
   name: "Replication",
-  filters: {
-    fromNow(datetime) {
-      if (!datetime) {
-        return "-";
-      }
-      return moment(datetime).fromNow();
-    },
-  },
   props: {
     initialTweet: {
       type: Object,
@@ -100,7 +139,18 @@ export default {
   },
   data() {
     return {
-      tweet: {},
+      tweet: {
+        UserId: -1,
+        TweetId: -1,
+        name: "",
+        account: "",
+        avatar: "",
+        description: "",
+        tweetCreatedAt: "",
+        totalLikeCount: 0,
+        totalReplyCount: 0,
+        isLike: false,
+      },
       replyContent: "",
       userId: -1,
       avatarNone,
@@ -148,6 +198,56 @@ export default {
         console.log("createReplyerror", error);
       }
     },
+    // initialReplyModalReply(newValue) {
+    //   const {
+    //     avatar,
+    //     userName,
+    //     userAccount,
+    //     replyCreatedAt,
+    //     comment,
+    //     replyId,
+    //     UserId,
+    //   } = newValue;
+    //   this.tweet = {
+    //     ...this.tweet,
+    //     avatar,
+    //     name: userName,
+    //     account: userAccount,
+    //     tweetCreatedAt: replyCreatedAt,
+    //     description: comment,
+    //     replyId,
+    //     UserId,
+    //   };
+    // },
+    initialReplyModalTweet(newValue) {
+      const {
+        avatar,
+        name,
+        account,
+        tweetCreatedAt,
+        description,
+        UserId,
+        TweetId,
+      } = newValue;
+      this.tweet = {
+        ...this.tweet,
+        avatar,
+        name,
+        account,
+        tweetCreatedAt,
+        description,
+        UserId,
+        TweetId,
+      };
+    },
+  },
+  filters: {
+    fromNow(datetime) {
+      if (!datetime) {
+        return "-";
+      }
+      return moment(datetime).fromNow();
+    },
   },
 };
 </script>
@@ -191,6 +291,7 @@ export default {
 .photo {
   width: 50px;
   height: 50px;
+  border-radius: 50%;
 }
 
 .new-reply,

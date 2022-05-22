@@ -1,17 +1,15 @@
 <template>
   <div class="reply">
     <div class="reply-img">
-      <img :src="reply.avatar" alt="" class="user-photo" />
+      <router-link :to="{ name: 'user', params: { id: reply.UserId } }">
+        <img :src="reply.avatar | emptyAvatar" alt="" class="user-photo" />
+      </router-link>
     </div>
     <div class="reply-right">
       <div class="user">
         <span class="user-name">{{ reply.userName }}</span>
         <span class="user-account"
-          >{{ reply.account }} ·{{
-            reply.replyCreatedAt
-              ? reply.replyCreatedAt
-              : reply.replyCreateAt | fromNow
-          }}</span
+          >{{ reply.userAccount }} ·{{ reply.replyCreateAt | fromNow }}</span
         >
       </div>
       <div class="tweet">
@@ -40,9 +38,11 @@
 </template>
 
 <script>
+import { emptyImageFilter } from "../utils/mixins";
 import moment from "moment";
 
 export default {
+  mixins: [emptyImageFilter],
   components: {
   },
   filters: {
@@ -87,24 +87,55 @@ export default {
         ...newValue,
       };
 
-      // comment: "faker.lorem.text()"
-      // createAt: "2022-05-15T12:31:42.000Z"
-      // id: 4
-      // replyAccount: "user1"
+      // UserId: (...)
+      // avatar: (...)
+      // comment: (...)
+      // replyAccount: (...)
+      // replyCreateAt: (...)
+      // replyId: (...)
+      // totalLikeCount: (...)
+      // totalReplyCount: (...)
+      // userAccount: (...)
+      // userName: (...)
     },
     initialReply(newValue) {
+      console.log("replynewvalue", newValue);
+      const {
+        UserId,
+        avatar,
+        comment,
+        replyAccount,
+        replyCreatedAt,
+        replyId,
+        totalLikeCount,
+        totalReplyCount,
+        userAccount,
+        userName,
+      } = newValue;
       this.reply = {
         ...this.reply,
-        ...newValue,
+        UserId,
+        avatar,
+        comment,
+        replyAccount,
+        replyCreateAt: replyCreatedAt, //待改
+        replyId,
+        totalLikeCount,
+        totalReplyCount,
+        userAccount,
+        userName,
       };
-      // account: "user2"
-      // avatar: "https://loremflickr.com/800/350/paradise/?random=75.80269215053413"
-      // comment: "faker.lorem.text()"
-      // id: 1
-      // likeCount: 0
-      // name: "user2"
-      // tweetId: 1
-      // userId: 3
+      //       UserId: (...)
+      // avatar: (...)
+      // comment: (...)
+      // replyAccount: (...)
+      // replyCreatedAt: (...)
+      // replyId: (...)
+      // totalLikeCount: (...)
+      // totalReplyCount: (...)
+      // tweetId: (...)
+      // userAccount: (...)
+      // userName: (...)
     },
   },
 };

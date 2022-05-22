@@ -29,10 +29,34 @@
         </button>
       </div>
       <div class="btn-other-user" v-else>
-        <button>私訊</button>
-        <button>鈴鐺</button>
-        <button>追隨</button>
+        <img
+          src="https://i.imgur.com/uag9cu3.png"
+          alt=""
+          class="icon-to-mail"
+        />
+        <img
+          src="https://i.imgur.com/mjUki2z.png"
+          alt=""
+          class="icon-describe"
+        />
+        <button
+          v-if="!otherUserIsFollowed"
+          type="button"
+          class="btn-follow"
+          @click.stop.prevent="addFollow(otherUserId)"
+        >
+          跟隨
+        </button>
+        <button
+          v-else
+          type="button"
+          class="btn-following"
+          @click.stop.prevent="deleteFollow(otherUserId)"
+        >
+          正在跟隨
+        </button>
       </div>
+
       <div class="info">
         <div class="names">
           <h5 class="user-name">{{ profile.name }}</h5>
@@ -62,6 +86,9 @@
 //導入沒avatar及cover時的替換照片
 import avatarNone from "../assets/Avatar-none.png";
 import coverNone from "../assets/Cover-none.jpg";
+import tweetsAPI from "./../apis/tweets";
+import usersAPI from "./../apis/users";
+// import { Toast } from "./../utils/helpers";
 
 export default {
   props: {
@@ -83,7 +110,53 @@ export default {
       profile: this.initialUserProfile,
       avatarNone,
       coverNone,
+      otherUserId: -1,
+      otherUserIsFollowed: false,
     };
+  },
+  created() {
+    this.otherUserId = this.initialParamsId;
+    this.fetchFollowersTweets(this.otherUserId);
+  },
+  methods: {
+    // GET /api/users/:id/followers
+    async fetchFollowersTweets(otherUserId) {
+      try {
+        const { data } = await tweetsAPI.getFollowersTweets(otherUserId);
+
+        this.otherUserIsFollowed = data.some(
+          (data_user) => data_user.followerId === this.initialCurrentUserId
+        );
+
+        console.log("fetchFollowers", data);
+      } catch (error) {
+        console.log("get this.otherUserIsFollowed", error);
+      }
+    },
+    // 追隨：POST /followships?id=2
+    async addFollow(otherUserId) {
+      try {
+        const response = await usersAPI.addFollow({ id: otherUserId });
+
+        console.log("addFollow", response);
+      } catch (error) {
+        console.log(error);
+      }
+      this.otherUserIsFollowed = true;
+      this.fetchFollowersTweets(this.otherUserId);
+    },
+    // 取消追隨：DETELE /followships/:followingId
+    async deleteFollow(otherUserId) {
+      try {
+        const response = await usersAPI.removeFollow(otherUserId);
+
+        console.log("removeFollow", response);
+      } catch (error) {
+        console.log(error);
+      }
+      this.otherUserIsFollowed = false;
+      this.fetchFollowersTweets(this.otherUserId);
+    },
   },
   watch: {
     initialUserProfile(newValue) {
@@ -154,6 +227,7 @@ header {
   color: #ff6600;
   width: 128px;
   height: 40px;
+  outline: none;
 }
 .info {
   margin-top: 72px;
@@ -176,5 +250,40 @@ header {
 }
 .following {
   margin-right: 20px;
+}
+.btn-follow {
+  width: 64px;
+  height: 40px;
+  background-color: #ffffff;
+  border: 1px solid #ff6600;
+  border-radius: 50px;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 24px;
+  text-align: center;
+  color: #ff6600;
+  outline: none; /*點擊不會出現黑框*/
+}
+.btn-following {
+  width: 96px;
+  height: 40px;
+  background-color: #ff6600;
+  border: 1px solid #ff6600;
+  border-radius: 50px;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 24px;
+  text-align: center;
+  color: #ffffff;
+  outline: none;
+}
+.btn-other-user {
+  display: flex;
+}
+.icon-to-mail,
+.icon-describe {
+  width: 40px;
+  height: 40px;
+  margin-right: 16px;
 }
 </style>

@@ -4,42 +4,56 @@
     <div class="left-content">
       <Navbar />
     </div>
-
     <div class="middle-content">
       <h4 class="title">首頁</h4>
       <hr class="hr1" />
       <!-- post -->
       <div class="post">
         <div class="posting">
+          <!-- <img class="user-photo" :src="user.avatar | emptyAvatar" alt="" /> -->
           <img class="photo" src="https://img.onl/d0RNIH" alt="" />
           <textarea
             v-model="newTweet2"
             :style="{ height: height }"
             name="new-post"
             class="new-post"
-            maxlength="140"
+            maxlength="141"
             autofocus
             placeholder="有什麼新鮮事？"
           ></textarea>
         </div>
-        <div class="btn">
-          <button class="btn-submit" type="submit" @click="handleAddTweet2">
+        <div class="footer">
+          <div v-show="newTweet2.length === 141" class="text-limit-error">
+            字數不可超過 140 字
+          </div>
+          <button
+            :disabled="!newTweet2.length || newTweet2.length === 141"
+            type="submit"
+            class="btn-submit"
+            @click="handleAddTweet2"
+          >
             推文
           </button>
         </div>
+        <!-- <div class="btn">
+          <button class="btn-submit" type="submit" @click="handleAddTweet2">
+            推文
+          </button>
+        </div> -->
         <hr class="hr2" />
       </div>
-
-      <!-- tweets -->
-      <div class="tweets">
-        <TweetCard
-          v-for="tweet in tweets"
+      <Spinner v-if="isLoading" />
+      <div v-else>
+        <!-- tweets -->
+        <div class="tweets">
+          <TweetCard
+            v-for="tweet in tweets"
           :key="tweet.TweetId"
           :initial-tweet="tweet"
-        />
+          />
+        </div>
       </div>
     </div>
-
     <div class="right-content">
       <PopularList />
     </div>
@@ -51,25 +65,33 @@
 </template>
 
 <script>
+import { emptyImageFilter } from "../utils/mixins";
 import Navbar from "./../components/Navbar";
 import TweetCard from "./../components/TweetCard";
 import TweetModal from "./../components/TweetModal";
+import ReplyModal from "../components/ReplyModal";
 import PopularList from "./../components/PopularList";
 import tweetsAPI from "./../apis/tweets";
 import { Toast } from "./../utils/helpers";
+import Spinner from "./../components/Spinner";
 
 export default {
+  mixins: [emptyImageFilter],
   components: {
     Navbar,
     TweetCard,
     TweetModal,
+    ReplyModal,
     PopularList,
+    Spinner,
   },
   data() {
     return {
       tweets: [],
       newTweet2: "",
       height: "",
+      replyModalTweet: {},
+      isLoading: true,
     };
   },
   created() {
@@ -85,15 +107,16 @@ export default {
   methods: {
     async fetchTweets() {
       try {
+        this.isLoading = true;
         const data = await tweetsAPI.getTweets();
 
         if (data.statusText !== "OK") {
           throw new Error(data.statusText);
         }
         this.tweets = data.data;
+        this.isLoading = false;
       } catch (error) {
-        console.log(error);
-
+        this.isLoading = false;
         Toast.fire({
           icon: "error",
           title: "無法取得推文資料，請稍後再試",
@@ -119,13 +142,11 @@ export default {
         const data = await tweetsAPI.addTweet({ description: newTweet });
         this.tweets = data.data;
         console.log("handleAddTweet", this.tweets);
-        //送出後重整頁面
-        // window.location.reload();
       } catch (error) {
         console.log(error);
       }
     },
-    handleAddTweet2() {
+    async handleAddTweet2() {
       this.handleAddTweet(this.newTweet2);
       this.newTweet2 = "";
       console.log("handleAddTweet2", this.tweets);
@@ -207,10 +228,27 @@ h4 {
   min-height: 66px;
 }
 
-.btn {
+/* .btn {
   display: flex;
   justify-content: flex-end;
   margin: 14px 25.19px 6px 0;
+} */
+
+.footer {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-top: 20px;
+  padding: 0;
+  margin-right: 30px;
+}
+
+.text-limit-error {
+  font-weight: 500;
+  font-size: 15px;
+  line-height: 15px;
+  color: #fc5a5a;
+  margin-right: 20px;
 }
 
 .btn-submit {

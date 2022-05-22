@@ -21,6 +21,7 @@
         </div>
         <button
           v-show="!user.isFollowed"
+          :disabled="isProcessing"
           @click.stop.prevent="addFollow(user)"
           class="btn-follow"
         >
@@ -28,6 +29,7 @@
         </button>
         <button
           v-show="user.isFollowed"
+          :disabled="isProcessing"
           @click.stop.prevent="removeFollow(user.id)"
           class="btn-follow btn-following"
         ></button>
@@ -46,6 +48,7 @@ export default {
     return {
       users: [],
       avatarNone,
+      isProcessing: false,
     };
   },
   created() {
@@ -68,6 +71,7 @@ export default {
     },
     async addFollow(TopFollowedUser) {
       try {
+        this.isProcessing = true;
         const { data } = await usersAPI.addFollow(TopFollowedUser);
         // console.log('data', data)
         this.users = this.users.map((user) => {
@@ -81,7 +85,9 @@ export default {
           }
         });
         // console.log(this.users)
+        this.isProcessing = false;
       } catch (error) {
+        this.isProcessing = false;
         Toast.fire({
           icon: "error",
           title: "無法加入追蹤，請稍後再試",
@@ -89,13 +95,16 @@ export default {
       }
     },
     async removeFollow(userId) {
+      this.isProcessing = true;
       const followUser = this.users.find((user) => user.id === userId);
       followUser.isFollowed = false;
       try {
         const { data } = await usersAPI.removeFollow(userId);
         console.log("data", data);
         console.log(userId);
+        this.isProcessing = false;
       } catch (error) {
+        this.isProcessing = false;
         Toast.fire({
           icon: "error",
           title: "無法取消追蹤，請稍後再試",

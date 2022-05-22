@@ -29,8 +29,10 @@
           </router-link>
         </ul>
       </div>
-
-      <FollowCard v-for="user in users" :key="user.id" :initial-user="user" />
+      <Spinner v-if="isLoading" />
+      <div v-else>
+        <FollowCard v-for="user in users" :key="user.id" :initial-user="user" />
+      </div>
     </div>
 
     <div class="right-content">
@@ -45,18 +47,21 @@ import FollowCard from "./../components/FollowCard";
 import PopularList from "../components/PopularList.vue";
 import tweetsAPI from "./../apis/tweets";
 import usersAPI from "./../apis/users";
+import Spinner from "./../components/Spinner";
 
 export default {
   components: {
     Navbar,
     FollowCard,
     PopularList,
+    Spinner,
   },
   data() {
     return {
       users: [],
       name: "",
       tweetCount: 0,
+      isLoading: true,
     };
   },
   created() {
@@ -68,9 +73,12 @@ export default {
     // GET /api/users/:id/followers
     async fetchFollowersTweets(userId) {
       try {
+        this.isLoading = true;
         const { data } = await tweetsAPI.getFollowersTweets(userId);
         this.users = data;
+        this.isLoading = false;
       } catch (error) {
+        this.isLoading = false;
         console.log(error);
       }
     },
