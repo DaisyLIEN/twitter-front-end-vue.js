@@ -40,10 +40,10 @@
           class="icon-describe"
         />
         <button
-          v-if="!otherUserData.isFollowed"
+          v-if="!otherUserIsFollowed"
           type="button"
           class="btn-follow"
-          @click.stop.prevent="addFollow(otherUserData)"
+          @click.stop.prevent="addFollow(otherUserId)"
         >
           跟隨
         </button>
@@ -111,7 +111,7 @@ export default {
       avatarNone,
       coverNone,
       otherUserId: -1,
-      otherUserData: [],
+      otherUserIsFollowed: false,
     };
   },
   created() {
@@ -124,43 +124,38 @@ export default {
       try {
         const { data } = await tweetsAPI.getFollowersTweets(otherUserId);
 
-        this.otherUserData = data.map(
-          (data_user) => data_user.id === this.otherUserId
+        this.otherUserIsFollowed = data.some(
+          (data_user) => data_user.followerId === this.initialCurrentUserId
         );
 
-        console.log("this.otherUserData", this.otherUserData);
+        console.log("fetchFollowers", data);
       } catch (error) {
-        console.log("this.otherUserData", error);
+        console.log("get this.otherUserIsFollowed", error);
       }
     },
-    // GET /api/users/:id/followings
-    // async fetchFollowingsTweets(userId) {
-    //   try {
-    //     const { data } = await tweetsAPI.getFollowingsTweets(userId);
-    //     this.userSelfData = data;
-    //   } catch (error) {
-    //     console.log(error);
-    //   }
-    // },
     // 追隨：POST /followships?id=2
-    async addFollow(user) {
+    async addFollow(otherUserId) {
       try {
-        const response = await usersAPI.addFollow(user);
-        console.log(response);
+        const response = await usersAPI.addFollow({ id: otherUserId });
+
+        console.log("addFollow", response);
       } catch (error) {
         console.log(error);
       }
-      this.otherUserData.isFollowed = true;
+      this.otherUserIsFollowed = true;
+      this.fetchFollowersTweets(this.otherUserId);
     },
     // 取消追隨：DETELE /followships/:followingId
-    async deleteFollow(userId) {
+    async deleteFollow(otherUserId) {
       try {
-        const response = await usersAPI.removeFollow(userId);
-        console.log("response", response);
+        const response = await usersAPI.removeFollow(otherUserId);
+
+        console.log("removeFollow", response);
       } catch (error) {
         console.log(error);
       }
-      this.otherUserData.isFollowed = false;
+      this.otherUserIsFollowed = false;
+      this.fetchFollowersTweets(this.otherUserId);
     },
   },
   watch: {
