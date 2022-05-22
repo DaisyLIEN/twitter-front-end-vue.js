@@ -93,6 +93,10 @@ export default {
       type: Object,
       required: false,
     },
+    replyTweet: {
+      type: Object,
+      required: false,
+    },
   },
   data() {
     return {
@@ -104,6 +108,11 @@ export default {
   },
   created() {
     this.tweet = this.initialTweet;
+    if (this.initialTweet) {
+      this.tweet = this.initialTweet;
+    } else {
+      this.tweet = this.replyTweet;
+    }
     this.userId = localStorage.getItem("userId");
   },
   methods: {
@@ -134,7 +143,7 @@ export default {
 
         this.replyContent = "";
         //送出後重整頁面
-        this.$emit("after-reply")
+        this.$emit("after-reply");
       } catch (error) {
         console.log("createReplyerror", error);
       }

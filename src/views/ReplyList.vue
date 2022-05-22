@@ -22,7 +22,11 @@
         <div class="tweet-content">
           <div class="user-avatar-name-account">
             <router-link :to="{ name: 'user', params: { id: tweet.UserId } }">
-              <img :src="tweet.avatar" alt="" class="user-avatar" />
+              <img
+                :src="tweet.avatar ? tweet.avatar : avatarNone"
+                alt=""
+                class="user-avatar"
+              />
             </router-link>
             <div class="user-name-account">
               <span class="user-name">{{ tweet.name }}</span>
@@ -45,7 +49,7 @@
         <div class="tweet-actions">
           <font-awesome-icon
             data-toggle="modal"
-            data-target="#replyModal"
+            :data-target="`#replyModal${tweet.TweetId}`"
             icon="fa-regular fa-comment"
           />
           <font-awesome-icon
@@ -74,7 +78,7 @@
       <PopularList />
     </div>
 
-    <ReplyModal :initial-tweet="tweet" />
+    <ReplyModal :reply-tweet="tweet" v-if="tweet.TweetId" />
   </div>
 </template>
 
@@ -85,6 +89,7 @@ import ReplyCard from "./../components/ReplyCard";
 import PopularList from "../components/PopularList.vue";
 import ReplyModal from "../components/ReplyModal.vue";
 import tweetsAPI from "./../apis/tweets";
+import avatarNone from "../assets/Avatar-none.png";
 
 export default {
   components: {
@@ -109,6 +114,8 @@ export default {
       tweet: {},
       users: [],
       replylist: [],
+
+      avatarNone,
     };
   },
   created() {
@@ -116,9 +123,6 @@ export default {
     this.fetchTweetReplies();
   },
   methods: {
-    consoleTweet() {
-      console.log('tweet', this.tweet)
-    },
     // GET /tweets/:tweet_id
     async fetchTweet() {
       try {
@@ -126,6 +130,7 @@ export default {
         const { data } = await tweetsAPI.getTweet(tweetId);
 
         this.tweet = data;
+        console.log("fetchTweet", this.tweet);
       } catch (error) {
         console.log(error);
       }
@@ -135,7 +140,6 @@ export default {
       try {
         const tweetId = this.$route.params.tweet_id;
         const { data } = await tweetsAPI.getTweetReplies(tweetId);
-        console.log("getTweetReplies", data);
         this.replylist = data;
       } catch (error) {
         console.log("getTweetReplies", error);
