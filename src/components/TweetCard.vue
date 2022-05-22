@@ -50,7 +50,6 @@
           <font-awesome-icon
             icon="fa-regular fa-heart"
             v-else
-            :disabled="isProcessing"
             @click.stop.prevent="addLike(tweet.TweetId)"
           />
           <p class="like-number">{{ totalLikeCount }}</p>
@@ -87,6 +86,7 @@ export default {
   },
   data() {
     return {
+      continue: false,
       tweet: this.initialTweet,
 
       //點及愛心後先透過前端method將like數及是否被按讚的效果渲染在畫面上
@@ -95,7 +95,6 @@ export default {
       totalLikeCount: this.initialTweet.totalLikeCount,
 
       avatarNone,
-      isProcessing: false,
     };
   },
   watch: {
@@ -109,35 +108,40 @@ export default {
   methods: {
     async addLike(tweetId) {
       try {
-        this.isProcessing = true;
-        const response = await usersAPI.addTweetLike(tweetId);
-        if (response.statusText !== "OK") {
-          throw new Error(response.statusText);
+        if (!this.continue) {
+          this.continue = true;
+          const response = await usersAPI.addTweetLike(tweetId);
+          if (response.statusText !== "OK") {
+            throw new Error(response.statusText);
+          }
+          console.log("addLikeResponse", response);
+          const { data } = response;
+          this.isLike = data.isLike;
+          this.totalLikeCount = data.totalLikeCount;
+          this.continue = false;
         }
-        console.log("addLikeResponse", response);
-        const { data } = response;
-        this.isLike = data.isLike;
-        this.totalLikeCount = data.totalLikeCount;
-        this.isProcessing = false;
       } catch (error) {
-        this.isProcessing = false;
+        this.continue = false;
         console.log(error);
       }
     },
     async deleteLike(tweetId) {
       try {
-        this.isProcessing = true;
-        const response = await usersAPI.deleteTweetLike(tweetId);
-        if (response.statusText !== "OK") {
-          throw new Error(response.statusText);
+        if (!this.continue) {
+          this.continue = true;
+          this.isProcessing = true;
+          const response = await usersAPI.deleteTweetLike(tweetId);
+          if (response.statusText !== "OK") {
+            throw new Error(response.statusText);
+          }
+          console.log("deleteLikeResponse", response);
+          const { data } = response;
+          this.isLike = data.isLike;
+          this.totalLikeCount = data.totalLikeCount;
+          this.continue = false;
         }
-        console.log("deleteLikeResponse", response);
-        const { data } = response;
-        this.isLike = data.isLike;
-        this.totalLikeCount = data.totalLikeCount;
-        this.isProcessing = false;
       } catch (error) {
-        this.isProcessing = false;
+        this.continue = false;
         console.log(error);
       }
     },

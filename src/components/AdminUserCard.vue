@@ -59,7 +59,8 @@ export default {
   width: 100%;
   height: 140px;
   object-fit: cover;
-  border-radius: 10px;
+  border-top-right-radius: 10px;
+  border-top-left-radius: 10px;
 }
 .avatar {
   display: block;
