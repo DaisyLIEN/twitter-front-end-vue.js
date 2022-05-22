@@ -99,6 +99,7 @@ export default {
 
         localStorage.setItem("token", data.data.token);
         localStorage.setItem("userId", data.data.user.id);
+        localStorage.setItem("userAvatar", data.data.user.avatar);
 
         // 將資料傳到Vuex中
         this.$store.commit("setCurrentUser", data.data.user);

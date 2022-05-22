@@ -34,6 +34,7 @@
           class="btn-submit btn btn-lg btn-primary btn-block"
           data-toggle="modal"
           data-target="#tweetModal"
+          @click="toMain"
         >
           推文
         </button>
@@ -51,7 +52,6 @@
 </template>
 
 <script>
-
 export default {
   data() {
     return {
@@ -61,14 +61,20 @@ export default {
   },
   created() {
     this.currentPage = this.$route.name;
-    this.currentUserId = localStorage.getItem('userId')
+    this.currentUserId = localStorage.getItem("userId");
   },
   methods: {
     logout() {
       // 待串接API後取消token
       localStorage.removeItem("token");
       localStorage.removeItem("userId");
+      localStorage.removeItem("userAvatar");
       this.$router.push("/signin");
+    },
+    toMain() {
+      if (this.$route.path !== "/main") {
+        this.$router.push("/main");
+      }
     },
   },
 };

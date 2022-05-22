@@ -11,7 +11,11 @@
       <div class="post">
         <div class="posting">
           <!-- <img class="user-photo" :src="user.avatar | emptyAvatar" alt="" /> -->
-          <img class="photo" src="https://img.onl/d0RNIH" alt="" />
+          <img
+            class="photo"
+            :src="currentUserAvatar ? currentUserAvatar : avatarNone"
+            alt=""
+          />
           <textarea
             v-model="newTweet2"
             :style="{ height: height }"
@@ -64,7 +68,6 @@
 </template>
 
 <script>
-import { emptyImageFilter } from "../utils/mixins";
 import Navbar from "./../components/Navbar";
 import TweetCard from "./../components/TweetCard";
 import TweetModal from "./../components/TweetModal";
@@ -72,9 +75,9 @@ import PopularList from "./../components/PopularList";
 import tweetsAPI from "./../apis/tweets";
 import { Toast } from "./../utils/helpers";
 import Spinner from "./../components/Spinner";
+import avatarNone from "../assets/Avatar-none.png";
 
 export default {
-  mixins: [emptyImageFilter],
   components: {
     Navbar,
     TweetCard,
@@ -89,6 +92,8 @@ export default {
       height: "",
       replyModalTweet: {},
       isLoading: true,
+      currentUserAvatar: localStorage.getItem("userAvatar"),
+      avatarNone,
     };
   },
   created() {

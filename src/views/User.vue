@@ -69,8 +69,6 @@
       @after-submit="handleAfterSubmit"
     />
     <!-- ref="editModalRef" -->
-
-    <ReplyModal :initial-reply-modal-tweet="replyModalTweet" />
   </div>
 </template>
 
@@ -81,7 +79,6 @@ import TweetCard from "../components/TweetCard.vue";
 import ReplyCard from "../components/ReplyCard.vue";
 import PopularList from "../components/PopularList.vue";
 import EditModal from "../components/EditModal.vue";
-import ReplyModal from "../components/ReplyModal.vue";
 import usersAPI from "./../apis/users";
 import tweetsAPI from "./../apis/tweets";
 import { Toast } from "./../utils/helpers";
@@ -95,7 +92,6 @@ export default {
     ReplyCard,
     PopularList,
     EditModal,
-    ReplyModal,
     Spinner,
   },
   data() {
@@ -179,7 +175,11 @@ export default {
       try {
         this.isLoading = true;
         const { data } = await tweetsAPI.getUserTweets(paramsId);
-        this.usersTweets = data;
+        if (data.length === 0) {
+          this.usersTweets = [];
+        } else {
+          this.usersTweets = data;
+        }
         this.isLoading = false;
       } catch (error) {
         this.isLoading = false;

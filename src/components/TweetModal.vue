@@ -22,7 +22,11 @@
           <div class="modal-body">
             <div class="posting">
               <!-- <img class="photo" :src="user.avatar | emptyAvatar" alt="" /> -->
-              <img class="photo" src="https://img.onl/d0RNIH" alt="" />
+              <img
+                class="photo"
+                :src="currentUserAvatar ? currentUserAvatar : avatarNone"
+                alt=""
+              />
               <textarea
                 v-model="newTweet"
                 :style="{ height: height }"
@@ -71,7 +75,8 @@ export default {
   data() {
     return {
       newTweet: "",
-      height: ""
+      height: "",
+      currentUserAvatar: localStorage.getItem("userAvatar"),
     };
   },
   watch: {
