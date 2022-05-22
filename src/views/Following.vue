@@ -17,7 +17,6 @@
           <p>{{ tweetCount }} 推文</p>
         </div>
       </header>
-
       <!-- FollowNavPills -->
       <div class="wrapper-follow-nav-pills">
         <ul>
@@ -27,10 +26,12 @@
           <li class="active">正在追隨</li>
         </ul>
       </div>
-
-      <FollowCard v-for="user in users" :key="user.id" :initial-user="user" />
+      
+      <Spinner v-if="isLoading" />
+      <div v-else>
+        <FollowCard v-for="user in users" :key="user.id" :initial-user="user" />
+      </div>
     </div>
-
     <div class="right-content">
       <PopularList />
     </div>
@@ -43,12 +44,14 @@ import FollowCard from "./../components/FollowCard";
 import PopularList from "../components/PopularList.vue";
 import usersAPI from "./../apis/users";
 import tweetsAPI from "./../apis/tweets";
+import Spinner from "./../components/Spinner";
 
 export default {
   components: {
     Navbar,
     FollowCard,
     PopularList,
+    Spinner,
   },
   data() {
     return {
@@ -60,6 +63,7 @@ export default {
       users: [],
       name: "",
       tweetCount: 0,
+      isLoading: true,
     };
   },
   created() {
@@ -71,9 +75,12 @@ export default {
     // GET /api/users/:id/followings
     async fetchFollowingsTweets(userId) {
       try {
+        this.isLoading = true;
         const { data } = await tweetsAPI.getFollowingsTweets(userId);
         this.users = data;
+        this.isLoading = false;
       } catch (error) {
+        this.isLoading = false;
         console.log(error);
       }
     },

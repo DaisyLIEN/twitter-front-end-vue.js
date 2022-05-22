@@ -32,34 +32,33 @@
           </li>
         </ul>
       </div>
+      <Spinner v-if="isLoading" />
+      <div v-else>
+        <div class="tweet-cards">
+          <TweetCard
+            v-for="tweet in usersTweets"
+            :key="tweet.id"
+            :initial-tweet="tweet"
+            v-show="currentPill === 'tweets'"
+          />
+        </div>
 
-      <div class="tweet-cards">
+        <ReplyCard
+          v-for="userReply in replyTweets"
+          :key="userReply.id"
+          :initial-user-reply="userReply"
+          :initial-profile="profile"
+          :initial-current-user-id="currentUserId"
+          v-show="currentPill === 'repliedTweets'"
+        />
+
         <TweetCard
           v-for="tweet in usersTweets"
           :key="tweet.id"
           :initial-tweet="tweet"
-          v-show="currentPill === 'tweets'"
-          @after-reply-modal-open="handleReplyModal"
+          v-show="currentPill === 'likes'"
         />
       </div>
-
-      <ReplyCard
-        v-for="userReply in replyTweets"
-        :key="userReply.id"
-        :initial-user-reply="userReply"
-        :initial-current-user-id="currentUserId"
-        v-show="currentPill === 'repliedTweets'"
-      />
-      <!-- @after-reply-modal-open="handleReplyModal"
-      :initial-profile="profile" -->
-
-      <TweetCard
-        v-for="tweet in usersTweets"
-        :key="tweet.id"
-        :initial-tweet="tweet"
-        v-show="currentPill === 'likes'"
-        @after-reply-modal-open="handleReplyModal"
-      />
     </div>
     <div class="right-content">
       <PopularList />
@@ -87,6 +86,7 @@ import ReplyModal from "../components/ReplyModal.vue";
 import usersAPI from "./../apis/users";
 import tweetsAPI from "./../apis/tweets";
 import { Toast } from "./../utils/helpers";
+import Spinner from "./../components/Spinner";
 
 export default {
   components: {
@@ -97,6 +97,7 @@ export default {
     PopularList,
     EditModal,
     ReplyModal,
+    Spinner,
   },
   data() {
     return {
@@ -116,8 +117,7 @@ export default {
         tweetCount: 0,
       },
       currentPill: "tweets",
-      replyModalTweet: {},
-      // replyModalReply: {},
+      isLoading: true,
     };
   },
   created() {
@@ -178,24 +178,31 @@ export default {
     // 推文：GET /api/users/:id/tweets
     async fetchUsersTweets(paramsId) {
       try {
+        this.isLoading = true;
         const { data } = await tweetsAPI.getUserTweets(paramsId);
         this.usersTweets = data;
+        this.isLoading = false;
       } catch (error) {
+        this.isLoading = false;
         console.log("fetchUsersTweets", error);
       }
     },
     // 回覆：GET /api/users/:id/replied_tweets
     async fetchReplyTweets(paramsId) {
       try {
+        this.isLoading = true;
         const { data } = await tweetsAPI.getReplyTweets(paramsId);
         this.replyTweets = data;
+        this.isLoading = false;
       } catch (error) {
+        this.isLoading = false;
         console.log("getReplyTweets", error);
       }
     },
     // 喜歡的內容：GET /api/users/:id/likes
     async fetchLikes(paramsId) {
       try {
+        this.isLoading = true;
         //先清空Tweets
         this.usersTweets = [];
         const { data } = await tweetsAPI.getLikeTweets(paramsId);
@@ -204,7 +211,9 @@ export default {
         } else {
           this.usersTweets = data;
         }
+        this.isLoading = false;
       } catch (error) {
+        this.isLoading = false;
         console.log("getLikeTweets", error);
       }
     },
@@ -231,6 +240,10 @@ export default {
         const response = await usersAPI.updateUserCard({
           formData,
         });
+        console.log(
+          "handleAfterSubmit",
+          window.URL.createObjectURL(formData.get("avatar"))
+        );
 
         const { data } = response;
         console.log("後端回傳", data);
