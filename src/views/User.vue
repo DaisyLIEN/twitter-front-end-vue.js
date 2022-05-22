@@ -3,7 +3,7 @@
     <div class="left-content">
       <Navbar />
     </div>
-    <div class="middle-content">
+    <div class="middle-content scrollbar">
       <UserCard
         :initial-user-profile="profile"
         :initial-current-user-id="currentUserId"
