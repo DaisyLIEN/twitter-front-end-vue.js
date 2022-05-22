@@ -2,15 +2,11 @@
   <div class="tweet">
     <div class="tweet-img">
       <router-link :to="{ name: 'user', params: { id: tweet.UserId } }">
-<<<<<<< HEAD
         <img
           :src="tweet.avatar ? tweet.avatar : avatarNone"
           alt=""
           class="user-photo"
         />
-=======
-        <img :src="tweet.avatar | emptyAvatar" alt="" class="user-photo" />
->>>>>>> 31e500ee97fd73835a0e9b54ae6a305a919bdb68
       </router-link>
     </div>
     <div class="tweet-right">
