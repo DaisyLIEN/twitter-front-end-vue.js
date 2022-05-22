@@ -86,6 +86,7 @@ export default {
         });
         // console.log(this.users)
         this.isProcessing = false;
+        window.location.reload();
       } catch (error) {
         this.isProcessing = false;
         Toast.fire({
@@ -103,6 +104,7 @@ export default {
         console.log("data", data);
         console.log(userId);
         this.isProcessing = false;
+        window.location.reload();
       } catch (error) {
         this.isProcessing = false;
         Toast.fire({

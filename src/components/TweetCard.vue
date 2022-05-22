@@ -44,7 +44,6 @@
             icon="fa-regular fa-heart"
             v-if="isLike"
             class="active"
-            :disabled="isProcessing"
             @click.stop.prevent="deleteLike(tweet.TweetId)"
           />
           <font-awesome-icon
@@ -129,7 +128,6 @@ export default {
       try {
         if (!this.continue) {
           this.continue = true;
-          this.isProcessing = true;
           const response = await usersAPI.deleteTweetLike(tweetId);
           if (response.statusText !== "OK") {
             throw new Error(response.statusText);

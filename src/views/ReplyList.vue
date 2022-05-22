@@ -78,7 +78,11 @@
       <PopularList />
     </div>
 
-    <ReplyModal :reply-tweet="tweet" v-if="tweet.TweetId" />
+    <ReplyModal
+      :reply-tweet="tweet"
+      v-if="tweet.TweetId"
+      @after-reply="tweet"
+    />
   </div>
 </template>
 
@@ -154,6 +158,7 @@ export default {
       avatarNone,
     };
   },
+
   created() {
     this.fetchTweet();
     this.fetchTweetReplies();
