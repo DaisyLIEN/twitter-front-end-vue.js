@@ -47,7 +47,6 @@
                 <div class="delete-tweet">
                   <font-awesome-icon
                     icon="fa-solid fa-xmark"
-                    :disabled="isProcessing"
                     @click="deleteTweet(user.TweetId)"
                   />
                 </div>
@@ -96,7 +95,7 @@ export default {
     return {
       users: [],
       isLoading: true,
-      isProcessing: false,
+      continue: false,
     };
   },
   created() {
@@ -126,14 +125,15 @@ export default {
     },
     async deleteTweet(tweetId) {
       try {
-        this.isProcessing = true;
-        const deleteResponse = await adminAPI.deleteTweet({ tweetId });
-        console.log("deleteResponse", deleteResponse);
-        this.fetchUsers();
-        this.isProcessing = false;
+        if (!this.continue) {
+          this.continue = true;
+          const deleteResponse = await adminAPI.deleteTweet({ tweetId });
+          console.log("deleteResponse", deleteResponse);
+          this.fetchUsers();
+          this.continue = false;
+        }
       } catch (error) {
-        this.isProcessing = false;
-        console.log(error);
+        this.continue = false;
 
         Toast.fire({
           icon: "error",
