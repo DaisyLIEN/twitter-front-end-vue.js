@@ -20,7 +20,7 @@
       />
       <img
         class="avatar"
-        :src="profile.avatar ? profile.cover : avatarNone"
+        :src="profile.avatar ? profile.avatar : avatarNone"
         alt=""
       />
       <div class="btn-user" v-if="initialCurrentUserId === initialParamsId">

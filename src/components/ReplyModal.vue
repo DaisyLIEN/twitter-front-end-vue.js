@@ -68,7 +68,11 @@
           </div>
           <div class="modal-body">
             <div class="posting">
-              <img class="photo" :src="tweet.avatar | emptyAvatar" alt="" />
+              <img
+                class="photo"
+                :src="tweet.avatar ? tweet.avatar : avatarNone"
+                alt=""
+              />
               <div class="tweet-info">
                 <div class="user-info">
                   <span class="user-name">{{ tweet.name }}</span>
@@ -125,7 +129,6 @@ import tweetsAPI from "./../apis/tweets";
 import avatarNone from "../assets/Avatar-none.png";
 
 export default {
-  mixins: [emptyImageFilter],
   name: "Replication",
   props: {
     initialTweet: {

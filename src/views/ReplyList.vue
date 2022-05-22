@@ -346,6 +346,7 @@ header {
   padding-bottom: 8px;
   display: flex;
   flex-flow: column nowrap;
+  word-break: break-all;
 }
 .user-avatar-name-account {
   display: flex;
