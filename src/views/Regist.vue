@@ -10,7 +10,9 @@
     </div>
     <h1>建立你的帳號</h1>
     <form class="w-100" @submit.prevent.stop="handleSubmit">
-      <div class="form-label-group">
+      <div
+        :class="['form-label-group', { 'wrong-form': account.length === 16 }]"
+      >
         <label for="name">帳號</label>
         <input
           id="account"
@@ -18,11 +20,17 @@
           name="account"
           type="text"
           class="form-control"
+          maxlength="16"
           required
           autofocus
         />
+        <span v-show="account.length === 16" class="words-limit-alert"
+          >字數超出上限！</span
+        >
+        <span class="words-length">{{ account.length }}/15</span>
       </div>
-      <div class="form-label-group">
+
+      <div :class="['form-label-group', { 'wrong-form': name.length === 51 }]">
         <label for="name">名稱</label>
         <input
           id="name"
@@ -30,13 +38,18 @@
           name="name"
           type="text"
           class="form-control"
+          maxlength="51"
           autocomplete="username"
           required
           autofocus
         />
+        <span v-show="name.length === 51" class="words-limit-alert"
+          >字數超出上限！</span
+        >
+        <span class="words-length">{{ name.length }}/50</span>
       </div>
 
-      <div class="form-label-group">
+      <div :class="['form-label-group', { 'wrong-form': isWronging.email }]">
         <label for="email">Email</label>
         <input
           id="email"
@@ -49,7 +62,7 @@
         />
       </div>
 
-      <div class="form-label-group">
+      <div :class="['form-label-group', { 'wrong-form': isWronging.password }]">
         <label for="password">密碼</label>
         <input
           id="password"
@@ -62,12 +75,17 @@
         />
       </div>
 
-      <div class="form-label-group">
+      <div
+        :class="[
+          'form-label-group',
+          { 'wrong-form': isWronging.checkPassword },
+        ]"
+      >
         <label for="password-check">密碼確認</label>
         <input
           id="password-check"
-          v-model="passwordCheck"
-          name="passwordCheck"
+          v-model="checkPassword"
+          name="checkPassword"
           type="password"
           class="form-control"
           autocomplete="new-password"
@@ -75,7 +93,11 @@
         />
       </div>
 
-      <button class="btn btn-lg btn-primary btn-block mb-3" type="submit">
+      <button
+        class="btn btn-lg btn-primary btn-block mb-3"
+        type="submit"
+        :disabled="isProcessing"
+      >
         註冊
       </button>
 
@@ -89,6 +111,9 @@
 </template>
 
 <script>
+import { Toast } from "../utils/helpers";
+import authorizationAPI from "../apis/authorization";
+
 export default {
   data() {
     return {
@@ -96,21 +121,61 @@ export default {
       name: "",
       email: "",
       password: "",
-      passwordCheck: "",
+      checkPassword: "",
+
+      isWronging: {
+        account: false,
+        name: false,
+        email: false,
+        password: false,
+        checkPassword: false,
+      },
+      isProcessing: false,
     };
   },
   methods: {
-    handleSubmit() {
-      const data = JSON.stringify({
-        account: this.account,
-        name: this.name,
-        email: this.email,
-        password: this.password,
-        passwordCheck: this.passwordCheck,
-      });
-
-      // TODO: 向後端驗證使用者登入資訊是否合法
-      console.log("data", data);
+    async handleSubmit() {
+      if (this.password !== this.checkPassword) {
+        this.password = "";
+        this.checkPassword = "";
+        Toast.fire({
+          icon: "warning",
+          title: "密碼與密碼確認不符，請重新輸入",
+        });
+        return;
+      }
+      if (this.name.length > 50 || this.account.length > 15) {
+        Toast.fire({
+          icon: "warning",
+          title: "帳號或名稱超過字數上限，請重新輸入",
+        });
+        return;
+      }
+      try {
+        this.isProcessing = true;
+        const response = await authorizationAPI.regist({
+          account: this.account,
+          name: this.name,
+          email: this.email,
+          password: this.password,
+          checkPassword: this.checkPassword,
+        });
+        console.log(response);
+        if (response.statusText === "OK") {
+          Toast.fire({
+            icon: "success",
+            title: "註冊成功！",
+          });
+          this.$router.push("/");
+        }
+      } catch (error) {
+        this.isProcessing = false;
+        console.log(error);
+        Toast.fire({
+          icon: "error",
+          title: "無法註冊，請稍後再試",
+        });
+      }
     },
   },
 };
@@ -144,6 +209,7 @@ h1 {
 }
 
 .form-label-group {
+  position: relative;
   height: 54px;
   margin-bottom: 30px;
   background: #f5f8fa;
@@ -174,6 +240,36 @@ label {
   left: 12px;
   font-weight: 500;
   color: #657786;
+}
+
+/* 字數上限提示 */
+.words-length {
+  position: absolute;
+  right: 0;
+  top: 58px;
+  font-size: 12px;
+  font-weight: 500px;
+  color: #696974;
+}
+
+.words-limit-alert {
+  position: absolute;
+  left: 0;
+  top: 58px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #fc5a5a;
+}
+
+/* 錯誤訊息提示 */
+.wrong-form:focus-within {
+  border-color: #fc5a5a;
+}
+
+.wrong-message {
+  margin-top: 12px;
+  color: #fc5a5a;
+  font-size: 12px;
 }
 
 .btn-primary {

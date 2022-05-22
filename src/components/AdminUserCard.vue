@@ -1,7 +1,11 @@
 <template>
   <div class="wrapper-admin-user-card">
-    <img class="cover-image" :src="user.coverImage" alt="" />
-    <img class="avatar" :src="user.avatar" alt="" />
+    <img
+      class="cover-image"
+      :src="user.cover ? user.cover : coverNone"
+      alt=""
+    />
+    <img class="avatar" :src="user.avatar ? user.avatar : avatarNone" alt="" />
     <div class="info">
       <div class="names">
         <p class="user-name">{{ user.name }}</p>
@@ -9,19 +13,21 @@
       </div>
       <div class="counts">
         <img class="tweet-count" src="https://i.imgur.com/41M4NLK.png" alt="" />
-        <span>1.5k</span>
+        <span>{{ user.totalTweetNum }}</span>
         <img class="like-count" src="https://i.imgur.com/dQXJ6Mp.png" alt="" />
-        <span>20k</span>
+        <span>{{ user.totalLikeCount }}</span>
       </div>
       <div class="follow-ship">
-        <span>{{ user.foiiowingNum }}個</span><span>追隨中</span>
-        <span>{{ user.followerNum }}位</span><span>追隨者</span>
+        <span>{{ user.followersNum }}個</span><span>追隨中</span>
+        <span>{{ user.followingsNum }}位</span><span>追隨者</span>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import avatarNone from "../assets/Avatar-none.png";
+import coverNone from "../assets/Cover-none.jpg";
 export default {
   props: {
     initialUser: {
@@ -32,6 +38,8 @@ export default {
   data() {
     return {
       user: this.initialUser,
+      avatarNone,
+      coverNone,
     };
   },
 };
@@ -44,12 +52,15 @@ export default {
   height: 314px;
   border-radius: 10px;
   margin: 0 0 16px 16px;
+  background-color: #f6f7f8;
 }
 .cover-image {
   display: block;
   width: 100%;
   height: 140px;
   object-fit: cover;
+  border-top-right-radius: 10px;
+  border-top-left-radius: 10px;
 }
 .avatar {
   display: block;

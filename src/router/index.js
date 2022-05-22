@@ -7,6 +7,11 @@ Vue.use(VueRouter)
 
 const routes = [
   {
+    path: '/',
+    name: 'root',
+    redirect: '/signin'
+  },
+  {
     path: '/regist',
     name: 'regist',
     component: () => import('../views/Regist.vue')
@@ -37,9 +42,14 @@ const routes = [
     component: () => import('../views/User.vue')
   },
   {
-    path: '/follow',
-    name: 'follow',
-    component: () => import('../views/Follow.vue')
+    path: '/follower/:id',
+    name: 'follower',
+    component: () => import('../views/Follower.vue')
+  },
+  {
+    path: '/following/:id',
+    name: 'following',
+    component: () => import('../views/Following.vue')
   },
   {
     path: '/admin/users',
@@ -71,5 +81,32 @@ const routes = [
 const router = new VueRouter({
   routes
 })
+
+// 驗證是否有取得token，否則無法進入其他頁面
+router.beforeEach((to, from, next) => {
+  const token = localStorage.getItem('token')
+  const userId = localStorage.getItem('userId')
+  if (to.fullPath === '/signin' || to.fullPath === '/admin' || to.fullPath === '/regist') {
+    //要前往登入頁面時如果有token和userId則導入main主頁
+    if(token && userId) {
+      next('main')
+      return
+    } else {
+      next()
+      return
+    }
+  } else {
+    //要前往其他頁面時如果缺少token或userId則導入signin頁面
+    if (token && userId) {
+      next()
+      return
+    } else {
+      next('signin')
+      return
+    }
+  }
+})
+
+
 
 export default router

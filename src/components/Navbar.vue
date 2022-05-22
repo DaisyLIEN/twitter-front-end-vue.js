@@ -16,7 +16,7 @@
         <span class="nav-item-title">首頁</span>
       </router-link>
       <router-link
-        to="/users/:id"
+        :to="{ name: 'user', params: { id: currentUserId } }"
         :class="['nav-item', { 'current-page': currentPage === 'user' }]"
       >
         <span class="nav-item-font icon-self-img"></span>
@@ -30,8 +30,11 @@
         <span class="nav-item-title">設定</span>
       </router-link>
       <div class="nav-item-tweet">
-        <button class="btn-submit btn btn-lg btn-primary btn-block" data-toggle="modal"
-      data-target="#tweetModal">
+        <button
+          class="btn-submit btn btn-lg btn-primary btn-block"
+          data-toggle="modal"
+          data-target="#tweetModal"
+        >
           推文
         </button>
       </div>
@@ -41,27 +44,32 @@
           alt="setting-img"
           class="nav-item-img"
         />
-        <span class="nav-item-title">登出</span>
+        <span @click="logout()" class="nav-item-title">登出</span>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+
 export default {
   data() {
     return {
       currentPage: "",
+      currentUserId: -1,
     };
   },
   created() {
     this.currentPage = this.$route.name;
+    this.currentUserId = localStorage.getItem('userId')
   },
   methods: {
     logout() {
       // 待串接API後取消token
+      localStorage.removeItem("token");
+      localStorage.removeItem("userId");
       this.$router.push("/signin");
-    }
+    },
   },
 };
 </script>
@@ -118,7 +126,7 @@ export default {
 }
 
 .btn-submit {
-  width: 178px; 
+  width: 178px;
   height: 46px;
   background-color: #ff6600;
   border: none;

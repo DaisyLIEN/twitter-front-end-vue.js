@@ -21,25 +21,76 @@
           </div>
           <div class="modal-body">
             <div class="posting">
+              <!-- <img class="photo" :src="user.avatar | emptyAvatar" alt="" /> -->
               <img class="photo" src="https://img.onl/d0RNIH" alt="" />
-              <input
-                type="text"
+              <textarea
+                v-model="newTweet"
+                :style="{ height: height }"
+                name="new-post"
                 class="new-post"
-                autofocus
+                maxlength="141"
                 placeholder="有什麼新鮮事？"
-              />
+              ></textarea>
             </div>
-            <div class="btn">
-              <button type="button" class="btn-submit" data-bs-dismiss="modal">
+            <div class="footer">
+              <div v-if="!newTweet.length" class="text-limit-error">
+                內容不可空白
+              </div>
+              <div v-else-if="newTweet.length === 141" class="text-limit-error">
+                字數不可超過 140 字
+              </div>
+              <!-- :disabled="!newTweet.length || newTweet.length === 141" -->
+              <button
+                type="button"
+                class="btn-submit"
+                data-dismiss="modal"
+                @click="addTweet"
+              >
                 推文
               </button>
             </div>
+            <!-- <div class="btn">
+              <button
+                type="button"
+                class="btn-submit"
+                data-dismiss="modal"
+                @click="addTweet"
+              >
+                推文
+              </button>
+            </div> -->
           </div>
         </div>
       </div>
     </div>
   </div>
 </template>
+
+<script>
+export default {
+  data() {
+    return {
+      newTweet: "",
+      height: ""
+    };
+  },
+  watch: {
+    newTweet() {
+      // console.log(this.newTweet.length);
+      if (this.newTweet.length > 70) this.height = "126px";
+      else this.height = "66px";
+    },
+  },
+  methods: {
+    addTweet() {
+      if (this.newTweet.length === 0 || this.newTweet.length === 141) return;
+      // const newTweet = this.newTweet;
+      this.$emit("after-addTweet", this.newTweet);
+      this.newTweet = "";
+    },
+  },
+};
+</script>
 
 <style scoped>
 /* Modal */
@@ -65,6 +116,10 @@
   margin-left: 0px;
 }
 
+/* .post {
+  height: auto;
+} */
+
 .posting {
   display: flex;
   padding: 0;
@@ -77,20 +132,40 @@
 }
 
 .new-post {
-  margin-left: 8px;
-  border: none;
-  outline: medium;
+  width: 526px;
+  margin: 12px 8px 14px 8px;
+  border: none; /*去除邊框*/
+  outline: none; /*去除選中後的邊框*/
+  resize: none; /*移除小三角，關閉調整大小功能*/
+  overflow: hidden;
   font-weight: 400;
   font-size: 16px;
   line-height: 26px;
   color: #6c757d;
+  min-height: 66px;
 }
 
-.btn {
+/* .btn {
   display: flex;
   justify-content: flex-end;
-  margin-top: 121px;
+  margin-top: 14px;
   padding: 0;
+} */
+
+.footer {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-top: 20px;
+  padding: 0;
+}
+
+.text-limit-error {
+  font-weight: 500;
+  font-size: 15px;
+  line-height: 15px;
+  color: #fc5a5a;
+  margin-right: 20px;
 }
 
 .btn-submit {

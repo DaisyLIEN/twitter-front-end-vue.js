@@ -1,63 +1,173 @@
 <template>
   <div class="tweet">
     <div class="tweet-img">
-      <img :src="user.image" alt="" class="user-photo" />
+      <router-link :to="{ name: 'user', params: { id: tweet.UserId } }">
+        <img
+          :src="tweet.avatar ? tweet.avatar : avatarNone"
+          alt=""
+          class="user-photo"
+        />
+      </router-link>
     </div>
     <div class="tweet-right">
       <div class="user">
-        <span class="user-name">{{ user.name }}</span>
-        <span class="user-account"
-          >@{{ user.account }} ‧ {{ user.createdAt | fromNow }}小時</span
+        <router-link :to="{ name: 'user', params: { id: tweet.UserId } }">
+          <span class="user-name">{{ tweet.name }}</span>
+          <span class="user-account">@{{ tweet.account }} ‧ </span>
+        </router-link>
+        <router-link
+          :to="{ name: 'replylist', params: { tweet_id: tweet.TweetId } }"
         >
+          <span class="tweet-time">{{ tweet.tweetCreatedAt | fromNow }}</span>
+        </router-link>
       </div>
+
       <div class="tweet-content">
-        {{ user.content }}
+        <router-link
+          :to="{ name: 'replylist', params: { tweet_id: tweet.TweetId } }"
+        >
+          <span class="tweet-content">{{ tweet.description }}</span>
+        </router-link>
       </div>
+
       <div class="tweet-actions">
         <div class="tweet-action">
-          <font-awesome-icon icon="fa-regular fa-comment" />
-          <p class="reply-number">{{ user.replyNum }}</p>
+          <font-awesome-icon
+            data-toggle="modal"
+            :data-target="`#replyModal${tweet.TweetId}`"
+            icon="fa-regular fa-comment"
+          />
+          <p class="reply-number">{{ totalReplyCount }}</p>
         </div>
-        <div class="tweet-action">
-          <font-awesome-icon icon="fa-regular fa-heart" />
-          <p class="like-number">{{ user.likeNum }}</p>
+        <div class="tweet-action" :class="{ active: isLike }">
+          <font-awesome-icon
+            icon="fa-regular fa-heart"
+            v-if="isLike"
+            class="active"
+            :disabled="isProcessing"
+            @click.stop.prevent="deleteLike(tweet.TweetId)"
+          />
+          <font-awesome-icon
+            icon="fa-regular fa-heart"
+            v-else
+            @click.stop.prevent="addLike(tweet.TweetId)"
+          />
+          <p class="like-number">{{ totalLikeCount }}</p>
         </div>
       </div>
     </div>
-    <hr class="hr1" />
+    <ReplyModal :initial-tweet="initialTweet" @after-reply="afterReply" />
   </div>
 </template>
 
 <script>
-import moment from 'moment'
+import { emptyImageFilter } from "../utils/mixins";
+import usersAPI from "./../apis/users";
+import ReplyModal from "../components/ReplyModal.vue";
+import moment from "moment";
+import avatarNone from "../assets/Avatar-none.png";
 
 export default {
+  mixins: [emptyImageFilter],
   filters: {
     fromNow(datetime) {
       if (!datetime) {
-        return '-'
+        return "-";
       }
-      return moment(datetime).fromNow()
-    }
+      return moment(datetime).fromNow();
+    },
+  },
+  components: {
+    ReplyModal,
   },
   props: {
-    initialUser: {
+    initialTweet: {
       type: Object,
-      required: true,
+      required: false,
     },
   },
   data() {
     return {
-      user: this.initialUser,
+      continue: false,
+      tweet: this.initialTweet,
+
+      //點及愛心後先透過前端method將like數及是否被按讚的效果渲染在畫面上
+      isLike: this.initialTweet.isLike,
+      totalReplyCount: this.initialTweet.totalReplyCount,
+      totalLikeCount: this.initialTweet.totalLikeCount,
+
+      avatarNone,
     };
-  }
+  },
+  watch: {
+    initialTweet(newValue) {
+      this.tweet = {
+        ...this.tweet,
+        ...newValue,
+      };
+    },
+  },
+  methods: {
+    async addLike(tweetId) {
+      try {
+        if (!this.continue) {
+          this.continue = true;
+          const response = await usersAPI.addTweetLike(tweetId);
+          if (response.statusText !== "OK") {
+            throw new Error(response.statusText);
+          }
+          console.log("addLikeResponse", response);
+          const { data } = response;
+          this.isLike = data.isLike;
+          this.totalLikeCount = data.totalLikeCount;
+          this.continue = false;
+        }
+      } catch (error) {
+        this.continue = false;
+        console.log(error);
+      }
+    },
+    async deleteLike(tweetId) {
+      try {
+        if (!this.continue) {
+          this.continue = true;
+          this.isProcessing = true;
+          const response = await usersAPI.deleteTweetLike(tweetId);
+          if (response.statusText !== "OK") {
+            throw new Error(response.statusText);
+          }
+          console.log("deleteLikeResponse", response);
+          const { data } = response;
+          this.isLike = data.isLike;
+          this.totalLikeCount = data.totalLikeCount;
+          this.continue = false;
+        }
+      } catch (error) {
+        this.continue = false;
+        console.log(error);
+      }
+    },
+    afterReply() {
+      //回覆成功時先讓前端頁面數字改變
+      this.totalReplyCount += 1;
+    },
+  },
 };
 </script>
 
 <style scoped>
+/* 去除底線 */
+a {
+  text-decoration: none;
+}
+.router-link-active {
+  text-decoration: none;
+}
+
 .tweet {
   display: flex;
-  flex-wrap: wrap;
+  border-bottom: 1px solid #e6ecf0;
+  padding: 16px 0;
 }
 
 img {
@@ -68,6 +178,8 @@ img {
 
 .tweet-right {
   width: calc(100% - 106px);
+  display: flex;
+  flex-direction: column;
 }
 
 .user-name {
@@ -78,12 +190,13 @@ img {
   color: #171725;
 }
 
-.user-account {
+.user-account,
+.tweet-time {
   font-weight: 400;
   font-size: 14px;
   line-height: 22px;
   text-align: left;
-  color: #6C757D;
+  color: #6c757d;
 }
 
 .tweet-content {
@@ -93,6 +206,7 @@ img {
   line-height: 26px;
   text-align: left;
   color: #171725;
+  word-break: break-all;
 }
 
 .tweet-actions {
@@ -113,9 +227,11 @@ img {
   line-height: 14px;
 }
 
-.hr1 {
-  width: 100%;
-  height: 1px;
-  /* margin: 24px 0px 16px 0px; */
+.fa-heart:hover {
+  color: #ff1493;
+}
+
+.active {
+  color: #ff1493;
 }
 </style>

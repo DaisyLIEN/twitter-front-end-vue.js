@@ -52,6 +52,7 @@ export default {
   methods: {
     logout() {
       // 待串接API後取消token
+      localStorage.removeItem("token");
       this.$router.push("/signin");
     },
   },

@@ -2,7 +2,7 @@
   <div class="container">
     <!-- Navbar -->
     <div class="left-content">
-      <Navbar />
+      <AdminNavbar />
     </div>
 
     <!-- middle-content -->
@@ -10,27 +10,57 @@
       <header>
         <h4>推文清單</h4>
       </header>
-
-      <div class="tweets">
-        <div class="tweet" v-for="user in users" :key="user.id">
-          <div class="tweet-img">
-            <img :src="user.image" alt="" class="user-photo" />
-          </div>
-          <div class="tweet-right">
-            <div class="tweet-right-top">
-              <div class="user">
-                <span class="user-name">{{ user.name }}</span>
-                <span class="user-account"
-                  >@{{ user.account }} ‧
-                  {{ user.createdAt | fromNow }}小時</span
-                >
-              </div>
-              <div class="delete-tweet">
-                <font-awesome-icon icon="fa-solid fa-xmark" />
-              </div>
+      <Spinner v-if="isLoading" />
+      <div v-else>
+        <div class="tweets">
+          <div class="tweet" v-for="user in users" :key="user.id">
+            <div class="tweet-img">
+              <router-link :to="{ name: 'user', params: { id: user.TweetId } }">
+                <img
+                  :src="user.avatar | emptyAvatar"
+                  alt=""
+                  class="user-photo"
+                />
+              </router-link>
             </div>
-            <div class="tweet-content">
-              {{ user.content }}
+            <div class="tweet-right">
+              <div class="tweet-right-top">
+                <div class="user">
+                  <router-link
+                    :to="{ name: 'user', params: { id: user.UserId } }"
+                  >
+                    <span class="user-name">{{ user.name }}</span>
+                    <span class="user-account">@{{ user.account }} ‧ </span>
+                  </router-link>
+                  <router-link
+                    :to="{
+                      name: 'replylist',
+                      params: { tweet_id: user.TweetId },
+                    }"
+                  >
+                    <span class="tweet-time">{{
+                      user.tweetCreatedAt | fromNow
+                    }}</span>
+                  </router-link>
+                </div>
+
+                <div class="delete-tweet">
+                  <font-awesome-icon
+                    icon="fa-solid fa-xmark"
+                    @click="deleteTweet(user.TweetId)"
+                  />
+                </div>
+              </div>
+              <div class="tweet-content">
+                <router-link
+                  :to="{
+                    name: 'replylist',
+                    params: { tweet_id: user.TweetId },
+                  }"
+                >
+                  <span class="tweet-content">{{ user.description }}</span>
+                </router-link>
+              </div>
             </div>
           </div>
         </div>
@@ -40,123 +70,105 @@
 </template>
 
 <script>
-import Navbar from "./../components/Navbar";
-
-const dummyData = {
-  users: [
-    {
-      id: 1,
-      name: "Apple",
-      account: "apple",
-      image: "https://img.onl/Dwojms",
-      createdAt: "2022-05-11T02:16:16.000Z",
-      updatedAt: "2022-05-11T02:16:16.000Z",
-      content:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec sed lacinia justo. Cras mi ipsum, venenatis vitae pretium quis, interdum non orci. Suspendisse blandit libero sit amet nisl blandit, vitae fermentum leo tincidunt.",
-      replyNum: 13,
-      likeNum: 76,
-    },
-    {
-      id: 2,
-      name: "Jane Cathy",
-      account: "jamjane1999",
-      image: "https://img.onl/KW4sJV",
-      createdAt: "2022-04-25T02:16:16.000Z",
-      updatedAt: "2022-04-25T02:16:16.000Z",
-      content:
-        "Cras blandit libero nibh, nec scelerisque lorem condimentum sit amet. Nam sapien eros, ultricies sit amet arcu non, iaculis venenatis nulla. Integer efficitur varius neque, viverra vestibulum ligula. Duis libero odio, convallis a elit ac, fermentum luctus velit.",
-      replyNum: 10,
-      likeNum: 80,
-    },
-    {
-      id: 3,
-      name: "Cheery",
-      account: "cheerysweet",
-      image: "https://img.onl/H5eDF2",
-      createdAt: "2022-04-19T02:16:16.000Z",
-      updatedAt: "2022-04-19T02:16:16.000Z",
-      content:
-        "Integer odio tellus, viverra eget vestibulum vitae, auctor sed magna. Sed sed gravida diam. Praesent volutpat tincidunt risus a sagittis. Vestibulum quis purus venenatis, sodales justo eu, faucibus tortor.",
-      replyNum: 17,
-      likeNum: 55,
-    },
-    {
-      id: 4,
-      name: "Dana",
-      account: "danagirl",
-      image: "https://img.onl/HM4fxm",
-      createdAt: "2022-04-19T02:16:16.000Z",
-      updatedAt: "2022-04-19T02:16:16.000Z",
-      content:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam porttitor, orci imperdiet condimentum sagittis, nisl enim commodo sem, nec ornare augue libero ut purus.",
-      replyNum: 10,
-      likeNum: 88,
-    },
-    {
-      id: 5,
-      name: "Gorden",
-      account: "gordenball2022",
-      image: "https://img.onl/25RyTE",
-      createdAt: "2022-04-19T02:16:16.000Z",
-      updatedAt: "2022-04-19T02:16:16.000Z",
-      content:
-        "Nullam eu ante nisi. In convallis non augue ac rutrum. Fusce eu ullamcorper quam. Duis at aliquet tortor.",
-      replyNum: 13,
-      likeNum: 76,
-    },
-    {
-      id: 6,
-      name: "LuLu",
-      account: "lulupig",
-      image: "https://img.onl/1XTVZ",
-      createdAt: "2022-04-19T02:16:16.000Z",
-      updatedAt: "2022-04-19T02:16:16.000Z",
-      content:
-        "Integer ut pulvinar augue, ac molestie diam. Aliquam sagittis luctus elit, vitae auctor enim euismod nec.",
-      replyNum: 17,
-      likeNum: 68,
-    },
-  ],
-};
+import { emptyImageFilter } from "../utils/mixins";
+import AdminNavbar from "./../components/AdminNavbar";
+import adminAPI from "./../apis/admin";
+import { Toast } from "./../utils/helpers";
+import moment from "moment";
+import Spinner from "./../components/Spinner";
 
 export default {
+  mixins: [emptyImageFilter],
+  filters: {
+    fromNow(datetime) {
+      if (!datetime) {
+        return "-";
+      }
+      return moment(datetime).fromNow();
+    },
+  },
   components: {
-    Navbar
+    AdminNavbar,
+    Spinner,
   },
   data() {
     return {
       users: [],
+      isLoading: true,
+      continue: false,
     };
   },
   created() {
     this.fetchUsers();
   },
   methods: {
-    fetchUsers() {
-      this.users = dummyData.users;
+    async fetchUsers() {
+      try {
+        this.isLoading = true;
+        const response = await adminAPI.getAdminTweets();
+        const { data } = response;
+        console.log("data", data);
+
+        if (response.status !== 200) {
+          throw new Error(data.statusText);
+        }
+
+        this.users = data;
+        this.isLoading = false;
+      } catch (error) {
+        this.isLoading = false;
+        Toast.fire({
+          icon: "error",
+          title: "無法取得後台推文資料，請稍後再試",
+        });
+      }
     },
-  }
+    async deleteTweet(tweetId) {
+      try {
+        if (!this.continue) {
+          this.continue = true;
+          const deleteResponse = await adminAPI.deleteTweet({ tweetId });
+          console.log("deleteResponse", deleteResponse);
+          this.fetchUsers();
+          this.continue = false;
+        }
+      } catch (error) {
+        this.continue = false;
+
+        Toast.fire({
+          icon: "error",
+          title: "無法刪除後台推文資料，請稍後再試",
+        });
+      }
+    },
+  },
 };
 </script>
 
 <style scoped>
 .container {
   display: grid;
-  grid-template-columns: 178px 938px;
-  grid-gap: 24px;
-  width: 1140px;
+  grid-template-columns: 130px 178px 24px 938px;
+  /* grid-gap: 24px; */
   padding: 0;
+  margin: 0;
+  /* border: 1px solid green; */
+}
+
+.left-content {
+  grid-column: 2/3;
+  /* border: 1px solid red; */
 }
 
 .middle-content {
-  width: 67%;
-  margin: 0 130px 0 24px;
-  border-right: 1px solid #E6ECF0;
-  border-left: 1px solid #E6ECF0;
+  border-right: 1px solid #e6ecf0;
+  border-left: 1px solid #e6ecf0;
+  grid-column: 4/5;
+  /* border: 1px solid blue; */
 }
 
 header {
-  border-bottom: 1px solid #E6ECF0;
+  border-bottom: 1px solid #e6ecf0;
 }
 
 h4 {
@@ -164,12 +176,12 @@ h4 {
   font-weight: 700;
   font-size: 24px;
   line-height: 26px;
-  color:#171725;
+  color: #171725;
 }
 
 .tweet {
   display: flex;
-  border-bottom: 1px solid #E6ECF0;
+  border-bottom: 1px solid #e6ecf0;
   margin: 16px 0;
 }
 
@@ -181,6 +193,7 @@ h4 {
 
 .tweet-right {
   margin-left: 8px;
+  width: 855px;
 }
 
 .tweet-right-top {
@@ -196,12 +209,13 @@ h4 {
   color: #171725;
 }
 
-.user-account {
+.user-account,
+.tweet-time {
   font-weight: 400;
   font-size: 14px;
   line-height: 22px;
   text-align: left;
-  color: #6C757D;
+  color: #6c757d;
 }
 
 .fa-xmark {
@@ -217,5 +231,13 @@ h4 {
   line-height: 26px;
   text-align: left;
   color: #171725;
+}
+
+/* 去除底線 */
+a {
+  text-decoration: none;
+}
+.router-link-active {
+  text-decoration: none;
 }
 </style>

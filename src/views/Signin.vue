@@ -3,8 +3,7 @@
     <div class="logo">
       <img
         class="logo-img"
-        src="https://upload.cc/i1/2022/05/10/LycK2A.png
-"
+        src="https://upload.cc/i1/2022/05/10/LycK2A.png"
         alt="AC-logo"
       />
     </div>
@@ -37,7 +36,11 @@
         />
       </div>
 
-      <button class="btn btn-lg btn-primary btn-block mb-3" type="submit">
+      <button
+        class="btn btn-lg btn-primary btn-block mb-3"
+        type="submit"
+        :disabled="isProcessing"
+      >
         登入
       </button>
 
@@ -57,6 +60,9 @@
 </template>
 
 <script>
+import authorizationAPI from "./../apis/authorization";
+import { Toast } from "../utils/helpers";
+
 export default {
   data() {
     return {
@@ -67,16 +73,47 @@ export default {
     };
   },
   methods: {
-    handleSubmit() {
-      const data = JSON.stringify({
-        account: this.account,
-        password: this.password,
-      });
+    async handleSubmit() {
+      try {
+        if (!this.account || !this.password) {
+          Toast.fire({
+            icon: "warning",
+            title: "請填入 account 和 password",
+          });
+          return;
+        }
 
-      // TODO: 向後端驗證使用者登入資訊是否合法
-      console.log("data", data);
-      // 成功登入後轉址到餐聽首頁
-      this.$router.push("/main");
+        this.isProcessing = true;
+
+        const response = await authorizationAPI.signIn({
+          account: this.account,
+          password: this.password,
+        });
+        const { data, statusText } = response;
+
+        console.log(data.data);
+
+        if (statusText !== "OK" || data.status !== "success") {
+          throw new Error(statusText);
+        }
+
+        localStorage.setItem("token", data.data.token);
+        localStorage.setItem("userId", data.data.user.id);
+
+        // 將資料傳到Vuex中
+        this.$store.commit("setCurrentUser", data.data.user);
+
+        this.$router.push("/main");
+      } catch (error) {
+        this.password = "";
+        console.log(error);
+        this.isProcessing = false;
+
+        Toast.fire({
+          icon: "error",
+          title: "帳號不存在或密碼錯誤，請重新輸入",
+        });
+      }
     },
   },
 };
