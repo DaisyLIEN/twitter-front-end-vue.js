@@ -86,9 +86,10 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
   const token = localStorage.getItem('token')
   const userId = localStorage.getItem('userId')
+  const userAvatar = localStorage.getItem('userAvatar')
   if (to.fullPath === '/signin' || to.fullPath === '/admin' || to.fullPath === '/regist') {
     //要前往登入頁面時如果有token和userId則導入main主頁
-    if(token && userId) {
+    if (token && userId && userAvatar) {
       next('main')
       return
     } else {
@@ -97,7 +98,7 @@ router.beforeEach((to, from, next) => {
     }
   } else {
     //要前往其他頁面時如果缺少token或userId則導入signin頁面
-    if (token && userId) {
+    if (token && userId && userAvatar) {
       next()
       return
     } else {

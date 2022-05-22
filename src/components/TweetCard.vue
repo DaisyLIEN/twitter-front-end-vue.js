@@ -44,7 +44,6 @@
             icon="fa-regular fa-heart"
             v-if="isLike"
             class="active"
-            :disabled="isProcessing"
             @click.stop.prevent="deleteLike(tweet.TweetId)"
           />
           <font-awesome-icon
@@ -61,14 +60,12 @@
 </template>
 
 <script>
-import { emptyImageFilter } from "../utils/mixins";
 import usersAPI from "./../apis/users";
 import ReplyModal from "../components/ReplyModal.vue";
 import moment from "moment";
 import avatarNone from "../assets/Avatar-none.png";
 
 export default {
-  mixins: [emptyImageFilter],
   filters: {
     fromNow(datetime) {
       if (!datetime) {
@@ -131,7 +128,6 @@ export default {
       try {
         if (!this.continue) {
           this.continue = true;
-          this.isProcessing = true;
           const response = await usersAPI.deleteTweetLike(tweetId);
           if (response.statusText !== "OK") {
             throw new Error(response.statusText);

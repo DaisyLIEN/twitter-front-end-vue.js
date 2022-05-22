@@ -72,20 +72,22 @@
         :key="reply.replyId"
         :initial-reply-from-reply-list="reply"
       />
-      <!-- @after-reply-modal-open="handleReplyModal" -->
     </div>
 
     <div class="right-content">
       <PopularList />
     </div>
 
-    <ReplyModal :reply-tweet="tweet" v-if="tweet.TweetId" />
+    <ReplyModal
+      :reply-tweet="tweet"
+      v-if="tweet.TweetId"
+      @after-reply="tweet"
+    />
   </div>
 </template>
 
 <script>
 import moment from "moment";
-import { emptyImageFilter } from "../utils/mixins";
 import Navbar from "../components/Navbar.vue";
 import ReplyCard from "./../components/ReplyCard.vue";
 import PopularList from "../components/PopularList.vue";
@@ -96,7 +98,6 @@ import usersAPI from "./../apis/users";
 import { Toast } from "./../utils/helpers";
 
 export default {
-  mixins: [emptyImageFilter],
   components: {
     Navbar,
     ReplyCard,
@@ -147,73 +148,27 @@ export default {
   },
   data() {
     return {
-      currentUserId: -1,
-      // 推文區域
-      tweet: {
-        UserId: -1,
-        TweetId: -1,
-        name: "",
-        account: "",
-        avatar: "",
-        description: "",
-        tweetCreatedAt: "",
-        totalLikeCount: 0,
-        totalReplyCount: 0,
-        isLike: false,
-      },
-      tweetId: -1, // from route.params
-      // replyList: [],
-      replyModalReply: {},
-      // 使用者資料
-      profile: {
-        account: "",
-        name: "",
-        avatar: "",
-      },
       user: {
         Id: -1,
       },
-      // tweet: {},
+      tweet: {},
       users: [],
       replylist: [],
 
       avatarNone,
     };
   },
+
   created() {
-    const { tweet_id } = this.$route.params;
-    this.tweetId = Number(tweet_id);
-    this.getCurrentUserId();
-    this.fetchTweet(this.tweetId);
-    this.fetchTweetReplies(this.tweetId);
-    this.fetchUserCard();
+    this.fetchTweet();
+    this.fetchTweetReplies();
   },
   methods: {
-    getCurrentUserId() {
-      const userId = localStorage.getItem("userId");
-      this.currentUserId = Number(userId);
-    },
-    // UserCard：GET /api/users/:id
-    async fetchUserCard() {
-      try {
-        const { data } = await usersAPI.getUserCard(this.currentUserId);
-        const { account, name, avatar } = data;
-
-        this.profile = {
-          ...this.profile,
-          account,
-          name,
-          avatar,
-        };
-      } catch (error) {
-        console.log(error);
-      }
-    },
     // GET /tweets/:tweet_id
-    async fetchTweet(tweetId) {
+    async fetchTweet() {
       try {
+        const tweetId = this.$route.params.tweet_id;
         const { data } = await tweetsAPI.getTweet(tweetId);
-        // console.log("fetchTweet", data);
 
         this.tweet = data;
         console.log("fetchTweet", this.tweet);
@@ -222,8 +177,9 @@ export default {
       }
     },
     // GET /api/tweets/:tweet_id/replies
-    async fetchTweetReplies(tweetId) {
+    async fetchTweetReplies() {
       try {
+        const tweetId = this.$route.params.tweet_id;
         const { data } = await tweetsAPI.getTweetReplies(tweetId);
         this.replylist = data;
       } catch (error) {
