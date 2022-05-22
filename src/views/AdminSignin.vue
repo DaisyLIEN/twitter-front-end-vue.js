@@ -1,12 +1,7 @@
 <template>
   <div class="container">
     <div class="logo">
-      <img
-        class="logo-img"
-        src="https://upload.cc/i1/2022/05/10/LycK2A.png
-"
-        alt="AC-logo"
-      />
+      <img class="logo-img" :src="acLogo" alt="AC-logo" />
     </div>
     <h1>後台登入</h1>
     <form class="w-100" @submit.prevent.stop="handleSubmit">
@@ -57,6 +52,7 @@
 <script>
 import authorization from "../apis/authorization";
 import { Toast } from "../utils/helpers";
+import acLogo from "../assets/AC-logo.png";
 
 export default {
   data() {
@@ -65,6 +61,7 @@ export default {
       adminPassword: "",
       isProcessing: false,
       isWronging: false,
+      acLogo,
     };
   },
   methods: {

@@ -3,7 +3,7 @@
     <div class="logo">
       <img
         class="logo-img"
-        src="https://upload.cc/i1/2022/05/10/LycK2A.png"
+        :src="acLogo"
         alt="AC-logo"
       />
     </div>
@@ -62,6 +62,7 @@
 <script>
 import authorizationAPI from "./../apis/authorization";
 import { Toast } from "../utils/helpers";
+import acLogo from "../assets/AC-logo.png"
 
 export default {
   data() {
@@ -70,6 +71,7 @@ export default {
       password: "",
       isProcessing: false,
       isWronging: false,
+      acLogo,
     };
   },
   methods: {

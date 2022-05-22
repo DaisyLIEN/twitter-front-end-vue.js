@@ -1,11 +1,7 @@
 <template>
   <div class="nav-container">
     <div class="logo">
-      <img
-        src="https://upload.cc/i1/2022/05/10/LycK2A.png"
-        alt="logo-img"
-        class="logo-img"
-      />
+      <img :src="acLogo" alt="logo-img" class="logo-img" />
     </div>
     <div class="navigation">
       <router-link
@@ -40,11 +36,7 @@
         </button>
       </div>
       <div class="nav-item logo-out">
-        <img
-          src="https://upload.cc/i1/2022/05/12/NqlER9.png"
-          alt="setting-img"
-          class="nav-item-img"
-        />
+        <img :src="logoutImg" alt="setting-img" class="nav-item-img" />
         <span @click="logout()" class="nav-item-title">登出</span>
       </div>
     </div>
@@ -52,11 +44,16 @@
 </template>
 
 <script>
+import acLogo from "../assets/AC-logo.png";
+import logoutImg from "../assets/icon_logout.png";
+
 export default {
   data() {
     return {
       currentPage: "",
       currentUserId: -1,
+      acLogo,
+      logoutImg,
     };
   },
   created() {

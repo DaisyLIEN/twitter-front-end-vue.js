@@ -196,6 +196,7 @@ export default {
 .photo {
   width: 50px;
   height: 50px;
+  border-radius: 25px;
 }
 
 .new-reply,
