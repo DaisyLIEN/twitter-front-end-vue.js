@@ -4,7 +4,7 @@
       <AdminNavbar />
     </div>
 
-    <div class="right-content">
+    <div class="right-content scrollbar">
       <header>
         <h4>使用者列表</h4>
       </header>

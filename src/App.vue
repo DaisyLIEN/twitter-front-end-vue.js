@@ -194,16 +194,21 @@ table {
   background: transparent;
 }
 
-.scrollbar {
-  padding-left: 6px;
+.scrollbar::-webkit-scrollbar {
+  width: 8px;
 }
 
-.scrollbar::-webkit-scrollbar {
-  width: 6px;
+.scrollbar::-webkit-scrollbar-track-piece {
+  background: #fafafa;
 }
 
 .scrollbar::-webkit-scrollbar-thumb {
-  border-radius: 3px;
-  background-color: rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  background-color: #c1c1c1;
+}
+
+.middle-content {
+  max-height: 99%;
+  overflow-y: scroll;
 }
 </style>

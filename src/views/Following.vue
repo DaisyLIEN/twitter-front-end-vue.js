@@ -4,7 +4,7 @@
       <Navbar />
     </div>
 
-    <div class="middle-content">
+    <div class="middle-content scrollbar">
       <header>
         <img
           @click="$router.back()"
@@ -115,7 +115,7 @@ export default {
   padding: 0;
 }
 .right-content {
-  grid-column: 3 /4;
+  grid-column: 3 / 4 ;
 }
 /* Header */
 header {

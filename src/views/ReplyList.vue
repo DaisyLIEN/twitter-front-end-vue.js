@@ -4,7 +4,7 @@
       <Navbar />
     </div>
 
-    <div class="middle-content">
+    <div class="middle-content scrollbar">
       <header>
         <img
           @click="$router.back()"
