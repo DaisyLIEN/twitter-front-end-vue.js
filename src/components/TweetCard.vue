@@ -2,7 +2,11 @@
   <div class="tweet">
     <div class="tweet-img">
       <router-link :to="{ name: 'user', params: { id: tweet.UserId } }">
-        <img :src="tweet.avatar" alt="" class="user-photo" />
+        <img
+          :src="tweet.avatar ? tweet.avatar : avatarNone"
+          alt=""
+          class="user-photo"
+        />
       </router-link>
     </div>
     <div class="tweet-right">
@@ -22,15 +26,17 @@
         <router-link
           :to="{ name: 'replylist', params: { tweet_id: tweet.TweetId } }"
         >
-          <span @click="getTweetId(tweet.TweetId)" class="tweet-content">{{
-            tweet.description
-          }}</span>
+          <span class="tweet-content">{{ tweet.description }}</span>
         </router-link>
       </div>
 
       <div class="tweet-actions">
         <div class="tweet-action">
-          <font-awesome-icon icon="fa-regular fa-comment" />
+          <font-awesome-icon
+            data-toggle="modal"
+            :data-target="`#replyModal${tweet.TweetId}`"
+            icon="fa-regular fa-comment"
+          />
           <p class="reply-number">{{ totalReplyCount }}</p>
         </div>
         <div class="tweet-action">
@@ -49,12 +55,15 @@
         </div>
       </div>
     </div>
+    <ReplyModal :initial-tweet="initialTweet" @after-reply="afterReply" />
   </div>
 </template>
 
 <script>
 import usersAPI from "./../apis/users";
+import ReplyModal from "../components/ReplyModal.vue";
 import moment from "moment";
+import avatarNone from "../assets/Avatar-none.png";
 
 export default {
   filters: {
@@ -65,10 +74,13 @@ export default {
       return moment(datetime).fromNow();
     },
   },
+  components: {
+    ReplyModal,
+  },
   props: {
     initialTweet: {
       type: Object,
-      required: true,
+      required: false,
     },
   },
   data() {
@@ -79,6 +91,8 @@ export default {
       isLike: this.initialTweet.isLike,
       totalReplyCount: this.initialTweet.totalReplyCount,
       totalLikeCount: this.initialTweet.totalLikeCount,
+
+      avatarNone,
     };
   },
   created() {},
@@ -106,6 +120,10 @@ export default {
       } catch (error) {
         console.log(error);
       }
+    },
+    afterReply() {
+      //回覆成功時先讓前端頁面數字改變
+      this.totalReplyCount += 1;
     },
   },
 };

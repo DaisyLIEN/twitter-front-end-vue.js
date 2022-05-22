@@ -34,7 +34,7 @@
       <div class="tweets">
         <TweetCard
           v-for="tweet in tweets"
-          :key="tweet.id"
+          :key="tweet.TweetId"
           :initial-tweet="tweet"
         />
       </div>
@@ -46,6 +46,7 @@
 
     <!-- TweetModal -->
     <TweetModal @after-addTweet="handleAddTweet" />
+    
   </div>
 </template>
 
@@ -73,7 +74,6 @@ export default {
   },
   created() {
     this.fetchTweets();
-    console.log("created", this.tweets)
   },
   watch: {
     newTweet2() {
@@ -118,7 +118,7 @@ export default {
         }
         const data = await tweetsAPI.addTweet({ description: newTweet });
         this.tweets = data.data;
-        console.log("handleAddTweet", this.tweets)
+        console.log("handleAddTweet", this.tweets);
         //送出後重整頁面
         // window.location.reload();
       } catch (error) {
@@ -128,7 +128,7 @@ export default {
     handleAddTweet2() {
       this.handleAddTweet(this.newTweet2);
       this.newTweet2 = "";
-      console.log("handleAddTweet2", this.tweets)
+      console.log("handleAddTweet2", this.tweets);
     },
   },
 };

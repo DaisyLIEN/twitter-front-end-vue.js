@@ -1,7 +1,7 @@
 <template>
   <div
     class="modal fade"
-    id="replyModal"
+    :id="`replyModal${tweet.TweetId}`"
     tabindex="-1"
     role="dialog"
     aria-hidden="true"
@@ -20,15 +20,19 @@
         </div>
         <div class="modal-body">
           <div class="posting">
-            <img class="photo" :src="tweet.avatar" alt="" />
+            <img
+              class="photo"
+              :src="tweet.avatar ? tweet.avatar : avatarNone"
+              alt=""
+            />
             <div class="tweet-info">
               <div class="user-info">
                 <span class="user-name">{{ tweet.name }}</span>
                 <span class="user-account">@{{ tweet.account }}</span>
                 <span>．</span>
-                <span class="create-time"
-                  >{{ tweet.createdAt | fromNow }}小時</span
-                >
+                <span class="create-time">{{
+                  tweet.tweetCreatedAt | fromNow
+                }}</span>
               </div>
               <div class="tweet-text">
                 {{ tweet.description }}
@@ -70,6 +74,9 @@
 
 <script>
 import moment from "moment";
+import { Toast } from "../utils/helpers";
+import tweetsAPI from "./../apis/tweets";
+import avatarNone from "../assets/Avatar-none.png";
 
 export default {
   name: "Replication",
@@ -82,38 +89,55 @@ export default {
     },
   },
   props: {
-    // initialTweet: {
-    //   type: Object,
-    //   required: true,
-    // },
+    initialTweet: {
+      type: Object,
+      required: false,
+    },
   },
   data() {
     return {
       tweet: {},
       replyContent: "",
       userId: -1,
+      avatarNone,
     };
   },
-  methods: {
-    handleSubmit() {
-      if (this.replyContent.length === 0) return;
-
-      this.$emit("after-reply", {
-        tweetId: this.tweetId,
-        userId: this.userId,
-        comment: this.replyContent,
-      });
-
-      this.replyContent = "";
-    },
+  created() {
+    this.tweet = this.initialTweet;
+    this.userId = localStorage.getItem("userId");
   },
-  watch: {
-    initialTweet(newValue) {
-      console.log("replyNewValue", newValue);
-      this.tweet = {
-        ...this.tweet,
-        ...newValue,
-      };
+  methods: {
+    async handleSubmit() {
+      try {
+        if (this.replyContent.length === 0) {
+          Toast.fire({
+            icon: "warning",
+            title: "回覆內容不可為空白",
+          });
+          return;
+        }
+
+        const response = await tweetsAPI.createTweetReply({
+          tweetId: this.tweet.TweetId,
+          userId: this.userId,
+          comment: this.replyContent,
+        });
+
+        if (response.statusText !== "OK") {
+          throw new Error(response.statusText);
+        }
+
+        Toast.fire({
+          icon: "success",
+          title: "回覆成功！",
+        });
+
+        this.replyContent = "";
+        //送出後重整頁面
+        this.$emit("after-reply")
+      } catch (error) {
+        console.log("createReplyerror", error);
+      }
     },
   },
 };

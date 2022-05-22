@@ -46,7 +46,6 @@
         v-for="userReply in replyTweets"
         :key="userReply.id"
         :initial-user-reply="userReply"
-        :initial-profile="profile"
         :initial-current-user-id="currentUserId"
         v-show="currentPill === 'repliedTweets'"
       />

@@ -36,17 +36,14 @@
         </div>
       </div>
     </div>
-    <ReplyModal />
   </div>
 </template>
 
 <script>
 import moment from "moment";
-import ReplyModal from "../components/ReplyModal.vue";
 
 export default {
   components: {
-    ReplyModal,
   },
   filters: {
     fromNow(datetime) {
@@ -65,10 +62,6 @@ export default {
       type: Object,
       required: false,
     },
-    initialProfile: {
-      type: Object,
-      required: false,
-    },
     initialReplyFromReplyList: {
       type: Object,
       required: false,
@@ -77,7 +70,6 @@ export default {
   data() {
     return {
       reply: this.initialUserReply,
-      profile: this.initialProfile,
       currentParams: -1,
     };
   },

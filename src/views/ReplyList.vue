@@ -74,7 +74,7 @@
       <PopularList />
     </div>
 
-    <ReplyModal :initial-tweet="tweet" @after-reply="handleAfterReply" />
+    <ReplyModal :initial-tweet="tweet" />
   </div>
 </template>
 
@@ -116,6 +116,9 @@ export default {
     this.fetchTweetReplies();
   },
   methods: {
+    consoleTweet() {
+      console.log('tweet', this.tweet)
+    },
     // GET /tweets/:tweet_id
     async fetchTweet() {
       try {
@@ -138,24 +141,7 @@ export default {
         console.log("getTweetReplies", error);
       }
     },
-    // POST /tweets/:tweet_id/replies
-    async handleAfterReply(payload) {
-      try {
-        console.log("handleAfterReply", payload);
-        const { tweetId, userId, comment } = payload;
-        const { data } = await tweetsAPI.createTweetReply({
-          tweetId,
-          userId,
-          comment,
-        });
 
-        if (data.status !== "success") {
-          throw new Error(data.message);
-        }
-      } catch (error) {
-        console.log("createTweetReply", error);
-      }
-    },
     // POST /tweets/:id/like
     addLike() {
       this.tweet = {
