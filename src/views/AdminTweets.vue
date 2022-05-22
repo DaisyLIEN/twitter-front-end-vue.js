@@ -5,8 +5,8 @@
       <AdminNavbar />
     </div>
 
-    <!-- middle-content -->
-    <div class="middle-content">
+    <!-- right-content -->
+    <div class="right-content scrollbar">
       <header>
         <h4>推文清單</h4>
       </header>
@@ -160,7 +160,7 @@ export default {
   /* border: 1px solid red; */
 }
 
-.middle-content {
+.right-content {
   border-right: 1px solid #e6ecf0;
   border-left: 1px solid #e6ecf0;
   grid-column: 4/5;

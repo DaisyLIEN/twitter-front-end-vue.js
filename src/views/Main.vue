@@ -4,7 +4,7 @@
     <div class="left-content">
       <Navbar />
     </div>
-    <div class="middle-content">
+    <div class="middle-content scrollbar">
       <h4 class="title">首頁</h4>
       <hr class="hr1" />
       <!-- post -->
@@ -58,6 +58,7 @@
         </div>
       </div>
     </div>
+
     <div class="right-content">
       <PopularList />
     </div>
@@ -160,9 +161,9 @@ export default {
 <style scoped>
 .container {
   display: grid;
-  grid-template-columns: 178px 641px 273px;
-  grid-gap: 24px;
-  width: 1140px;
+  grid-template-columns: 178px 24px 670px 273px;
+  /* grid-gap: 24px; */
+  /* width: 1140px; */
   padding: 0;
   /* border: 1px solid black; */
 }
@@ -173,17 +174,17 @@ export default {
 }
 
 .middle-content {
-  /* width: 46%; */
+  /* width: 100%; */
   padding: 0px;
   border: 1px solid #e6ecf0;
   border-top: 1px solid white;
   border-bottom: 1px solid white;
-  grid-column: 2/3;
+  grid-column: 3/4;
   /* border: 1px solid red; */
 }
 
 .right-content {
-  grid-column: 3/4;
+  grid-column: 4/5;
   margin-top: 16px;
   /* border: 1px solid green; */
 }
@@ -271,7 +272,7 @@ h4 {
 
 .hr2 {
   border: 10px solid #e6ecf0;
-  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  /* box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25); */
   margin: 10px 0 16px 0;
   background-color: #e6ecf0;
 }
