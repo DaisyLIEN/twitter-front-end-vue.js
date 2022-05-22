@@ -48,8 +48,8 @@
         <div class="tweets">
           <TweetCard
             v-for="tweet in tweets"
-          :key="tweet.TweetId"
-          :initial-tweet="tweet"
+            :key="tweet.TweetId"
+            :initial-tweet="tweet"
           />
         </div>
       </div>
@@ -60,7 +60,6 @@
 
     <!-- TweetModal -->
     <TweetModal @after-addTweet="handleAddTweet" />
-    
   </div>
 </template>
 
@@ -69,7 +68,6 @@ import { emptyImageFilter } from "../utils/mixins";
 import Navbar from "./../components/Navbar";
 import TweetCard from "./../components/TweetCard";
 import TweetModal from "./../components/TweetModal";
-import ReplyModal from "../components/ReplyModal";
 import PopularList from "./../components/PopularList";
 import tweetsAPI from "./../apis/tweets";
 import { Toast } from "./../utils/helpers";
@@ -81,7 +79,6 @@ export default {
     Navbar,
     TweetCard,
     TweetModal,
-    ReplyModal,
     PopularList,
     Spinner,
   },
